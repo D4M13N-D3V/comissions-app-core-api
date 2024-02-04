@@ -8,7 +8,7 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 COPY ["/src/comissions.app.api/comissions.app.api.csproj", "comissions.app.api/"]
-COPY ["/src/ArtPlatform.Database/ArtPlatform.Database.csproj", "ArtPlatform.Database/"]
+COPY ["/src/comissions.app.database/ArtPlatform.Database.csproj", "comissions.app.database/"]
 RUN dotnet restore "comissions.app.api/comissions.app.api.csproj"
 COPY . .
 WORKDIR "/src/comissions.app.api"
