@@ -7,12 +7,12 @@ EXPOSE 8081
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["/src/comissions.app.api/comissions.app.api.csproj", "comissions.app.api/"]
-COPY ["/src/comissions.app.database/comissions.app.database.csproj", "comissions.app.database/"]
+COPY ["comissions.app.api/comissions.app.api.csproj", "comissions.app.api/"]
+COPY ["comissions.app.database/comissions.app.database.csproj", "comissions.app.database/"]
 RUN dotnet restore "comissions.app.api/comissions.app.api.csproj"
-WORKDIR "/src/comissions.app.api"
 COPY . .
-RUN dotnet build "commissions.app.api.csproj" -c $BUILD_CONFIGURATION -o /app/build
+WORKDIR "/src/comissions.app.api"
+RUN dotnet build "comissions.app.api.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release

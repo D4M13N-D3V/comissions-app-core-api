@@ -19,9 +19,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Content Include="..\.dockerignore">
-        <Link>.dockerignore</Link>
-      </Content>
       <None Remove="react\public\favicon.ico" />
       <None Remove="react\public\index.html" />
       <None Remove="react\public\logo192.png" />
@@ -31,6 +28,12 @@
 
     <ItemGroup>
       <ProjectReference Include="..\comissions.app.database\comissions.app.database.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Content Include="..\.dockerignore">
+        <Link>.dockerignore</Link>
+      </Content>
     </ItemGroup>
 
 </Project>
