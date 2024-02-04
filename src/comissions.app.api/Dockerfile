@@ -10,9 +10,9 @@ WORKDIR /src
 COPY ["/src/comissions.app.api/comissions.app.api.csproj", "comissions.app.api/"]
 COPY ["/src/comissions.app.database/comissions.app.database.csproj", "comissions.app.database/"]
 RUN dotnet restore "comissions.app.api/comissions.app.api.csproj"
-COPY . .
 WORKDIR "/src/comissions.app.api"
-RUN dotnet build "comissions.app.api.csproj" -c $BUILD_CONFIGURATION -o /app/build
+COPY . .
+RUN dotnet build "commissions.app.api.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
