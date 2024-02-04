@@ -7,18 +7,18 @@ EXPOSE 8081
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["/src/ArtPlatform.API/ArtPlatform.API.csproj", "ArtPlatform.API/"]
+COPY ["/src/comissions.app.api/comissions.app.api.csproj", "comissions.app.api/"]
 COPY ["/src/ArtPlatform.Database/ArtPlatform.Database.csproj", "ArtPlatform.Database/"]
-RUN dotnet restore "ArtPlatform.API/ArtPlatform.API.csproj"
+RUN dotnet restore "comissions.app.api/comissions.app.api.csproj"
 COPY . .
-WORKDIR "/src/ArtPlatform.API"
-RUN dotnet build "ArtPlatform.API.csproj" -c $BUILD_CONFIGURATION -o /app/build
+WORKDIR "/src/comissions.app.api"
+RUN dotnet build "comissions.app.api.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "ArtPlatform.API.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "comissions.app.api.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "ArtPlatform.API.dll"]
+ENTRYPOINT ["dotnet", "comissions.app.api.dll"]
