@@ -147,12 +147,9 @@ var app = builder.Build();
 app.UseSwagger();
 app.UseSwaggerUI(settings =>
 {
-    if (app.Environment.IsDevelopment())
-    {
-        settings.OAuthClientId(builder.Configuration.GetValue<string>("Auth0:ClientId"));
-        settings.OAuthClientSecret(builder.Configuration.GetValue<string>("Auth0:ClientSecret"));
-        settings.OAuthUsePkce();
-    }
+    settings.OAuthClientId(builder.Configuration.GetValue<string>("Auth0:ClientId"));
+    settings.OAuthClientSecret(builder.Configuration.GetValue<string>("Auth0:ClientSecret"));
+    settings.OAuthUsePkce();
 });
 var defaultFilesOptions = new DefaultFilesOptions();
 defaultFilesOptions.DefaultFileNames.Clear();
