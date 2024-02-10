@@ -9,6 +9,7 @@ using Auth0.AspNetCore.Authentication;
 using comissions.app.database;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -144,7 +145,12 @@ builder.Services.AddSingleton<IAuthorizationHandler, HasScopeHandler>();
 
 
 var app = builder.Build();
-
+var serviceScope = app.Services
+    .GetRequiredService<IServiceScopeFactory>()
+    .CreateScope();
+using var context = serviceScope.ServiceProvider
+    .GetService<ApplicationDbContext>();
+context.Database.Migrate();
 app.UseSwagger();
 app.UseSwaggerUI(settings =>
 {
