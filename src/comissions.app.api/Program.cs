@@ -148,9 +148,9 @@ var app = builder.Build();
 var serviceScope = app.Services
     .GetRequiredService<IServiceScopeFactory>()
     .CreateScope();
-using var context = serviceScope.ServiceProvider
-    .GetService<ApplicationDbContext>();
-context.Database.Migrate();
+using (var context = serviceScope.ServiceProvider.GetService<ApplicationDbContext>()){
+    context.Database.Migrate();
+}
 app.UseSwagger();
 app.UseSwaggerUI(settings =>
 {
