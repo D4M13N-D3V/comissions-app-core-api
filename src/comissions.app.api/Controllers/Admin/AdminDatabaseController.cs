@@ -6,7 +6,6 @@ using Microsoft.EntityFrameworkCore;
 namespace comissions.app.api.Controllers;
 
 [ApiController]
-[Authorize("admin")]
 [Route("api/admin/[controller]")]
 public class AdminDatabaseController:ControllerBase
 {
