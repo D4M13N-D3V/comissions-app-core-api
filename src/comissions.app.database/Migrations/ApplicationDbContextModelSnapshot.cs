@@ -5,10 +5,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
+using comissions.app.database;
 
 #nullable disable
 
-namespace comissions.app.database.Migrations
+namespace ArtPlatform.Database.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
     partial class ApplicationDbContextModelSnapshot : ModelSnapshot
@@ -22,7 +23,7 @@ namespace comissions.app.database.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("ArtPlatform.Database.Entities.SellerProfilePortfolioPiece", b =>
+            modelBuilder.Entity("comissions.app.database.Entities.SellerProfilePortfolioPiece", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -49,7 +50,7 @@ namespace comissions.app.database.Migrations
                     b.ToTable("SellerProfilePortfolioPieces");
                 });
 
-            modelBuilder.Entity("ArtPlatform.Database.Entities.SellerProfileRequest", b =>
+            modelBuilder.Entity("comissions.app.database.Entities.SellerProfileRequest", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -77,7 +78,7 @@ namespace comissions.app.database.Migrations
                     b.ToTable("SellerProfileRequests");
                 });
 
-            modelBuilder.Entity("ArtPlatform.Database.Entities.SellerService", b =>
+            modelBuilder.Entity("comissions.app.database.Entities.SellerService", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -109,7 +110,7 @@ namespace comissions.app.database.Migrations
                     b.ToTable("SellerServices");
                 });
 
-            modelBuilder.Entity("ArtPlatform.Database.Entities.SellerServiceOrder", b =>
+            modelBuilder.Entity("comissions.app.database.Entities.SellerServiceOrder", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -156,7 +157,7 @@ namespace comissions.app.database.Migrations
                     b.ToTable("SellerServiceOrders");
                 });
 
-            modelBuilder.Entity("ArtPlatform.Database.Entities.SellerServiceOrderMessage", b =>
+            modelBuilder.Entity("comissions.app.database.Entities.SellerServiceOrderMessage", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -187,7 +188,7 @@ namespace comissions.app.database.Migrations
                     b.ToTable("SellerServiceOrderMessages");
                 });
 
-            modelBuilder.Entity("ArtPlatform.Database.Entities.SellerServiceOrderMessageAttachment", b =>
+            modelBuilder.Entity("comissions.app.database.Entities.SellerServiceOrderMessageAttachment", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -209,7 +210,7 @@ namespace comissions.app.database.Migrations
                     b.ToTable("SellerServiceOrderMessageAttachments");
                 });
 
-            modelBuilder.Entity("ArtPlatform.Database.Entities.SellerServiceOrderReview", b =>
+            modelBuilder.Entity("comissions.app.database.Entities.SellerServiceOrderReview", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -247,7 +248,7 @@ namespace comissions.app.database.Migrations
                     b.ToTable("SellerServiceOrderReviews");
                 });
 
-            modelBuilder.Entity("ArtPlatform.Database.Entities.User", b =>
+            modelBuilder.Entity("comissions.app.database.Entities.User", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("text");
@@ -302,7 +303,7 @@ namespace comissions.app.database.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("ArtPlatform.Database.Entities.UserSellerProfile", b =>
+            modelBuilder.Entity("comissions.app.database.Entities.UserSellerProfile", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -354,15 +355,15 @@ namespace comissions.app.database.Migrations
                     b.ToTable("UserSellerProfiles");
                 });
 
-            modelBuilder.Entity("ArtPlatform.Database.Entities.SellerProfilePortfolioPiece", b =>
+            modelBuilder.Entity("comissions.app.database.Entities.SellerProfilePortfolioPiece", b =>
                 {
-                    b.HasOne("ArtPlatform.Database.Entities.UserSellerProfile", "SellerProfile")
+                    b.HasOne("comissions.app.database.Entities.UserSellerProfile", "SellerProfile")
                         .WithMany("PortfolioPieces")
                         .HasForeignKey("SellerProfileId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("ArtPlatform.Database.Entities.SellerService", "SellerService")
+                    b.HasOne("comissions.app.database.Entities.SellerService", "SellerService")
                         .WithMany("PortfolioPieces")
                         .HasForeignKey("SellerServiceId");
 
@@ -371,9 +372,9 @@ namespace comissions.app.database.Migrations
                     b.Navigation("SellerService");
                 });
 
-            modelBuilder.Entity("ArtPlatform.Database.Entities.SellerProfileRequest", b =>
+            modelBuilder.Entity("comissions.app.database.Entities.SellerProfileRequest", b =>
                 {
-                    b.HasOne("ArtPlatform.Database.Entities.User", "User")
+                    b.HasOne("comissions.app.database.Entities.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -382,9 +383,9 @@ namespace comissions.app.database.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("ArtPlatform.Database.Entities.SellerService", b =>
+            modelBuilder.Entity("comissions.app.database.Entities.SellerService", b =>
                 {
-                    b.HasOne("ArtPlatform.Database.Entities.UserSellerProfile", "SellerProfile")
+                    b.HasOne("comissions.app.database.Entities.UserSellerProfile", "SellerProfile")
                         .WithMany("SellerServices")
                         .HasForeignKey("SellerProfileId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -393,21 +394,21 @@ namespace comissions.app.database.Migrations
                     b.Navigation("SellerProfile");
                 });
 
-            modelBuilder.Entity("ArtPlatform.Database.Entities.SellerServiceOrder", b =>
+            modelBuilder.Entity("comissions.app.database.Entities.SellerServiceOrder", b =>
                 {
-                    b.HasOne("ArtPlatform.Database.Entities.User", "Buyer")
+                    b.HasOne("comissions.app.database.Entities.User", "Buyer")
                         .WithMany("Orders")
                         .HasForeignKey("BuyerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("ArtPlatform.Database.Entities.UserSellerProfile", "Seller")
+                    b.HasOne("comissions.app.database.Entities.UserSellerProfile", "Seller")
                         .WithMany()
                         .HasForeignKey("SellerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("ArtPlatform.Database.Entities.SellerService", "SellerService")
+                    b.HasOne("comissions.app.database.Entities.SellerService", "SellerService")
                         .WithMany()
                         .HasForeignKey("SellerServiceId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -420,15 +421,15 @@ namespace comissions.app.database.Migrations
                     b.Navigation("SellerService");
                 });
 
-            modelBuilder.Entity("ArtPlatform.Database.Entities.SellerServiceOrderMessage", b =>
+            modelBuilder.Entity("comissions.app.database.Entities.SellerServiceOrderMessage", b =>
                 {
-                    b.HasOne("ArtPlatform.Database.Entities.SellerServiceOrder", "SellerServiceOrder")
+                    b.HasOne("comissions.app.database.Entities.SellerServiceOrder", "SellerServiceOrder")
                         .WithMany("Messages")
                         .HasForeignKey("SellerServiceOrderId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("ArtPlatform.Database.Entities.User", "Sender")
+                    b.HasOne("comissions.app.database.Entities.User", "Sender")
                         .WithMany()
                         .HasForeignKey("SenderId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -439,9 +440,9 @@ namespace comissions.app.database.Migrations
                     b.Navigation("Sender");
                 });
 
-            modelBuilder.Entity("ArtPlatform.Database.Entities.SellerServiceOrderMessageAttachment", b =>
+            modelBuilder.Entity("comissions.app.database.Entities.SellerServiceOrderMessageAttachment", b =>
                 {
-                    b.HasOne("ArtPlatform.Database.Entities.SellerServiceOrderMessage", "SellerServiceOrderMessage")
+                    b.HasOne("comissions.app.database.Entities.SellerServiceOrderMessage", "SellerServiceOrderMessage")
                         .WithMany("Attachments")
                         .HasForeignKey("SellerServiceOrderMessageId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -450,21 +451,21 @@ namespace comissions.app.database.Migrations
                     b.Navigation("SellerServiceOrderMessage");
                 });
 
-            modelBuilder.Entity("ArtPlatform.Database.Entities.SellerServiceOrderReview", b =>
+            modelBuilder.Entity("comissions.app.database.Entities.SellerServiceOrderReview", b =>
                 {
-                    b.HasOne("ArtPlatform.Database.Entities.User", "Reviewer")
+                    b.HasOne("comissions.app.database.Entities.User", "Reviewer")
                         .WithMany()
                         .HasForeignKey("ReviewerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("ArtPlatform.Database.Entities.SellerService", "SellerService")
+                    b.HasOne("comissions.app.database.Entities.SellerService", "SellerService")
                         .WithMany("Reviews")
                         .HasForeignKey("SellerServiceId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("ArtPlatform.Database.Entities.SellerServiceOrder", "SellerServiceOrder")
+                    b.HasOne("comissions.app.database.Entities.SellerServiceOrder", "SellerServiceOrder")
                         .WithMany("Reviews")
                         .HasForeignKey("SellerServiceOrderId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -477,44 +478,44 @@ namespace comissions.app.database.Migrations
                     b.Navigation("SellerServiceOrder");
                 });
 
-            modelBuilder.Entity("ArtPlatform.Database.Entities.UserSellerProfile", b =>
+            modelBuilder.Entity("comissions.app.database.Entities.UserSellerProfile", b =>
                 {
-                    b.HasOne("ArtPlatform.Database.Entities.User", "User")
+                    b.HasOne("comissions.app.database.Entities.User", "User")
                         .WithOne("UserSellerProfile")
-                        .HasForeignKey("ArtPlatform.Database.Entities.UserSellerProfile", "UserId")
+                        .HasForeignKey("comissions.app.database.Entities.UserSellerProfile", "UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("ArtPlatform.Database.Entities.SellerService", b =>
+            modelBuilder.Entity("comissions.app.database.Entities.SellerService", b =>
                 {
                     b.Navigation("PortfolioPieces");
 
                     b.Navigation("Reviews");
                 });
 
-            modelBuilder.Entity("ArtPlatform.Database.Entities.SellerServiceOrder", b =>
+            modelBuilder.Entity("comissions.app.database.Entities.SellerServiceOrder", b =>
                 {
                     b.Navigation("Messages");
 
                     b.Navigation("Reviews");
                 });
 
-            modelBuilder.Entity("ArtPlatform.Database.Entities.SellerServiceOrderMessage", b =>
+            modelBuilder.Entity("comissions.app.database.Entities.SellerServiceOrderMessage", b =>
                 {
                     b.Navigation("Attachments");
                 });
 
-            modelBuilder.Entity("ArtPlatform.Database.Entities.User", b =>
+            modelBuilder.Entity("comissions.app.database.Entities.User", b =>
                 {
                     b.Navigation("Orders");
 
                     b.Navigation("UserSellerProfile");
                 });
 
-            modelBuilder.Entity("ArtPlatform.Database.Entities.UserSellerProfile", b =>
+            modelBuilder.Entity("comissions.app.database.Entities.UserSellerProfile", b =>
                 {
                     b.Navigation("PortfolioPieces");
 
