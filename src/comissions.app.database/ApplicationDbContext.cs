@@ -8,10 +8,10 @@ public class ApplicationDbContext:DbContext
 {
     private readonly ApplicationDatabaseConfigurationModel _configuration;
     
-    // public ApplicationDbContext(ApplicationDatabaseConfigurationModel configuration, DbContextOptions<ApplicationDbContext> options):base(options)
-    // {
-    //     _configuration = configuration;
-    // }
+    public ApplicationDbContext(ApplicationDatabaseConfigurationModel configuration, DbContextOptions<ApplicationDbContext> options):base(options)
+    {
+        _configuration = configuration;
+    }
     
     
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
