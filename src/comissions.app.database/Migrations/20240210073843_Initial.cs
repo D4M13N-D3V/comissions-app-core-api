@@ -5,10 +5,10 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace comissions.app.database.Migrations
+namespace ArtPlatform.Database.Migrations
 {
     /// <inheritdoc />
-    public partial class _001 : Migration
+    public partial class Initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
