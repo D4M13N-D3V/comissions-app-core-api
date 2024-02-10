@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "PKQfuow4U2wkZAn2bJN+dFlOrvKzTWMHqoeTy6jmSL+9p3w+MgGfmi408xjN/LboH8TL9B+O0UuudBhV60kJLA==",
+  "dgSpecHash": "vSIyIrq2QaIkwTm9vkjsfpVhlAQwjCLR08185uSQd03v9cuU8Qu0W8CV1p18sr865cChc5kRAHVpxCVbJhERGw==",
   "success": true,
-  "projectFilePath": "/home/damienostler/Documents/Github Repositories/art_platform/src/comissions.app.database/comissions.app.database.csproj",
+  "projectFilePath": "/home/damienostler/Documents/Github Repositories/comissions.app/core-api/src/comissions.app.database/comissions.app.database.csproj",
   "expectedPackageFiles": [
     "/home/damienostler/.nuget/packages/humanizer.core/2.14.1/humanizer.core.2.14.1.nupkg.sha512",
     "/home/damienostler/.nuget/packages/microsoft.bcl.asyncinterfaces/6.0.0/microsoft.bcl.asyncinterfaces.6.0.0.nupkg.sha512",

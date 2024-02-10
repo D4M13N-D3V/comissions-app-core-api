@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "LLz5CyOJH5i8eTJU7nCyd3wYRrxXoyC/guvnd1ca0FhpvBkIQf54OXYW8sKOtFzXoG7+R/+6jLb/4m3xe2p4dA==",
+  "dgSpecHash": "0ovJ89cSIIKcoaI7jEtZVT5VoonxhRyWCL4Fd7sA8R0NhkCKrgSIlzXMETVistbAjiqh/YxBhGXb44dV7lDSIw==",
   "success": true,
-  "projectFilePath": "/home/damienostler/Documents/Github Repositories/art_platform/src/comissions.app.api/comissions.app.api.csproj",
+  "projectFilePath": "/home/damienostler/Documents/Github Repositories/comissions.app/core-api/src/comissions.app.api/comissions.app.api.csproj",
   "expectedPackageFiles": [
     "/home/damienostler/.nuget/packages/auth0.aspnetcore.authentication/1.4.1/auth0.aspnetcore.authentication.1.4.1.nupkg.sha512",
     "/home/damienostler/.nuget/packages/microsoft.aspnetcore.authentication.jwtbearer/8.0.1/microsoft.aspnetcore.authentication.jwtbearer.8.0.1.nupkg.sha512",

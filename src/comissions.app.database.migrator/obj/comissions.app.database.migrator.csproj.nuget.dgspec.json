@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "/home/damienostler/Documents/Github Repositories/art_platform/src/comissions.app.database.migrator/comissions.app.database.migrator.csproj": {}
+    "/home/damienostler/Documents/Github Repositories/comissions.app/core-api/src/comissions.app.database.migrator/comissions.app.database.migrator.csproj": {}
   },
   "projects": {
-    "/home/damienostler/Documents/Github Repositories/art_platform/src/comissions.app.database.migrator/comissions.app.database.migrator.csproj": {
+    "/home/damienostler/Documents/Github Repositories/comissions.app/core-api/src/comissions.app.database.migrator/comissions.app.database.migrator.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/home/damienostler/Documents/Github Repositories/art_platform/src/comissions.app.database.migrator/comissions.app.database.migrator.csproj",
+        "projectUniqueName": "/home/damienostler/Documents/Github Repositories/comissions.app/core-api/src/comissions.app.database.migrator/comissions.app.database.migrator.csproj",
         "projectName": "comissions.app.database.migrator",
-        "projectPath": "/home/damienostler/Documents/Github Repositories/art_platform/src/comissions.app.database.migrator/comissions.app.database.migrator.csproj",
+        "projectPath": "/home/damienostler/Documents/Github Repositories/comissions.app/core-api/src/comissions.app.database.migrator/comissions.app.database.migrator.csproj",
         "packagesPath": "/home/damienostler/.nuget/packages/",
-        "outputPath": "/home/damienostler/Documents/Github Repositories/art_platform/src/comissions.app.database.migrator/obj/",
+        "outputPath": "/home/damienostler/Documents/Github Repositories/comissions.app/core-api/src/comissions.app.database.migrator/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/home/damienostler/.nuget/NuGet/NuGet.Config"
@@ -20,7 +20,6 @@
           "net8.0"
         ],
         "sources": {
-          "/usr/share/dotnet/library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
