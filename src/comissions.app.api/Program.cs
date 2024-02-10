@@ -23,6 +23,7 @@ builder.Services.AddSingleton<IPaymentService,StripePaymentServiceProvider>();
 
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSingleton<ApplicationDatabaseConfigurationModel>();
 builder.Services.AddDbContext<ApplicationDbContext>();
 builder.Services.AddSwaggerGen(options =>
 {
