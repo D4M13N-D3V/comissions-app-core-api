@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "/home/damienostler/Documents/Github Repositories/art_platform/src/comissions.app.database/comissions.app.database.csproj": {}
+    "/home/damienostler/Documents/Github Repositories/comissions.app/core-api/src/comissions.app.database/comissions.app.database.csproj": {}
   },
   "projects": {
-    "/home/damienostler/Documents/Github Repositories/art_platform/src/comissions.app.database/comissions.app.database.csproj": {
+    "/home/damienostler/Documents/Github Repositories/comissions.app/core-api/src/comissions.app.database/comissions.app.database.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/home/damienostler/Documents/Github Repositories/art_platform/src/comissions.app.database/comissions.app.database.csproj",
+        "projectUniqueName": "/home/damienostler/Documents/Github Repositories/comissions.app/core-api/src/comissions.app.database/comissions.app.database.csproj",
         "projectName": "comissions.app.database",
-        "projectPath": "/home/damienostler/Documents/Github Repositories/art_platform/src/comissions.app.database/comissions.app.database.csproj",
+        "projectPath": "/home/damienostler/Documents/Github Repositories/comissions.app/core-api/src/comissions.app.database/comissions.app.database.csproj",
         "packagesPath": "/home/damienostler/.nuget/packages/",
-        "outputPath": "/home/damienostler/Documents/Github Repositories/art_platform/src/comissions.app.database/obj/",
+        "outputPath": "/home/damienostler/Documents/Github Repositories/comissions.app/core-api/src/comissions.app.database/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/home/damienostler/.nuget/NuGet/NuGet.Config"
@@ -20,7 +20,6 @@
           "net8.0"
         ],
         "sources": {
-          "/usr/share/dotnet/library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
