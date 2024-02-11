@@ -181,6 +181,65 @@ public class DiscoveryController : Controller
     }
     
     [HttpGet]
+    [Route("Sellers/{sellerId:int}/Services/{serviceId:int}/Portfolio")]
+    public async Task<IActionResult> GetSellerServicePortfolio(int sellerId, int serviceId, int offset = 0, int pageSize = 10)
+    {
+        var seller = await _dbContext.UserSellerProfiles
+            .Include(x=>x.User)
+            .FirstOrDefaultAsync(x=>x.Id==sellerId);
+        if(seller==null)
+            return NotFound("Seller not found.");
+        var sellerService = await _dbContext.SellerServices
+            .Include(x=>x.PortfolioPieces)
+            .FirstOrDefaultAsync(x=>x.Id==serviceId);
+        if(sellerService==null)
+            return NotFound("Seller service not found.");
+        var result = sellerService.PortfolioPieces.Select(x=>x.ToModel()).ToList();
+        return Ok(result);
+    }
+    
+    [HttpGet]
+    [Route("Sellers/{sellerId:int}/Services/{serviceId:int}/Portfolio/Count")]
+    public async Task<IActionResult> GetSellerServicePortfolioCount(int sellerId, int serviceId)
+    {
+        var seller = await _dbContext.UserSellerProfiles
+            .Include(x=>x.User)
+            .FirstOrDefaultAsync(x=>x.Id==sellerId);
+        if(seller==null)
+            return NotFound("Seller not found.");
+        var sellerService = await _dbContext.SellerServices
+            .Include(x=>x.PortfolioPieces)
+            .FirstOrDefaultAsync(x=>x.Id==serviceId);
+        if(sellerService==null)
+            return NotFound("Seller service not found.");
+        var result = sellerService.PortfolioPieces.Count;
+        return Ok(result);
+    }
+    
+    [HttpGet]
+    [Route("Sellers/{sellerId:int}/Services/{serviceId:int}/Portfolio/{portfolioId:int}")]
+    public async Task<IActionResult> GetSellerServicePortfolioPiece(int sellerId, int serviceId, int portfolioId)
+    {
+        var seller = await _dbContext.UserSellerProfiles
+            .Include(x=>x.User)
+            .FirstOrDefaultAsync(x=>x.Id==sellerId);
+        if(seller==null)
+            return NotFound("Seller not found.");
+        var sellerService = await _dbContext.SellerServices
+            .Include(x=>x.PortfolioPieces)
+            .FirstOrDefaultAsync(x=>x.Id==serviceId);
+        if(sellerService==null)
+            return NotFound("Seller service not found.");
+        var sellerPortfolio = await _dbContext.SellerProfilePortfolioPieces
+            .FirstOrDefaultAsync(x=>x.Id==portfolioId);
+        if(sellerPortfolio==null)
+            return NotFound("Portfolio piece not found.");
+        
+        var content = await _storageService.DownloadImageAsync(sellerPortfolio.FileReference);
+        return new FileStreamResult(content, "application/octet-stream");
+    }   
+    
+    [HttpGet]
     [Route("Sellers/{sellerId:int}/Services/{serviceId:int}/Reviews")]
     public async Task<IActionResult> GetSellerServiceReviews(int sellerId, int serviceId, int offset = 0, int pageSize = 10)
     {
