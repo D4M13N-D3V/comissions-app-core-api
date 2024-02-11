@@ -15,9 +15,8 @@ public static class SellerProfileModelExtensions
             PrepaymentRequired = sellerProfile.PrepaymentRequired
         };
     }
-    public static DiscoverySellerModel ToDiscoveryModel(this UserSellerProfile sellerProfile)
+    public static DiscoverySellerModel ToDiscoveryModelWithoutReviews(this UserSellerProfile sellerProfile)
     {
-        
         return new DiscoverySellerModel()
         {
             Name = sellerProfile.User.DisplayName,
@@ -25,7 +24,18 @@ public static class SellerProfileModelExtensions
             SocialMediaLinks = sellerProfile.SocialMediaLinks,
             Biography = sellerProfile.Biography,
             PrepaymentRequired = sellerProfile.PrepaymentRequired,
-            AverageRating = sellerProfile.SellerServices?.Average(x=>x.Reviews.Average(y=>y.Rating)),
+        };
+    }
+    public static DiscoverySellerModel ToDiscoveryModel(this UserSellerProfile sellerProfile)
+    {
+        return new DiscoverySellerModel()
+        {
+            Name = sellerProfile.User.DisplayName,
+            Id = sellerProfile.Id,
+            SocialMediaLinks = sellerProfile.SocialMediaLinks,
+            Biography = sellerProfile.Biography,
+            PrepaymentRequired = sellerProfile.PrepaymentRequired,
+            AverageRating = sellerProfile.SellerServices?.Average(x=>x.Reviews?.Average(y=>y.Rating)),
             ReviewCount = sellerProfile.SellerServices?.Sum(x=>x.Reviews.Count)
         };
     }
