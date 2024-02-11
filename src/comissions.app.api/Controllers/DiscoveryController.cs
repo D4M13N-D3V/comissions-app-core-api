@@ -29,7 +29,7 @@ public class DiscoveryController : Controller
             .Where(x=>x.User.DisplayName.Contains(search))
             .Include(x=>x.User)
             .Skip(offset).Take(pageSize).ToListAsync();
-        var result = sellers.Select(x=>x.ToDiscoveryModel()).ToList();
+        var result = sellers.Select(x=>x.ToDiscoveryModelWithoutReviews()).ToList();
         return Ok(result);
     }
     
