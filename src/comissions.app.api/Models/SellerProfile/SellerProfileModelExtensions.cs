@@ -19,6 +19,7 @@ public static class SellerProfileModelExtensions
     {
         return new DiscoverySellerModel()
         {
+            Name = sellerProfile.User.DisplayName,
             Id = sellerProfile.Id,
             SocialMediaLinks = sellerProfile.SocialMediaLinks,
             Biography = sellerProfile.Biography,
