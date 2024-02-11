@@ -38,6 +38,7 @@ public class DiscoveryController : Controller
     public async Task<IActionResult> GetSeller(int sellerId)
     {
         var seller = await _dbContext.UserSellerProfiles
+            .Include(x=>x.SellerServices).ThenInclude(x=>x.Reviews)
             .Include(x=>x.User)
             .FirstOrDefaultAsync(x=>x.Id==sellerId);
         if(seller==null)

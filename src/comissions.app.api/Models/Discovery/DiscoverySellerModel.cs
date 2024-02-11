@@ -7,4 +7,6 @@ public class DiscoverySellerModel
     public List<string> SocialMediaLinks { get; set; }
     public string Biography { get; set; }
     public bool PrepaymentRequired { get; set; }
+    public double AverageRating { get; set; }
+    public int ReviewCount { get; set; }
 }
