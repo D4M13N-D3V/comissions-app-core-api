@@ -23,7 +23,9 @@ public static class SellerProfileModelExtensions
             Id = sellerProfile.Id,
             SocialMediaLinks = sellerProfile.SocialMediaLinks,
             Biography = sellerProfile.Biography,
-            PrepaymentRequired = sellerProfile.PrepaymentRequired
+            PrepaymentRequired = sellerProfile.PrepaymentRequired,
+            AverageRating = sellerProfile.SellerServices.Average(x=>x.Reviews.Average(y=>y.Rating)),
+            ReviewCount = sellerProfile.SellerServices.Sum(x=>x.Reviews.Count)
         };
     }
     public static UserSellerProfile ToModel(this SellerProfileModel sellerProfile, UserSellerProfile existingSellerProfile)
