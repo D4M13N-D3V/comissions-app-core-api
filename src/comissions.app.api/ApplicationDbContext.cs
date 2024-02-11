@@ -12,7 +12,17 @@ public class ApplicationDbContext:DbContext
     {
         _configuration = configuration;
     }
-    
+
+    public ApplicationDbContext()
+    {
+        _configuration = null;
+    }
+
+    public ApplicationDbContext(ApplicationDatabaseConfigurationModel configuration)
+    {
+        _configuration = null;
+    }
+
     
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
@@ -20,9 +30,9 @@ public class ApplicationDbContext:DbContext
         {
             Host = _configuration?.Host ?? "localhost",
             Port = _configuration?.Port ?? 5432,
-            Database = _configuration?.Database ?? "artplatform",
-            Username = _configuration?.Username ?? "sa",
-            Password = _configuration?.Password ?? "P@ssw0rd"
+            Database = _configuration?.Database ?? "comissionsapp",
+            Username = _configuration?.Username ?? "postgres",
+            Password = _configuration?.Password ?? "postgres"
         };
         optionsBuilder.UseNpgsql(connectionStringBuilder.ConnectionString);
         base.OnConfiguring(optionsBuilder);

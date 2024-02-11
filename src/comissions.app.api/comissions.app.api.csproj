@@ -14,6 +14,9 @@
         <PackageReference Include="Auth0.AspNetCore.Authentication" Version="1.4.1" />
         <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.1" />
         <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.1"/>
+        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.1" />
+        <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.0" />
+        <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL.Design" Version="1.1.0" />
         <PackageReference Include="Stripe.net" Version="43.12.0" />
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0"/>
     </ItemGroup>
@@ -24,10 +27,6 @@
       <None Remove="react\public\logo192.png" />
       <None Remove="react\public\logo512.png" />
       <None Remove="react\public\robots.txt" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <ProjectReference Include="..\comissions.app.database\comissions.app.database.csproj" />
     </ItemGroup>
 
     <ItemGroup>

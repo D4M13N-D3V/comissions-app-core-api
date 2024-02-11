@@ -11,9 +11,11 @@
           "Auth0.AspNetCore.Authentication": "1.4.1",
           "Microsoft.AspNetCore.Authentication.JwtBearer": "8.0.1",
           "Microsoft.AspNetCore.OpenApi": "8.0.1",
+          "Microsoft.EntityFrameworkCore": "8.0.1",
+          "Npgsql.EntityFrameworkCore.PostgreSQL": "8.0.0",
+          "Npgsql.EntityFrameworkCore.PostgreSQL.Design": "1.1.0",
           "Stripe.net": "43.12.0",
-          "Swashbuckle.AspNetCore": "6.4.0",
-          "comissions.app.database": "1.0.0"
+          "Swashbuckle.AspNetCore": "6.4.0"
         },
         "runtime": {
           "comissions.app.api.dll": {}
@@ -126,26 +128,9 @@
           "Microsoft.Extensions.Primitives": "8.0.0"
         }
       },
-      "Microsoft.Extensions.Configuration/8.0.0": {
-        "dependencies": {
-          "Microsoft.Extensions.Configuration.Abstractions": "8.0.0",
-          "Microsoft.Extensions.Primitives": "8.0.0"
-        }
-      },
       "Microsoft.Extensions.Configuration.Abstractions/8.0.0": {
         "dependencies": {
           "Microsoft.Extensions.Primitives": "8.0.0"
-        }
-      },
-      "Microsoft.Extensions.Configuration.Binder/8.0.1": {
-        "dependencies": {
-          "Microsoft.Extensions.Configuration.Abstractions": "8.0.0"
-        },
-        "runtime": {
-          "lib/net8.0/Microsoft.Extensions.Configuration.Binder.dll": {
-            "assemblyVersion": "8.0.0.0",
-            "fileVersion": "8.0.123.58001"
-          }
         }
       },
       "Microsoft.Extensions.DependencyInjection/8.0.0": {
@@ -1125,18 +1110,6 @@
           "System.Threading": "4.3.0",
           "System.Xml.ReaderWriter": "4.3.0"
         }
-      },
-      "comissions.app.database/1.0.0": {
-        "dependencies": {
-          "Microsoft.EntityFrameworkCore": "8.0.1",
-          "Microsoft.Extensions.Configuration": "8.0.0",
-          "Microsoft.Extensions.Configuration.Binder": "8.0.1",
-          "Npgsql.EntityFrameworkCore.PostgreSQL": "8.0.0",
-          "Npgsql.EntityFrameworkCore.PostgreSQL.Design": "1.1.0"
-        },
-        "runtime": {
-          "comissions.app.database.dll": {}
-        }
       }
     }
   },
@@ -1230,26 +1203,12 @@
       "path": "microsoft.extensions.caching.memory/8.0.0",
       "hashPath": "microsoft.extensions.caching.memory.8.0.0.nupkg.sha512"
     },
-    "Microsoft.Extensions.Configuration/8.0.0": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-0J/9YNXTMWSZP2p2+nvl8p71zpSwokZXZuJW+VjdErkegAnFdO1XlqtA62SJtgVYHdKu3uPxJHcMR/r35HwFBA==",
-      "path": "microsoft.extensions.configuration/8.0.0",
-      "hashPath": "microsoft.extensions.configuration.8.0.0.nupkg.sha512"
-    },
     "Microsoft.Extensions.Configuration.Abstractions/8.0.0": {
       "type": "package",
       "serviceable": true,
       "sha512": "sha512-3lE/iLSutpgX1CC0NOW70FJoGARRHbyKmG7dc0klnUZ9Dd9hS6N/POPWhKhMLCEuNN5nXEY5agmlFtH562vqhQ==",
       "path": "microsoft.extensions.configuration.abstractions/8.0.0",
       "hashPath": "microsoft.extensions.configuration.abstractions.8.0.0.nupkg.sha512"
-    },
-    "Microsoft.Extensions.Configuration.Binder/8.0.1": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-2UKFJnLiBt7Od6nCnTqP9rTIUNhzmn9Hv1l2FchyKbz8xieB9ULwZTbQZMw+M24Qw3F5dzzH1U9PPleN0LNLOQ==",
-      "path": "microsoft.extensions.configuration.binder/8.0.1",
-      "hashPath": "microsoft.extensions.configuration.binder.8.0.1.nupkg.sha512"
     },
     "Microsoft.Extensions.DependencyInjection/8.0.0": {
       "type": "package",
@@ -1978,11 +1937,6 @@
       "sha512": "sha512-5zJ0XDxAIg8iy+t4aMnQAu0MqVbqyvfoUVl1yDV61xdo3Vth45oA2FoY4pPkxYAH5f8ixpmTqXeEIya95x0aCQ==",
       "path": "system.xml.xdocument/4.3.0",
       "hashPath": "system.xml.xdocument.4.3.0.nupkg.sha512"
-    },
-    "comissions.app.database/1.0.0": {
-      "type": "project",
-      "serviceable": false,
-      "sha512": ""
     }
   }
 }

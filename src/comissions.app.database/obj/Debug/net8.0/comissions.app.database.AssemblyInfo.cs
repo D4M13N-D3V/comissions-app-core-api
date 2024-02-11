@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("comissions.app.database")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+5036eaa5f6e294c1aefc28119d38568cfbf3a553")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+7d6ca309de4b95217468fc190ac2465eebaeb070")]
 [assembly: System.Reflection.AssemblyProductAttribute("comissions.app.database")]
 [assembly: System.Reflection.AssemblyTitleAttribute("comissions.app.database")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

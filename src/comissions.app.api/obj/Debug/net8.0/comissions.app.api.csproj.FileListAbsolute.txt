@@ -83,7 +83,6 @@
 /home/damienostler/Documents/Github Repositories/comissions.app/core-api/src/comissions.app.api/bin/Debug/net8.0/Microsoft.EntityFrameworkCore.Abstractions.dll
 /home/damienostler/Documents/Github Repositories/comissions.app/core-api/src/comissions.app.api/bin/Debug/net8.0/Microsoft.EntityFrameworkCore.Relational.dll
 /home/damienostler/Documents/Github Repositories/comissions.app/core-api/src/comissions.app.api/bin/Debug/net8.0/Microsoft.EntityFrameworkCore.Relational.Design.dll
-/home/damienostler/Documents/Github Repositories/comissions.app/core-api/src/comissions.app.api/bin/Debug/net8.0/Microsoft.Extensions.Configuration.Binder.dll
 /home/damienostler/Documents/Github Repositories/comissions.app/core-api/src/comissions.app.api/bin/Debug/net8.0/Microsoft.IdentityModel.Abstractions.dll
 /home/damienostler/Documents/Github Repositories/comissions.app/core-api/src/comissions.app.api/bin/Debug/net8.0/Microsoft.IdentityModel.JsonWebTokens.dll
 /home/damienostler/Documents/Github Repositories/comissions.app/core-api/src/comissions.app.api/bin/Debug/net8.0/Microsoft.IdentityModel.Logging.dll
@@ -111,8 +110,6 @@
 /home/damienostler/Documents/Github Repositories/comissions.app/core-api/src/comissions.app.api/bin/Debug/net8.0/runtimes/win/lib/net6.0/System.Drawing.Common.dll
 /home/damienostler/Documents/Github Repositories/comissions.app/core-api/src/comissions.app.api/bin/Debug/net8.0/runtimes/win/lib/net6.0/System.Security.Cryptography.ProtectedData.dll
 /home/damienostler/Documents/Github Repositories/comissions.app/core-api/src/comissions.app.api/bin/Debug/net8.0/runtimes/win/lib/net6.0/System.Windows.Extensions.dll
-/home/damienostler/Documents/Github Repositories/comissions.app/core-api/src/comissions.app.api/bin/Debug/net8.0/comissions.app.database.dll
-/home/damienostler/Documents/Github Repositories/comissions.app/core-api/src/comissions.app.api/bin/Debug/net8.0/comissions.app.database.pdb
 /home/damienostler/Documents/Github Repositories/comissions.app/core-api/src/comissions.app.api/obj/Debug/net8.0/comissions.app.api.csproj.AssemblyReference.cache
 /home/damienostler/Documents/Github Repositories/comissions.app/core-api/src/comissions.app.api/obj/Debug/net8.0/comissions.app.api.GeneratedMSBuildEditorConfig.editorconfig
 /home/damienostler/Documents/Github Repositories/comissions.app/core-api/src/comissions.app.api/obj/Debug/net8.0/comissions.app.api.AssemblyInfoInputs.cache
