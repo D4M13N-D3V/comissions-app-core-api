@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "0ovJ89cSIIKcoaI7jEtZVT5VoonxhRyWCL4Fd7sA8R0NhkCKrgSIlzXMETVistbAjiqh/YxBhGXb44dV7lDSIw==",
+  "dgSpecHash": "JG4xwrqqwDq6mlDJ8oMNHwddT94Cw99daojZkDvfxJZCyTUQi9YlvWs/fTwI6T/zQP20Ww5rxA81wc0sTbrfyQ==",
   "success": true,
   "projectFilePath": "/home/damienostler/Documents/Github Repositories/comissions.app/core-api/src/comissions.app.api/comissions.app.api.csproj",
   "expectedPackageFiles": [
@@ -16,9 +16,7 @@
     "/home/damienostler/.nuget/packages/microsoft.extensions.apidescription.server/6.0.5/microsoft.extensions.apidescription.server.6.0.5.nupkg.sha512",
     "/home/damienostler/.nuget/packages/microsoft.extensions.caching.abstractions/8.0.0/microsoft.extensions.caching.abstractions.8.0.0.nupkg.sha512",
     "/home/damienostler/.nuget/packages/microsoft.extensions.caching.memory/8.0.0/microsoft.extensions.caching.memory.8.0.0.nupkg.sha512",
-    "/home/damienostler/.nuget/packages/microsoft.extensions.configuration/8.0.0/microsoft.extensions.configuration.8.0.0.nupkg.sha512",
     "/home/damienostler/.nuget/packages/microsoft.extensions.configuration.abstractions/8.0.0/microsoft.extensions.configuration.abstractions.8.0.0.nupkg.sha512",
-    "/home/damienostler/.nuget/packages/microsoft.extensions.configuration.binder/8.0.1/microsoft.extensions.configuration.binder.8.0.1.nupkg.sha512",
     "/home/damienostler/.nuget/packages/microsoft.extensions.dependencyinjection/8.0.0/microsoft.extensions.dependencyinjection.8.0.0.nupkg.sha512",
     "/home/damienostler/.nuget/packages/microsoft.extensions.dependencyinjection.abstractions/8.0.0/microsoft.extensions.dependencyinjection.abstractions.8.0.0.nupkg.sha512",
     "/home/damienostler/.nuget/packages/microsoft.extensions.logging/8.0.0/microsoft.extensions.logging.8.0.0.nupkg.sha512",

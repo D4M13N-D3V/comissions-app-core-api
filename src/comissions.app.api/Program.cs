@@ -145,6 +145,9 @@ builder.Services.AddSingleton<IAuthorizationHandler, HasScopeHandler>();
 
 
 var app = builder.Build();
+
+var dbContext = app.Services.GetService<ApplicationDbContext>();
+dbContext.Database.Migrate();
 app.UseSwagger();
 app.UseSwaggerUI(settings =>
 {

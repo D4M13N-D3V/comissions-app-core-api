@@ -25,5 +25,17 @@
             <param name="userId">The ID of the user to accept the request for.</param>
             <returns>The new seller profile.</returns>
         </member>
+        <member name="T:ArtPlatform.Database.Migrations.Initial">
+            <inheritdoc />
+        </member>
+        <member name="M:ArtPlatform.Database.Migrations.Initial.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:ArtPlatform.Database.Migrations.Initial.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:ArtPlatform.Database.Migrations.Initial.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
     </members>
 </doc>
