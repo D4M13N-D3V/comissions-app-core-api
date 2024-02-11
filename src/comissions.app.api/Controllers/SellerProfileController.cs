@@ -68,7 +68,7 @@ public class SellerProfileController : Controller
     
     [HttpPost]
     [Authorize("write:seller-profile")]
-    public async Task<IActionResult> RequestSellerProfile(SellerProfileModel model)
+    public async Task<IActionResult> RequestSellerProfile()
     {
         var userId = User.GetUserId();
         
