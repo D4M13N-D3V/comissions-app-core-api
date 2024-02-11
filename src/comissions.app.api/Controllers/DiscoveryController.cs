@@ -3,6 +3,7 @@ using comissions.app.api.Models.SellerService;
 using ArtPlatform.Database;
 using comissions.app.api.Models.Discovery;
 using comissions.app.api.Models.PortfolioModel;
+using comissions.app.api.Services.Storage;
 using comissions.app.database;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -14,10 +15,12 @@ namespace comissions.app.api.Controllers;
 public class DiscoveryController : Controller
 {
     private readonly ApplicationDbContext _dbContext;
+    private readonly IStorageService _storageService;
 
-    public DiscoveryController(ApplicationDbContext dbContext)
+    public DiscoveryController(ApplicationDbContext dbContext, IStorageService storageService)
     {
         _dbContext = dbContext;
+        _storageService = storageService;
     }
     
     
@@ -76,6 +79,24 @@ public class DiscoveryController : Controller
             .Where(x=>x.SellerProfileId==sellerId)
             .CountAsync();
         return Ok(sellerPortfolio);
+    }
+    
+    [HttpGet]
+    [Route("Sellers/{sellerId:int}/Portfolio/{portfolioId:int}")]
+    public async Task<IActionResult> GetSellerPortfolioPiece(int sellerId, int portfolioId)
+    {
+        var seller = await _dbContext.UserSellerProfiles
+            .Include(x=>x.User)
+            .FirstOrDefaultAsync(x=>x.Id==sellerId);
+        if(seller==null)
+            return NotFound("Seller not found.");
+        var sellerPortfolio = await _dbContext.SellerProfilePortfolioPieces
+            .FirstOrDefaultAsync(x=>x.Id==portfolioId);
+        if(sellerPortfolio==null)
+            return NotFound("Portfolio piece not found.");
+        
+        var content = await _storageService.DownloadImageAsync(sellerPortfolio.FileReference);
+        return new FileStreamResult(content, "application/octet-stream");
     }
     
     [HttpGet]
