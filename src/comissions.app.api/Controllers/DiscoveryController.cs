@@ -2,6 +2,7 @@ using comissions.app.api.Models.SellerProfile;
 using comissions.app.api.Models.SellerService;
 using ArtPlatform.Database;
 using comissions.app.api.Models.Discovery;
+using comissions.app.api.Models.PortfolioModel;
 using comissions.app.database;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -30,6 +31,86 @@ public class DiscoveryController : Controller
             .Skip(offset).Take(pageSize).ToListAsync();
         var result = sellers.Select(x=>x.ToDiscoveryModel()).ToList();
         return Ok(result);
+    }
+    
+    [HttpGet]
+    [Route("Sellers/{sellerId:int}")]
+    public async Task<IActionResult> GetSeller(int sellerId)
+    {
+        var seller = await _dbContext.UserSellerProfiles
+            .Include(x=>x.User)
+            .FirstOrDefaultAsync(x=>x.Id==sellerId);
+        if(seller==null)
+            return NotFound("Seller not found.");
+        var result = seller.ToDiscoveryModel();
+        return Ok(result);
+    }
+    
+    [HttpGet]
+    [Route("Sellers/{sellerId:int}/Portfolio")]
+    public async Task<IActionResult> GetSellerPortfolio(int sellerId, int offset = 0, int pageSize = 10)
+    {
+        var seller = await _dbContext.UserSellerProfiles
+            .Include(x=>x.User)
+            .FirstOrDefaultAsync(x=>x.Id==sellerId);
+        if(seller==null)
+            return NotFound("Seller not found.");
+        var sellerPortfolio = await _dbContext.SellerProfilePortfolioPieces
+            .Where(x=>x.SellerProfileId==sellerId)
+            .Skip(offset).Take(pageSize).ToListAsync();
+        var result = sellerPortfolio.Select(x=>x.ToModel()).ToList();
+        return Ok(result);
+    }
+    
+    [HttpGet]
+    [Route("Sellers/{sellerId:int}/Portfolio/Count")]
+    public async Task<IActionResult> GetSellerPortfolioCount(int sellerId)
+    {
+        var seller = await _dbContext.UserSellerProfiles
+            .Include(x=>x.User)
+            .FirstOrDefaultAsync(x=>x.Id==sellerId);
+        if(seller==null)
+            return NotFound("Seller not found.");
+        var sellerPortfolio = await _dbContext.SellerProfilePortfolioPieces
+            .Where(x=>x.SellerProfileId==sellerId)
+            .CountAsync();
+        return Ok(sellerPortfolio);
+    }
+    
+    [HttpGet]
+    [Route("Sellers/{sellerId:int}/Reviews")]
+    public async Task<IActionResult> GetSellerReviews(int sellerId, int offset = 0, int pageSize = 10)
+    {
+        var seller = await _dbContext.UserSellerProfiles
+            .Include(x=>x.User)
+            .FirstOrDefaultAsync(x=>x.Id==sellerId);
+        if(seller==null)
+            return NotFound("Seller not found.");
+        var sellerReviews = await _dbContext.SellerServiceOrderReviews
+            .Where(x=>x.SellerService.SellerProfileId==sellerId)
+            .Skip(offset).Take(pageSize).ToListAsync();
+        var result = sellerReviews.Select(x=> new DiscoveryReviewModel()
+        {
+            Rating = x.Rating,
+            WriterDisplayName = x.Reviewer.DisplayName,
+            WriterId = x.ReviewerId,
+        }).ToList();
+        return Ok(result);
+    }
+    
+    [HttpGet]
+    [Route("Sellers/{sellerId:int}/Reviews/Count")]
+    public async Task<IActionResult> GetSellerReviewsCount(int sellerId)
+    {
+        var seller = await _dbContext.UserSellerProfiles
+            .Include(x=>x.User)
+            .FirstOrDefaultAsync(x=>x.Id==sellerId);
+        if(seller==null)
+            return NotFound("Seller not found.");
+        var sellerReviews = await _dbContext.SellerServiceOrderReviews
+            .Where(x=>x.SellerService.SellerProfileId==sellerId)
+            .CountAsync();
+        return Ok(sellerReviews);
     }
     
     [HttpGet]
