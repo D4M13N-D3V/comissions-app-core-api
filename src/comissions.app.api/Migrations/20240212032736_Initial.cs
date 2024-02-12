@@ -5,7 +5,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace ArtPlatform.Database.Migrations
+namespace comissions.app.api.Migrations
 {
     /// <inheritdoc />
     public partial class Initial : Migration
@@ -178,34 +178,6 @@ namespace ArtPlatform.Database.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "SellerServiceOrderMessages",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    SellerServiceOrderId = table.Column<int>(type: "integer", nullable: false),
-                    SenderId = table.Column<string>(type: "text", nullable: false),
-                    Message = table.Column<string>(type: "text", nullable: false),
-                    SentAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_SellerServiceOrderMessages", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_SellerServiceOrderMessages_SellerServiceOrders_SellerServic~",
-                        column: x => x.SellerServiceOrderId,
-                        principalTable: "SellerServiceOrders",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_SellerServiceOrderMessages_Users_SenderId",
-                        column: x => x.SenderId,
-                        principalTable: "Users",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "SellerServiceOrderReviews",
                 columns: table => new
                 {
@@ -241,26 +213,6 @@ namespace ArtPlatform.Database.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
-            migrationBuilder.CreateTable(
-                name: "SellerServiceOrderMessageAttachments",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    SellerServiceOrderMessageId = table.Column<int>(type: "integer", nullable: false),
-                    FileReference = table.Column<string>(type: "text", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_SellerServiceOrderMessageAttachments", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_SellerServiceOrderMessageAttachments_SellerServiceOrderMess~",
-                        column: x => x.SellerServiceOrderMessageId,
-                        principalTable: "SellerServiceOrderMessages",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
             migrationBuilder.CreateIndex(
                 name: "IX_SellerProfilePortfolioPieces_SellerProfileId",
                 table: "SellerProfilePortfolioPieces",
@@ -275,21 +227,6 @@ namespace ArtPlatform.Database.Migrations
                 name: "IX_SellerProfileRequests_UserId",
                 table: "SellerProfileRequests",
                 column: "UserId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_SellerServiceOrderMessageAttachments_SellerServiceOrderMess~",
-                table: "SellerServiceOrderMessageAttachments",
-                column: "SellerServiceOrderMessageId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_SellerServiceOrderMessages_SellerServiceOrderId",
-                table: "SellerServiceOrderMessages",
-                column: "SellerServiceOrderId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_SellerServiceOrderMessages_SenderId",
-                table: "SellerServiceOrderMessages",
-                column: "SenderId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_SellerServiceOrderReviews_ReviewerId",
@@ -343,13 +280,7 @@ namespace ArtPlatform.Database.Migrations
                 name: "SellerProfileRequests");
 
             migrationBuilder.DropTable(
-                name: "SellerServiceOrderMessageAttachments");
-
-            migrationBuilder.DropTable(
                 name: "SellerServiceOrderReviews");
-
-            migrationBuilder.DropTable(
-                name: "SellerServiceOrderMessages");
 
             migrationBuilder.DropTable(
                 name: "SellerServiceOrders");

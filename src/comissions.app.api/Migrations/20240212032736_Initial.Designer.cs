@@ -10,10 +10,10 @@ using comissions.app.database;
 
 #nullable disable
 
-namespace ArtPlatform.Database.Migrations
+namespace comissions.app.api.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240210073843_Initial")]
+    [Migration("20240212032736_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -158,59 +158,6 @@ namespace ArtPlatform.Database.Migrations
                     b.HasIndex("SellerServiceId");
 
                     b.ToTable("SellerServiceOrders");
-                });
-
-            modelBuilder.Entity("comissions.app.database.Entities.SellerServiceOrderMessage", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Message")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<int>("SellerServiceOrderId")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("SenderId")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<DateTime>("SentAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("SellerServiceOrderId");
-
-                    b.HasIndex("SenderId");
-
-                    b.ToTable("SellerServiceOrderMessages");
-                });
-
-            modelBuilder.Entity("comissions.app.database.Entities.SellerServiceOrderMessageAttachment", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("FileReference")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<int>("SellerServiceOrderMessageId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("SellerServiceOrderMessageId");
-
-                    b.ToTable("SellerServiceOrderMessageAttachments");
                 });
 
             modelBuilder.Entity("comissions.app.database.Entities.SellerServiceOrderReview", b =>
@@ -424,36 +371,6 @@ namespace ArtPlatform.Database.Migrations
                     b.Navigation("SellerService");
                 });
 
-            modelBuilder.Entity("comissions.app.database.Entities.SellerServiceOrderMessage", b =>
-                {
-                    b.HasOne("comissions.app.database.Entities.SellerServiceOrder", "SellerServiceOrder")
-                        .WithMany("Messages")
-                        .HasForeignKey("SellerServiceOrderId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("comissions.app.database.Entities.User", "Sender")
-                        .WithMany()
-                        .HasForeignKey("SenderId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("SellerServiceOrder");
-
-                    b.Navigation("Sender");
-                });
-
-            modelBuilder.Entity("comissions.app.database.Entities.SellerServiceOrderMessageAttachment", b =>
-                {
-                    b.HasOne("comissions.app.database.Entities.SellerServiceOrderMessage", "SellerServiceOrderMessage")
-                        .WithMany("Attachments")
-                        .HasForeignKey("SellerServiceOrderMessageId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("SellerServiceOrderMessage");
-                });
-
             modelBuilder.Entity("comissions.app.database.Entities.SellerServiceOrderReview", b =>
                 {
                     b.HasOne("comissions.app.database.Entities.User", "Reviewer")
@@ -501,14 +418,7 @@ namespace ArtPlatform.Database.Migrations
 
             modelBuilder.Entity("comissions.app.database.Entities.SellerServiceOrder", b =>
                 {
-                    b.Navigation("Messages");
-
                     b.Navigation("Reviews");
-                });
-
-            modelBuilder.Entity("comissions.app.database.Entities.SellerServiceOrderMessage", b =>
-                {
-                    b.Navigation("Attachments");
                 });
 
             modelBuilder.Entity("comissions.app.database.Entities.User", b =>

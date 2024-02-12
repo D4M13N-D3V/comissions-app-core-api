@@ -58,26 +58,6 @@ public class AdminOrdersController:ControllerBase
         return Ok(order);
     }
     
-    [HttpPost("{orderId:int}")]
-    public async Task<IActionResult> SendMessage(int orderId, [FromBody]string message)
-    {
-        var order = await _dbContext.SellerServiceOrders.Include(x=>x.Seller).ThenInclude(x=>x.User).Include(x=>x.Buyer)
-            .FirstOrDefaultAsync(x=>x.Id==orderId);
-
-        if (order == null)
-            return NotFound("Order not found.");
-        
-        order.Messages.Add(new SellerServiceOrderMessage()
-        {
-            Message = message,
-            SenderId = User.GetUserId(),
-            SentAt = DateTime.UtcNow
-        });
-        _dbContext.SellerServiceOrders.Update(order);
-        await _dbContext.SaveChangesAsync();
-        return Ok(order);
-    }
-    
     
     [HttpPut("{orderId:int}/Terminate")]
     public async Task<IActionResult> TerminateOrder(int orderId)
@@ -88,7 +68,7 @@ public class AdminOrdersController:ControllerBase
         if (order == null)
             return NotFound("Order not found.");
         
-        order.Status = EnumOrderStatus.Cancelled;
+        order.Status = EnumOrderStatus.Declined;
         _dbContext.SellerServiceOrders.Update(order);
         await _dbContext.SaveChangesAsync();
         return Ok(order);
