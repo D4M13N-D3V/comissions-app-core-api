@@ -28,7 +28,7 @@ public static class SellerProfileModelExtensions
     }
     public static DiscoverySellerModel ToDiscoveryModel(this UserSellerProfile sellerProfile)
     {
-        var reviews = sellerProfile.SellerServices.SelectMany(x=>x.Reviews).Select(x=>x.ToDiscoveryModel());
+        var reviews = sellerProfile.SellerServices.SelectMany(x => x.Reviews);
         var reviewAverage = reviews.Average(x=>x.Rating);
         
         return new DiscoverySellerModel()
