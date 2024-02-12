@@ -19,6 +19,5 @@ public class SellerServiceOrder
     public virtual UserSellerProfile Seller { get; set; } = null!;
 
     public virtual ICollection<SellerServiceOrderReview> Reviews { get; set; } = new List<SellerServiceOrderReview>();
-    public virtual ICollection<SellerServiceOrderMessage> Messages { get; set; } = new List<SellerServiceOrderMessage>();
     public string? PaymentUrl { get; set; }
 }

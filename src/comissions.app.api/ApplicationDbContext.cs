@@ -45,9 +45,7 @@ public class ApplicationDbContext:DbContext
     public DbSet<SellerProfileRequest> SellerProfileRequests { get; set; }= null!;
     public DbSet<SellerProfilePortfolioPiece> SellerProfilePortfolioPieces { get; set; }= null!;
     public DbSet<SellerService> SellerServices { get; set; }= null!;
-    public DbSet<SellerServiceOrder> SellerServiceOrders { get; set; }= null!;
-    public DbSet<SellerServiceOrderMessage> SellerServiceOrderMessages { get; set; }= null!;
-    public DbSet<SellerServiceOrderMessageAttachment> SellerServiceOrderMessageAttachments { get; set; }= null!;
+    public DbSet<SellerServiceOrder> SellerServiceOrders { get; set; } = null!;
     public DbSet<SellerServiceOrderReview> SellerServiceOrderReviews { get; set; }= null!;
     #endregion
 }

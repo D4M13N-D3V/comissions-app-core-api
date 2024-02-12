@@ -68,111 +68,81 @@ public class SellerOrderController : Controller
             .FirstOrDefaultAsync(x=>x.Id==orderId && x.Seller.UserId==userId);
         if(order==null)
             return NotFound("Order not found.");
-        if(order.Status==EnumOrderStatus.Completed || order.Status== EnumOrderStatus.Cancelled)
+        if(order.Status==EnumOrderStatus.Completed || order.Status== EnumOrderStatus.Declined)
             return BadRequest("Order is already complete.");
         if(order.BuyerId!=userId)
             return BadRequest("You are not the buyer of this order.");
-        if(order.Status!=EnumOrderStatus.Completed && order.Status!= EnumOrderStatus.Cancelled)
+        if(order.Status!=EnumOrderStatus.Completed && order.Status!= EnumOrderStatus.Declined)
             return BadRequest("Order is not in a cancellable state.");
-        order.Status = EnumOrderStatus.Cancelled;
+        order.Status = EnumOrderStatus.Declined;
         order.EndDate = DateTime.UtcNow;
         order = _dbContext.SellerServiceOrders.Update(order).Entity;
         await _dbContext.SaveChangesAsync();
         var result = order.ToModel();
         return Ok(result);
     }
-    
+
     [HttpPut]
     [Authorize("write:seller-orders")]
     [Route("/api/SellerOrders/{orderId:int}/Accept")]
     public async Task<IActionResult> AcceptOrder(int orderId)
     {
         var userId = User.GetUserId();
-        var seller = await _dbContext.UserSellerProfiles.FirstOrDefaultAsync(x=>x.UserId==userId);
-        if(seller==null)
+        var seller = await _dbContext.UserSellerProfiles.FirstOrDefaultAsync(x => x.UserId == userId);
+        if (seller == null)
             return NotFound("User it not a seller.");
-        if(seller.Suspended)
+        if (seller.Suspended)
             return BadRequest("Seller is suspended.");
         var order = await _dbContext.SellerServiceOrders
-            .Include(x=>x.SellerService)
-            .FirstOrDefaultAsync(x=>x.Id==orderId && x.Seller.UserId==userId);
-        if(order==null)
+            .Include(x => x.SellerService)
+            .FirstOrDefaultAsync(x => x.Id == orderId && x.Seller.UserId == userId);
+        if (order == null)
             return NotFound("Order not found.");
-        if(order.Status==EnumOrderStatus.Completed || order.Status== EnumOrderStatus.Cancelled)
+        if (order.Status == EnumOrderStatus.Completed || order.Status == EnumOrderStatus.Declined)
             return BadRequest("Order is already complete.");
-        if(order.BuyerId!=userId)
+        if (order.BuyerId != userId)
             return BadRequest("You are not the buyer of this order.");
-        if(order.Status!=EnumOrderStatus.PendingAcceptance)
+        if (order.Status != EnumOrderStatus.PendingAcceptance)
             return BadRequest("Order has already been accepted.");
-        order.Status = EnumOrderStatus.Waitlist;
+        if (order.Status == EnumOrderStatus.Declined)
+            return BadRequest("Order has already been declined.");
+        order.Status = EnumOrderStatus.WaitingForPayment;
         order = _dbContext.SellerServiceOrders.Update(order).Entity;
         await _dbContext.SaveChangesAsync();
         var result = order.ToModel();
         return Ok(result);
     }
-    
+
     [HttpPut]
     [Authorize("write:seller-orders")]
-    [Route("/api/SellerOrders/{orderId:int}/Start")]
-    public async Task<IActionResult> StartOrder(int orderId)
+    [Route("/api/SellerOrders/{orderId:int}/Decline")]
+    public async Task<IActionResult> DeclineOrder(int orderId)
     {
         var userId = User.GetUserId();
-        var seller = await _dbContext.UserSellerProfiles.FirstOrDefaultAsync(x=>x.UserId==userId);
-        if(seller==null)
+        var seller = await _dbContext.UserSellerProfiles.FirstOrDefaultAsync(x => x.UserId == userId);
+        if (seller == null)
             return NotFound("User it not a seller.");
-        if(seller.Suspended)
+        if (seller.Suspended)
             return BadRequest("Seller is suspended.");
         var order = await _dbContext.SellerServiceOrders
-            .Include(x=>x.SellerService)
-            .FirstOrDefaultAsync(x=>x.Id==orderId && x.Seller.UserId==userId);
-        if(order==null)
+            .Include(x => x.SellerService)
+            .FirstOrDefaultAsync(x => x.Id == orderId && x.Seller.UserId == userId);
+        if (order == null)
             return NotFound("Order not found.");
-        if(order.Status==EnumOrderStatus.Completed || order.Status== EnumOrderStatus.Cancelled)
+        if (order.Status == EnumOrderStatus.Completed || order.Status == EnumOrderStatus.Declined)
             return BadRequest("Order is already complete.");
-        if(order.BuyerId!=userId)
+        if (order.BuyerId != userId)
             return BadRequest("You are not the buyer of this order.");
-        if(order.Status!=EnumOrderStatus.Waitlist)
-            return BadRequest("Order has already been started.");
-        order.Status = EnumOrderStatus.DiscussingRequirements;
+        if (order.Status != EnumOrderStatus.PendingAcceptance)
+            return BadRequest("Order has already been accepted or declined.");
+        order.Status = EnumOrderStatus.Declined;
         order = _dbContext.SellerServiceOrders.Update(order).Entity;
         await _dbContext.SaveChangesAsync();
         var result = order.ToModel();
         return Ok(result);
     }
-    
-    [HttpPut]
-    [Authorize("write:seller-orders")]
-    [Route("/api/SellerOrders/{orderId:int}/AdjustPrice")]
-    public async Task<IActionResult> AdjustPrice(int orderId,[FromQuery]double price)
-    {
-        var userId = User.GetUserId();
-        var seller = await _dbContext.UserSellerProfiles.FirstOrDefaultAsync(x=>x.UserId==userId);
-        if(seller==null)
-            return NotFound("User it not a seller.");
-        if(seller.Suspended)
-            return BadRequest("Seller is suspended.");
-        
-        var order = await _dbContext.SellerServiceOrders
-            .Include(x=>x.Seller)
-            .Include(x=>x.SellerService)
-            .FirstOrDefaultAsync(x=>x.Id==orderId && x.Seller.UserId==userId);
-        if(order==null)
-            return NotFound("Order not found.");
-        if(order.Seller.UserId!=userId)
-            return BadRequest("You are not the seller of this order.");
-        if(order.Status==EnumOrderStatus.Completed || order.Status== EnumOrderStatus.Cancelled)
-            return BadRequest("Order is already complete.");
-        if(order.Status>EnumOrderStatus.DiscussingRequirements)
-            return BadRequest("Order requirements and price have already been confirmed.");
-        if(order.Status<EnumOrderStatus.DiscussingRequirements)
-            return BadRequest("Order has not been started.");
-        order.Price = price;
-        order = _dbContext.SellerServiceOrders.Update(order).Entity;
-        await _dbContext.SaveChangesAsync();
-        var result = order.ToModel();
-        return Ok(result);
-    }
-    
+
+
     [HttpPut]
     [Authorize("write:seller-orders")]
     [Route("/api/SellerOrders/{orderId:int}/CompleteRevision")]
@@ -192,155 +162,16 @@ public class SellerOrderController : Controller
             return NotFound("Order not found.");
         if(order.Seller.UserId!=userId)
             return BadRequest("You are not the seller of this order.");
-        if(order.Status==EnumOrderStatus.Completed || order.Status== EnumOrderStatus.Cancelled)
+        if(order.Status==EnumOrderStatus.Completed || order.Status== EnumOrderStatus.Declined)
             return BadRequest("Order is already complete.");
         if(order.Status<EnumOrderStatus.InProgress)
             return BadRequest("Order has not been started.");
         if(order.Status>EnumOrderStatus.InProgress)
             return BadRequest("Order is pending review already.");
-        order.Status = EnumOrderStatus.PendingReview;
+        order.Status = EnumOrderStatus.Completed;
         order = _dbContext.SellerServiceOrders.Update(order).Entity;
         await _dbContext.SaveChangesAsync();
         var result = order.ToModel();
         return Ok(result);
-    }
-    
-    [HttpGet]
-    [Authorize("read:orders")]
-    [Route("/api/SellerOrders/{orderId:int}/Messages")]
-    public async Task<IActionResult> GetMessages(int orderId, int offset = 0, int pageSize = 10)
-    {
-        var userId = User.GetUserId();
-        var order = await _dbContext.SellerServiceOrders
-            .Include(x=>x.Seller)
-            .FirstOrDefaultAsync(x=>x.Id==orderId && x.Seller.UserId==userId);
-        var seller = await _dbContext.UserSellerProfiles.FirstOrDefaultAsync(x=>x.UserId==userId);
-        if(seller==null)
-            return NotFound("User it not a seller.");
-        if(seller.Suspended)
-            return BadRequest("Seller is suspended.");
-        if(order==null)
-            return NotFound("Order not found.");
-        if(order.BuyerId!=userId && order.Seller.UserId!=userId)
-            return BadRequest("You are not the buyer or seller of this order.");
-        var messages = _dbContext.SellerServiceOrderMessages
-            .Include(x=>x.Sender)
-            .Include(x=>x.Attachments)
-            .OrderBy(x=>x.SentAt)
-            .Where(x=>x.SellerServiceOrderId==orderId)
-            .Skip(offset).Take(pageSize).ToList();
-        var result = messages.Select(x=>x.ToModel()).ToList();
-        return Ok(result);
-    }
-    [HttpPost]
-    [Authorize("write:orders")]
-    [Route("/api/SellerOrders/{orderId:int}/Message")]
-    public async Task<IActionResult> Message(int orderId, [FromBody] SellerServiceOrderMessageModel model)
-    {
-        var userId = User.GetUserId();
-        var seller = await _dbContext.UserSellerProfiles.FirstOrDefaultAsync(x=>x.UserId==userId);
-        if(seller==null)
-            return NotFound("User it not a seller.");
-        if(seller.Suspended)
-            return BadRequest("Seller is suspended.");
-        var order = await _dbContext.SellerServiceOrders
-            .Include(x=>x.Messages)
-            .Include(x=>x.Seller)
-            .Include(x=>x.SellerService)
-            .FirstOrDefaultAsync(x=>x.Id==orderId && x.Seller.UserId==userId);
-        if(order==null)
-            return NotFound("Order not found.");
-        if(order.Status==EnumOrderStatus.Completed || order.Status==EnumOrderStatus.Cancelled)
-            return BadRequest("Order is already complete.");
-        if(order.BuyerId!=userId && order.Seller.UserId!=userId)
-            return BadRequest("You are not the buyer or seller of this order.");
-        if(order.Status<EnumOrderStatus.Waitlist)
-            return BadRequest("Order is not accepted.");
-        var message = new SellerServiceOrderMessage()
-        {
-            SellerServiceOrderId = orderId,
-            Message = model.Message,
-            SentAt = DateTime.UtcNow,
-            SenderId = userId,
-            Sender = await _dbContext.Users.FirstOrDefaultAsync(x=>x.Id==userId),
-        };
-        var dbMessage = _dbContext.SellerServiceOrderMessages.Add(message).Entity;
-        await _dbContext.SaveChangesAsync();
-        return Ok();
-    }
-    
-    [HttpPost]
-    [Authorize("write:orders")]
-    [Route("/api/SellerOrders/{orderId:int}/Message/{messageId:int}/Attachment")]
-    public async Task<IActionResult> MessageAttachment(int orderId, int messageId,IFormFile file)
-    {
-        var userId = User.GetUserId();
-        var seller = await _dbContext.UserSellerProfiles.FirstOrDefaultAsync(x=>x.UserId==userId);
-        if(seller==null)
-            return NotFound("User it not a seller.");
-        if(seller.Suspended)
-            return BadRequest("Seller is suspended.");
-        var order = await _dbContext.SellerServiceOrders
-            .Include(x=>x.Messages)
-            .Include(x=>x.Seller)
-            .Include(x=>x.SellerService)
-            .FirstOrDefaultAsync(x=>x.Id==orderId && x.Seller.UserId==userId);
-        if(order==null)
-            return NotFound("Order not found.");
-        if(order.BuyerId!=userId && order.Seller.UserId!=userId)
-            return BadRequest("You are not the buyer or seller of this order.");
-        if(order.Status==EnumOrderStatus.Completed || order.Status==EnumOrderStatus.Cancelled)
-            return BadRequest("Order is already complete.");
-        if(order.Status<EnumOrderStatus.Waitlist)
-            return BadRequest("Order is not accepted.");
-        
-        var message = _dbContext.SellerServiceOrderMessages.First(x=>x.Id==messageId && x.SellerServiceOrderId==orderId);
-        if(message==null)
-            return BadRequest("Message does not exist or does not belong to this order.");
-        
-        var url = await _storageService.UploadImageAsync(file, Guid.NewGuid().ToString());
-        var attachment = new SellerServiceOrderMessageAttachment()
-        {
-            SellerServiceOrderMessageId = message.Id,
-            FileReference = url
-        };
-        _dbContext.SellerServiceOrderMessageAttachments.Add(attachment);
-        await _dbContext.SaveChangesAsync();
-        return Ok();
-    }
-    [HttpGet]
-    [Authorize("read:orders")]
-    [Route("/api/SellerOrders/{orderId:int}/Message/{messageId:int}/Attachment")]
-    public async Task<IActionResult> MessageAttachments(int orderId, int messageId)
-    {
-        var userId = User.GetUserId();
-        var seller = await _dbContext.UserSellerProfiles.FirstOrDefaultAsync(x=>x.UserId==userId);
-        if(seller==null)
-            return NotFound("User it not a seller.");
-        if(seller.Suspended)
-            return BadRequest("Seller is suspended.");
-        var order = await _dbContext.SellerServiceOrders
-            .Include(x=>x.Messages)
-            .Include(x=>x.Seller)
-            .Include(x=>x.SellerService)
-            .FirstOrDefaultAsync(x=>x.Id==orderId);
-        if(order==null)
-            return NotFound("Order not found.");
-        if(order.BuyerId!=userId && order.Seller.UserId!=userId)
-            return BadRequest("You are not the buyer or seller of this order.");
-        if(order.Status==EnumOrderStatus.Completed || order.Status==EnumOrderStatus.Cancelled)
-            return BadRequest("Order is already complete.");
-        if(order.Status<EnumOrderStatus.Waitlist)
-            return BadRequest("Order is not accepted.");
-        
-        var message = _dbContext.SellerServiceOrderMessages.Include(x=>x.Attachments)
-            .First(x=>x.Id==messageId && x.SellerServiceOrderId==orderId);
-        if(message==null)
-            return BadRequest("Message does not exist or does not belong to this order.");
-        var attachment = message.Attachments.FirstOrDefault();
-        if(attachment==null)
-            return BadRequest("Message does not have an attachment.");
-        var content = await _storageService.DownloadImageAsync(message.Attachments.First().FileReference);
-        return new FileStreamResult(content, "application/octet-stream");
     }
 }
