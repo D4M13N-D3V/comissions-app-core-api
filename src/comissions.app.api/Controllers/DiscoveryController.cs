@@ -164,6 +164,24 @@ public class DiscoveryController : Controller
     }
     
     [HttpGet]
+    [Route("Sellers/{sellerId:int}/Services/{serviceId:int}")]
+    public async Task<IActionResult> GetSellerService(int sellerId, int serviceId)
+    {
+        var seller = await _dbContext.UserSellerProfiles
+            .Include(x=>x.User)
+            .FirstOrDefaultAsync(x=>x.Id==sellerId);
+        if(seller==null)
+            return NotFound("Seller not found.");
+        var sellerService = await _dbContext.SellerServices
+            .Include(x=>x.Reviews)
+            .FirstOrDefaultAsync(x=>x.Id==serviceId);
+        if(sellerService==null)
+            return NotFound("Seller service not found.");
+        var result = sellerService.ToModel();
+        return Ok(result);
+    }
+    
+    [HttpGet]
     [Route("Sellers/{sellerId:int}/Services/Count")]
     public async Task<IActionResult> GetSellerServicesCount(int sellerId)
     {
