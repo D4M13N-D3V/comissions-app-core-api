@@ -11,7 +11,7 @@ This is a application that provides a platform to allow creatives to sell their 
   - [Table of Contents](#table-of-contents)
   - [Prerequisites](#prerequisites)
   - [Getting Started](#getting-started)
-    - [Clone the Repository](#clone-the-repository)
+    - [Clone the Repository](#clone-the-repository) 
     - [Build and Run with Docker](#build-and-run-with-docker)
   - [Usage](#usage)
   - [Swagger UI](#swagger-ui)
