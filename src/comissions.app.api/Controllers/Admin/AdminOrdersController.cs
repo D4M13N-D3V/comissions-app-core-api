@@ -53,7 +53,7 @@ public class AdminOrdersController:ControllerBase
             .FirstOrDefaultAsync(x=>x.Id==orderId);
 
         if (order == null)
-            return NotFound("Order not found.");
+            return NotFound();
         
         return Ok(order);
     }

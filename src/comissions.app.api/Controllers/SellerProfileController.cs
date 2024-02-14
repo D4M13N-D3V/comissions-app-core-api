@@ -40,8 +40,8 @@ public class SellerProfileController : Controller
         {
             var sellerProfileRequest = await _dbContext.SellerProfileRequests.FirstOrDefaultAsync(request=>request.UserId==userId && request.Accepted==false);
             if(sellerProfileRequest!=null)
-                return BadRequest("Account has requested to be a seller and not been approved yet.");
-            return Unauthorized("Account is not a seller.");
+                return BadRequest();
+            return Unauthorized();
         }
         var result = sellerProfile.ToModel();
         return Ok(result);
@@ -57,8 +57,8 @@ public class SellerProfileController : Controller
         {
             var sellerProfileRequest = await _dbContext.SellerProfileRequests.FirstOrDefaultAsync(request=>request.UserId==userId && request.Accepted==false);
             if(sellerProfileRequest!=null)
-                return BadRequest("Account has requested to be a seller and not been approved yet.");
-            return Unauthorized("Account is not a seller.");
+                return BadRequest();
+            return Unauthorized();
         }
         var updatedSellerProfile = model.ToModel(existingSellerProfile);
         updatedSellerProfile = _dbContext.UserSellerProfiles.Update(updatedSellerProfile).Entity;
@@ -76,7 +76,7 @@ public class SellerProfileController : Controller
         var existingSellerProfile = await _dbContext.UserSellerProfiles.FirstOrDefaultAsync(sellerProfile=>sellerProfile.UserId==userId);
         if (existingSellerProfile != null)
         {
-            return Unauthorized("Account is already a seller.");
+            return Unauthorized();
         }
         
         var sellerProfileRequest = await _dbContext.SellerProfileRequests.FirstOrDefaultAsync(request=>request.UserId==userId);
@@ -104,11 +104,11 @@ public class SellerProfileController : Controller
         {
             var sellerProfileRequest = await _dbContext.SellerProfileRequests.FirstOrDefaultAsync(request=>request.UserId==userId && request.Accepted==false);
             if(sellerProfileRequest!=null)
-                return BadRequest("Account has requested to be a seller and not been approved yet.");
-            return Unauthorized("Account is not a seller.");
+                return BadRequest();
+            return Unauthorized();
         }
         if(existingSellerProfile.Suspended)
-            return BadRequest("Seller is suspended.");
+            return BadRequest();
 
         var portfolio = await _dbContext.SellerProfilePortfolioPieces
             .FirstAsync(x => x.SellerProfileId == existingSellerProfile.Id && x.Id==portfolioId);
@@ -127,11 +127,11 @@ public class SellerProfileController : Controller
         {
             var sellerProfileRequest = await _dbContext.SellerProfileRequests.FirstOrDefaultAsync(request=>request.UserId==userId && request.Accepted==false);
             if(sellerProfileRequest!=null)
-                return BadRequest("Account has requested to be a seller and not been approved yet.");
-            return Unauthorized("Account is not a seller.");
+                return BadRequest();
+            return Unauthorized();
         }
         if(existingSellerProfile.Suspended)
-            return BadRequest("Seller is suspended.");
+            return BadRequest();
         var portfolio = await _dbContext.SellerProfilePortfolioPieces.Where(x=>x.SellerProfileId==existingSellerProfile.Id).ToListAsync();
         var result = portfolio.Select(x=>x.ToModel()).ToList();
         return Ok(result);
@@ -148,12 +148,12 @@ public class SellerProfileController : Controller
         {
             var sellerProfileRequest = await _dbContext.SellerProfileRequests.FirstOrDefaultAsync(request=>request.UserId==userId && request.Accepted==false);
             if(sellerProfileRequest!=null)
-                return BadRequest("Account has requested to be a seller and not been approved yet.");
-            return Unauthorized("Account is not a seller.");
+                return BadRequest();
+            return Unauthorized();
         }
 
         if(existingSellerProfile.Suspended)
-            return BadRequest("Seller is suspended.");
+            return BadRequest();
         var url = await _storageService.UploadImageAsync(file, Guid.NewGuid().ToString());
         var portfolio = new SellerProfilePortfolioPiece()
         {
@@ -178,16 +178,16 @@ public class SellerProfileController : Controller
         {
             var sellerProfileRequest = await _dbContext.SellerProfileRequests.FirstOrDefaultAsync(request=>request.UserId==userId && request.Accepted==false);
             if(sellerProfileRequest!=null)
-                return BadRequest("Account has requested to be a seller and not been approved yet.");
-            return Unauthorized("Account is not a seller.");
+                return BadRequest();
+            return Unauthorized();
         }
         if(existingSellerProfile.Suspended)
-            return BadRequest("Seller is suspended.");
+            return BadRequest();
         var portfolio = await _dbContext.SellerProfilePortfolioPieces.FirstOrDefaultAsync(x=>x.Id==portfolioId);
         if(portfolio==null)
-            return NotFound("Portfolio piece not found.");
+            return NotFound();
         if(portfolio.SellerProfileId!=existingSellerProfile.Id)
-            return BadRequest("Portfolio piece does not belong to this seller.");
+            return BadRequest();
         _dbContext.SellerProfilePortfolioPieces.Remove(portfolio);
         await _dbContext.SaveChangesAsync();
         return Ok();
@@ -204,14 +204,14 @@ public class SellerProfileController : Controller
         {
             var sellerProfileRequest = await _dbContext.SellerProfileRequests.FirstOrDefaultAsync(request=>request.UserId==userId && request.Accepted==false);
             if(sellerProfileRequest!=null)
-                return BadRequest("Account has requested to be a seller and not been approved yet.");
-            return Unauthorized("Account is not a seller.");
+                return BadRequest();
+            return Unauthorized();
         }
         
         if(existingSellerProfile.Suspended)
-            return BadRequest("Seller is suspended.");
+            return BadRequest();
         if(existingSellerProfile.StripeAccountId!=null)
-            return BadRequest("Account already have a payment account.");
+            return BadRequest();
 
         var accountId = _paymentService.CreateSellerAccount();
         existingSellerProfile.StripeAccountId = accountId;
@@ -232,13 +232,13 @@ public class SellerProfileController : Controller
         {
             var sellerProfileRequest = await _dbContext.SellerProfileRequests.FirstOrDefaultAsync(request=>request.UserId==userId && request.Accepted==false);
             if(sellerProfileRequest!=null)
-                return BadRequest("Account has requested to be a seller and not been approved yet.");
-            return Unauthorized("Account is not a seller.");
+                return BadRequest();
+            return Unauthorized();
         }
         if(existingSellerProfile.Suspended)
-            return BadRequest("Seller is suspended.");
+            return BadRequest();
         if(existingSellerProfile.StripeAccountId==null)
-            return BadRequest("Account does not have a payment account.");
+            return BadRequest();
 
         var result = _paymentService.CreateSellerAccountOnboardingUrl(existingSellerProfile.StripeAccountId);
         return Ok(result);

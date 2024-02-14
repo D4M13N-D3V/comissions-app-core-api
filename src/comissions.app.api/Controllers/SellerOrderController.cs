@@ -60,20 +60,20 @@ public class SellerOrderController : Controller
         var userId = User.GetUserId();
         var seller = await _dbContext.UserSellerProfiles.FirstOrDefaultAsync(x=>x.UserId==userId);
         if(seller==null)
-            return NotFound("User it not a seller.");
+            return NotFound();
         if(seller.Suspended)
-            return BadRequest("Seller is suspended.");
+            return BadRequest();
         var order = await _dbContext.SellerServiceOrders
             .Include(x=>x.SellerService)
             .FirstOrDefaultAsync(x=>x.Id==orderId && x.Seller.UserId==userId);
         if(order==null)
-            return NotFound("Order not found.");
+            return NotFound();
         if(order.Status==EnumOrderStatus.Completed || order.Status== EnumOrderStatus.Declined)
-            return BadRequest("Order is already complete.");
+            return BadRequest();
         if(order.BuyerId!=userId)
-            return BadRequest("You are not the buyer of this order.");
+            return BadRequest();
         if(order.Status!=EnumOrderStatus.Completed && order.Status!= EnumOrderStatus.Declined)
-            return BadRequest("Order is not in a cancellable state.");
+            return BadRequest();
         order.Status = EnumOrderStatus.Declined;
         order.EndDate = DateTime.UtcNow;
         order = _dbContext.SellerServiceOrders.Update(order).Entity;
@@ -90,22 +90,22 @@ public class SellerOrderController : Controller
         var userId = User.GetUserId();
         var seller = await _dbContext.UserSellerProfiles.FirstOrDefaultAsync(x => x.UserId == userId);
         if (seller == null)
-            return NotFound("User it not a seller.");
+            return NotFound();
         if (seller.Suspended)
-            return BadRequest("Seller is suspended.");
+            return BadRequest();
         var order = await _dbContext.SellerServiceOrders
             .Include(x => x.SellerService)
             .FirstOrDefaultAsync(x => x.Id == orderId && x.Seller.UserId == userId);
         if (order == null)
-            return NotFound("Order not found.");
+            return NotFound();
         if (order.Status == EnumOrderStatus.Completed || order.Status == EnumOrderStatus.Declined)
-            return BadRequest("Order is already complete.");
+            return BadRequest();
         if (order.BuyerId != userId)
-            return BadRequest("You are not the buyer of this order.");
+            return BadRequest();
         if (order.Status != EnumOrderStatus.PendingAcceptance)
-            return BadRequest("Order has already been accepted.");
+            return BadRequest();
         if (order.Status == EnumOrderStatus.Declined)
-            return BadRequest("Order has already been declined.");
+            return BadRequest();
         order.Status = EnumOrderStatus.WaitingForPayment;
         order = _dbContext.SellerServiceOrders.Update(order).Entity;
         await _dbContext.SaveChangesAsync();
@@ -121,20 +121,20 @@ public class SellerOrderController : Controller
         var userId = User.GetUserId();
         var seller = await _dbContext.UserSellerProfiles.FirstOrDefaultAsync(x => x.UserId == userId);
         if (seller == null)
-            return NotFound("User it not a seller.");
+            return NotFound();
         if (seller.Suspended)
-            return BadRequest("Seller is suspended.");
+            return BadRequest();
         var order = await _dbContext.SellerServiceOrders
             .Include(x => x.SellerService)
             .FirstOrDefaultAsync(x => x.Id == orderId && x.Seller.UserId == userId);
         if (order == null)
-            return NotFound("Order not found.");
+            return NotFound();
         if (order.Status == EnumOrderStatus.Completed || order.Status == EnumOrderStatus.Declined)
-            return BadRequest("Order is already complete.");
+            return BadRequest();
         if (order.BuyerId != userId)
-            return BadRequest("You are not the buyer of this order.");
+            return BadRequest();
         if (order.Status != EnumOrderStatus.PendingAcceptance)
-            return BadRequest("Order has already been accepted or declined.");
+            return BadRequest();
         order.Status = EnumOrderStatus.Declined;
         order = _dbContext.SellerServiceOrders.Update(order).Entity;
         await _dbContext.SaveChangesAsync();
@@ -155,19 +155,19 @@ public class SellerOrderController : Controller
             .FirstOrDefaultAsync(x=>x.Id==orderId && x.Seller.UserId==userId);
         var seller = await _dbContext.UserSellerProfiles.FirstOrDefaultAsync(x=>x.UserId==userId);
         if(seller==null)
-            return NotFound("User it not a seller.");
+            return NotFound();
         if(seller.Suspended)
-            return BadRequest("Seller is suspended.");
+            return BadRequest();
         if(order==null)
-            return NotFound("Order not found.");
+            return NotFound();
         if(order.Seller.UserId!=userId)
-            return BadRequest("You are not the seller of this order.");
+            return BadRequest();
         if(order.Status==EnumOrderStatus.Completed || order.Status== EnumOrderStatus.Declined)
-            return BadRequest("Order is already complete.");
+            return BadRequest();
         if(order.Status<EnumOrderStatus.InProgress)
-            return BadRequest("Order has not been started.");
+            return BadRequest();
         if(order.Status>EnumOrderStatus.InProgress)
-            return BadRequest("Order is pending review already.");
+            return BadRequest();
         order.Status = EnumOrderStatus.Completed;
         order = _dbContext.SellerServiceOrders.Update(order).Entity;
         await _dbContext.SaveChangesAsync();

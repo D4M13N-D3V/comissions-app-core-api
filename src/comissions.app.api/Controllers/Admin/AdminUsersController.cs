@@ -43,7 +43,7 @@ public class AdminUsersController:ControllerBase
         var user = await _dbContext.Users.FirstOrDefaultAsync(x=>x.Id==userId);
 
         if (user == null)
-            return NotFound("User not found.");
+            return NotFound();
         
         return Ok(user);
     }
@@ -54,7 +54,7 @@ public class AdminUsersController:ControllerBase
         var user = await _dbContext.Users.Include(x=>x.Orders).FirstOrDefaultAsync(x=>x.Id==userId);
         
         if (user == null)
-            return NotFound("User not found.");
+            return NotFound();
         
         return Ok(user.Orders);
     }
@@ -65,7 +65,7 @@ public class AdminUsersController:ControllerBase
         var user = await _dbContext.Users.FirstOrDefaultAsync(x=>x.Id==userId);
         
         if (user == null)
-            return NotFound("User not found.");
+            return NotFound();
         
         user.Suspended = true;
         user.SuspendedDate = DateTime.UtcNow;
@@ -83,7 +83,7 @@ public class AdminUsersController:ControllerBase
         var user = await _dbContext.Users.FirstOrDefaultAsync(x=>x.Id==userId);
         
         if (user == null)
-            return NotFound("User not found.");
+            return NotFound();
         
         user.Suspended = false;
         user.SuspendedDate = null;
@@ -101,7 +101,7 @@ public class AdminUsersController:ControllerBase
         var user = await _dbContext.Users.FirstOrDefaultAsync(x=>x.Id==userId);
         
         if (user == null)
-            return NotFound("User not found.");
+            return NotFound();
         
         user.Banned = true;
         user.BannedDate = DateTime.UtcNow;
@@ -119,7 +119,7 @@ public class AdminUsersController:ControllerBase
         var user = await _dbContext.Users.FirstOrDefaultAsync(x=>x.Id==userId);
         
         if (user == null)
-            return NotFound("User not found.");
+            return NotFound();
         
         user.Banned = false;
         user.BannedDate = null;
@@ -137,7 +137,7 @@ public class AdminUsersController:ControllerBase
         var user = await _dbContext.Users.FirstOrDefaultAsync(x=>x.Id==userId);
         
         if (user == null)
-            return NotFound("User not found.");
+            return NotFound();
         
         user.DisplayName = displayName;
         _dbContext.Users.Update(user);
@@ -151,7 +151,7 @@ public class AdminUsersController:ControllerBase
         var user = await _dbContext.Users.FirstOrDefaultAsync(x=>x.Id==userId);
         
         if (user == null)
-            return NotFound("User not found.");
+            return NotFound();
         
         user.Biography = biography;
         _dbContext.Users.Update(user);
