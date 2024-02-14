@@ -45,7 +45,7 @@ public class DiscoveryController : Controller
             .Include(x=>x.User)
             .FirstOrDefaultAsync(x=>x.Id==sellerId);
         if(seller==null)
-            return NotFound("Seller not found.");
+            return NotFound();
         var result = seller.ToDiscoveryModel();
         return Ok(result);
     }
@@ -58,7 +58,7 @@ public class DiscoveryController : Controller
             .Include(x=>x.User)
             .FirstOrDefaultAsync(x=>x.Id==sellerId);
         if(seller==null)
-            return NotFound("Seller not found.");
+            return NotFound();
         var sellerPortfolio = await _dbContext.SellerProfilePortfolioPieces
             .Where(x=>x.SellerProfileId==sellerId)
             .Skip(offset).Take(pageSize).ToListAsync();
@@ -74,7 +74,7 @@ public class DiscoveryController : Controller
             .Include(x=>x.User)
             .FirstOrDefaultAsync(x=>x.Id==sellerId);
         if(seller==null)
-            return NotFound("Seller not found.");
+            return NotFound();
         var sellerPortfolio = await _dbContext.SellerProfilePortfolioPieces
             .Where(x=>x.SellerProfileId==sellerId)
             .CountAsync();
@@ -89,7 +89,7 @@ public class DiscoveryController : Controller
             .Include(x=>x.User)
             .FirstOrDefaultAsync(x=>x.Id==sellerId);
         if(seller==null)
-            return NotFound("Seller not found.");
+            return NotFound();
         var sellerPortfolio = await _dbContext.SellerProfilePortfolioPieces
             .FirstOrDefaultAsync(x=>x.Id==portfolioId);
         if(sellerPortfolio==null)
@@ -107,7 +107,7 @@ public class DiscoveryController : Controller
             .Include(x=>x.User)
             .FirstOrDefaultAsync(x=>x.Id==sellerId);
         if(seller==null)
-            return NotFound("Seller not found.");
+            return NotFound();
         var sellerReviews = await _dbContext.SellerServiceOrderReviews
             .Where(x=>x.SellerService.SellerProfileId==sellerId)
             .Skip(offset).Take(pageSize).ToListAsync();
@@ -128,7 +128,7 @@ public class DiscoveryController : Controller
             .Include(x=>x.User)
             .FirstOrDefaultAsync(x=>x.Id==sellerId);
         if(seller==null)
-            return NotFound("Seller not found.");
+            return NotFound();
         var sellerReviews = await _dbContext.SellerServiceOrderReviews
             .Where(x=>x.SellerService.SellerProfileId==sellerId)
             .CountAsync();
@@ -154,7 +154,7 @@ public class DiscoveryController : Controller
             .Include(x=>x.User)
             .FirstOrDefaultAsync(x=>x.Id==sellerId);
         if(seller==null)
-            return NotFound("Seller not found.");
+            return NotFound();
         var sellerServices = await _dbContext.SellerServices
             .Include(x=>x.Reviews)
             .Where(x=>x.SellerProfileId==sellerId && !x.Archived)
@@ -171,12 +171,12 @@ public class DiscoveryController : Controller
             .Include(x=>x.User)
             .FirstOrDefaultAsync(x=>x.Id==sellerId);
         if(seller==null)
-            return NotFound("Seller not found.");
+            return NotFound();
         var sellerService = await _dbContext.SellerServices
             .Include(x=>x.Reviews)
             .FirstOrDefaultAsync(x=>x.Id==serviceId);
         if(sellerService==null)
-            return NotFound("Seller service not found.");
+            return NotFound();
         var result = sellerService.ToModel();
         return Ok(result);
     }
@@ -189,7 +189,7 @@ public class DiscoveryController : Controller
             .Include(x=>x.User)
             .FirstOrDefaultAsync(x=>x.Id==sellerId);
         if(seller==null)
-            return NotFound("Seller not found.");
+            return NotFound();
         var sellerServices = await _dbContext.SellerServices
             .Include(x=>x.Reviews)
             .Where(x=>x.SellerProfileId==sellerId && !x.Archived)
@@ -206,12 +206,12 @@ public class DiscoveryController : Controller
             .Include(x=>x.User)
             .FirstOrDefaultAsync(x=>x.Id==sellerId);
         if(seller==null)
-            return NotFound("Seller not found.");
+            return NotFound();
         var sellerService = await _dbContext.SellerServices
             .Include(x=>x.PortfolioPieces)
             .FirstOrDefaultAsync(x=>x.Id==serviceId);
         if(sellerService==null)
-            return NotFound("Seller service not found.");
+            return NotFound();
         var result = sellerService.PortfolioPieces.Select(x=>x.ToModel()).ToList();
         return Ok(result);
     }
@@ -224,12 +224,12 @@ public class DiscoveryController : Controller
             .Include(x=>x.User)
             .FirstOrDefaultAsync(x=>x.Id==sellerId);
         if(seller==null)
-            return NotFound("Seller not found.");
+            return NotFound();
         var sellerService = await _dbContext.SellerServices
             .Include(x=>x.PortfolioPieces)
             .FirstOrDefaultAsync(x=>x.Id==serviceId);
         if(sellerService==null)
-            return NotFound("Seller service not found.");
+            return NotFound();
         var result = sellerService.PortfolioPieces.Count;
         return Ok(result);
     }
@@ -242,12 +242,12 @@ public class DiscoveryController : Controller
             .Include(x=>x.User)
             .FirstOrDefaultAsync(x=>x.Id==sellerId);
         if(seller==null)
-            return NotFound("Seller not found.");
+            return NotFound();
         var sellerService = await _dbContext.SellerServices
             .Include(x=>x.PortfolioPieces)
             .FirstOrDefaultAsync(x=>x.Id==serviceId);
         if(sellerService==null)
-            return NotFound("Seller service not found.");
+            return NotFound();
         var sellerPortfolio = await _dbContext.SellerProfilePortfolioPieces
             .FirstOrDefaultAsync(x=>x.Id==portfolioId);
         if(sellerPortfolio==null)
@@ -265,12 +265,12 @@ public class DiscoveryController : Controller
             .Include(x=>x.User)
             .FirstOrDefaultAsync(x=>x.Id==sellerId);
         if(seller==null)
-            return NotFound("Seller not found.");
+            return NotFound();
         var sellerService = await _dbContext.SellerServices
             .Include(x=>x.Reviews).ThenInclude(x=>x.Reviewer)
             .FirstOrDefaultAsync(x=>x.Id==serviceId);
         if(sellerService==null)
-            return NotFound("Seller service not found.");
+            return NotFound();
         var result = sellerService.Reviews.Select(x=> new DiscoveryReviewModel()
         {
             Rating = x.Rating,
@@ -288,12 +288,12 @@ public class DiscoveryController : Controller
             .Include(x=>x.User)
             .FirstOrDefaultAsync(x=>x.Id==sellerId);
         if(seller==null)
-            return NotFound("Seller not found.");
+            return NotFound();
         var sellerService = await _dbContext.SellerServices
             .Include(x=>x.Reviews).ThenInclude(x=>x.Reviewer)
             .FirstOrDefaultAsync(x=>x.Id==serviceId);
         if(sellerService==null)
-            return NotFound("Seller service not found.");
+            return NotFound();
         var result = sellerService.Reviews.Count;
         return Ok(result);
     }

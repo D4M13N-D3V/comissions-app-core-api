@@ -109,21 +109,21 @@ public class OrderController : Controller
             .Include(x=>x.User)
             .FirstOrDefaultAsync(x=>x.Id==sellerId);
         if(seller==null)
-            return NotFound("Seller not found.");
+            return NotFound();
         if(seller.Suspended)
-            return NotFound("Seller is suspended.");
+            return NotFound();
         
         var service = await _dbContext.SellerServices
             .Include(x=>x.Reviews)
             .FirstOrDefaultAsync(x=>x.Id==serviceId);
         if(service==null)
-            return NotFound("Service not found.");
+            return NotFound();
         
         if(service.Archived)
-            return BadRequest("Service is archived.");
+            return BadRequest();
         
         if(_dbContext.SellerServiceOrders.Where(x=>x.BuyerId==userId && x.Status!=EnumOrderStatus.Completed && x.Status!=EnumOrderStatus.Declined).Count()>=3)
-            return BadRequest("You already have an order in progress. There is a limit of three at a time.");
+            return BadRequest();
         
         var order = new SellerServiceOrder()
         {
@@ -152,11 +152,11 @@ public class OrderController : Controller
             .Include(x=>x.SellerService)
             .FirstOrDefaultAsync(x=>x.Id==orderId && x.BuyerId==userId);
         if(order==null)
-            return NotFound("/Order not found.");
+            return NotFound();
         if(order.BuyerId!=userId)
-            return BadRequest("You are not the buyer of this order.");
+            return BadRequest();
         if(order.Status==EnumOrderStatus.Completed)
-            return BadRequest("/Order is not in a cancellable state.");
+            return BadRequest();
         order.Status = EnumOrderStatus.Declined;
         order.EndDate = DateTime.UtcNow;
         order = _dbContext.SellerServiceOrders.Update(order).Entity;
@@ -177,13 +177,13 @@ public class OrderController : Controller
             .Include(x=>x.Seller)
             .FirstOrDefaultAsync(x=>x.Id==orderId && x.BuyerId==userId);
         if(order==null)
-            return NotFound("/Order not found.");
+            return NotFound();
         if(order.Seller.UserId!=userId)
-            return BadRequest("You are not the seller of this order.");
+            return BadRequest();
         if(order.Status==EnumOrderStatus.Completed)
-            return BadRequest("/Order is already complete.");
+            return BadRequest();
         if(order.Status!=EnumOrderStatus.WaitingForPayment)
-            return BadRequest("/Order does not need to be paid for.");
+            return BadRequest();
         if (order.PaymentUrl != null)
             return Ok(order.PaymentUrl);
         var url = _paymentService.ChargeForService(order.Id, order.Seller.StripeAccountId, order.Price);
@@ -205,13 +205,13 @@ public class OrderController : Controller
             .Include(x=>x.SellerService)
             .FirstOrDefaultAsync(x=>x.Id==orderId && x.BuyerId==userId);
         if(order==null)
-            return NotFound("/Order not found.");
+            return NotFound();
         if(order.BuyerId!=userId)
-            return BadRequest("You are not the buyer of this order.");
+            return BadRequest("");
         if(order.Status!=EnumOrderStatus.Completed)
-            return BadRequest("/Order is not complete.");
+            return BadRequest("");
         if(order.Reviews.Any(x=>x.SellerServiceOrderId==orderId))
-            return BadRequest("/Order has already been reviewed.");
+            return BadRequest("");
         var review = new SellerServiceOrderReview()
         {
             SellerServiceOrderId = orderId,

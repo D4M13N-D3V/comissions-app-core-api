@@ -45,7 +45,7 @@ public class AdminSellersController:ControllerBase
             .FirstOrDefaultAsync(x=>x.Id==sellerId);
 
         if (seller == null)
-            return NotFound("Seller not found.");
+            return NotFound();
         
         return Ok(seller);
     }
@@ -57,7 +57,7 @@ public class AdminSellersController:ControllerBase
             .FirstOrDefault(x=>x.Id==sellerId);
         
         if (seller == null)
-            return NotFound("Seller not found.");
+            return NotFound();
         
         var orders = await _dbContext.SellerServiceOrders.Where(x=>x.SellerId==sellerId).ToListAsync();
         return Ok(orders);
@@ -69,10 +69,10 @@ public class AdminSellersController:ControllerBase
         var seller = _dbContext.UserSellerProfiles.FirstOrDefault(x=>x.Id==sellerId);
         
         if (seller == null)
-            return NotFound("Seller not found.");
+            return NotFound();
 
         if (seller.Suspended)
-            return BadRequest("Seller is already suspended.");
+            return BadRequest();
         
         seller.Suspended = true;
         seller.SuspendedDate = DateTime.UtcNow;
@@ -91,10 +91,10 @@ public class AdminSellersController:ControllerBase
         var seller = _dbContext.UserSellerProfiles.FirstOrDefault(x=>x.Id==sellerId);
         
         if (seller == null)
-            return NotFound("Seller not found.");
+            return NotFound();
 
         if (!seller.Suspended)
-            return BadRequest("Seller is not suspended.");
+            return BadRequest();
         
         seller.Suspended = false;
         seller.SuspendedDate = null;
@@ -113,10 +113,10 @@ public class AdminSellersController:ControllerBase
         var seller = _dbContext.UserSellerProfiles.FirstOrDefault(x=>x.Id==sellerId);
         
         if (seller == null)
-            return NotFound("Seller not found.");
+            return NotFound();
 
         if (!seller.Suspended)
-            return BadRequest("Seller is not suspended.");
+            return BadRequest();
 
         _dbContext.UserSellerProfiles.Remove(seller);
         await _dbContext.SaveChangesAsync();
@@ -129,10 +129,10 @@ public class AdminSellersController:ControllerBase
         var seller = _dbContext.UserSellerProfiles.FirstOrDefault(x=>x.Id==sellerId);
         
         if (seller == null)
-            return NotFound("Seller not found.");
+            return NotFound();
 
         if (!seller.Suspended)
-            return BadRequest("Seller is not suspended.");
+            return BadRequest();
 
         seller.Biography = biography;
         _dbContext.UserSellerProfiles.Update(seller);
