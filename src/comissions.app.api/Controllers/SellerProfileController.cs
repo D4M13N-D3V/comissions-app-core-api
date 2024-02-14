@@ -3,6 +3,7 @@ using comissions.app.api.Models.PortfolioModel;
 using ArtPlatform.Database;
 using ArtPlatform.Database.Entities;
 using comissions.app.api.Models.SellerProfile;
+using comissions.app.api.Models.SellerProfileRequest;
 using comissions.app.api.Services.Payment;
 using comissions.app.api.Services.Storage;
 using comissions.app.database;
@@ -79,8 +80,8 @@ public class SellerProfileController : Controller
         }
         
         var sellerProfileRequest = await _dbContext.SellerProfileRequests.FirstOrDefaultAsync(request=>request.UserId==userId);
-        if(sellerProfileRequest!=null)
-            return BadRequest("Account has already requested to be a seller.");
+        if (sellerProfileRequest != null)
+            return Ok(sellerProfileRequest.ToModel());
         
         sellerProfileRequest = new SellerProfileRequest()
         {
@@ -91,7 +92,7 @@ public class SellerProfileController : Controller
         _dbContext.SellerProfileRequests.Add(sellerProfileRequest);
         await _dbContext.SaveChangesAsync();
         return Ok();
-    }
+    }   
     [HttpGet]
     [Authorize("read:seller-profile")]
     [Route("{sellerServiceId:int}/Portfolio/{portfolioId:int}")]
