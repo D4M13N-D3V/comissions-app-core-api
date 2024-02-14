@@ -67,6 +67,19 @@ public class SellerProfileController : Controller
         return Ok(result);
     }
     
+    [HttpGet]
+    [Authorize("read:seller-profile")]
+    [Route("Request")]
+    public async Task<IActionResult> GetSellerProfileRequest()
+    {
+        var userId = User.GetUserId();
+        var sellerProfileRequest = await _dbContext.SellerProfileRequests.FirstOrDefaultAsync(request=>request.UserId==userId);
+        if(sellerProfileRequest==null)
+            return NotFound();
+        var result = sellerProfileRequest.ToModel();
+        return Ok(result);
+    }
+    
     [HttpPost]
     [Authorize("write:seller-profile")]
     public async Task<IActionResult> RequestSellerProfile()
