@@ -17,6 +17,10 @@ namespace comissions.app.api.Services.Storage
 
         public async Task<string> UploadImageAsync(Stream fileStream, string fileName)
         {
+            if(fileStream== null)
+            {
+                throw new System.ArgumentNullException(nameof(fileStream));
+            }
             using var content = new MultipartFormDataContent();
             content.Add(new StringContent(ApiKey), "key");
             content.Add(new StreamContent(fileStream), "source", fileName);
