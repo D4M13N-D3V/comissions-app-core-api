@@ -9,9 +9,9 @@ namespace comissions.app.api.Services.Storage
     {
         private readonly string _storageFolderPath;
 
-        public LocalStorageServiceProvider(string storageFolderPath)
+        public LocalStorageServiceProvider()
         {
-            _storageFolderPath = storageFolderPath;
+            _storageFolderPath = "/requestbox/";
 
             // Create storage folder if it does not exist
             if (!Directory.Exists(_storageFolderPath))
