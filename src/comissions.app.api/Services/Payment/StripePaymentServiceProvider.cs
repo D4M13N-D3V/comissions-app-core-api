@@ -7,6 +7,7 @@ public class StripePaymentServiceProvider:IPaymentService
 {
     private readonly IConfiguration _configuration;
     private readonly string _apiKey;
+    private readonly string _baseUiUrl;
     
     
     public StripePaymentServiceProvider(IConfiguration configuration)
@@ -14,6 +15,7 @@ public class StripePaymentServiceProvider:IPaymentService
         _configuration = configuration;
         _apiKey = _configuration.GetValue<string>("Stripe:ApiKey");
         StripeConfiguration.ApiKey = _apiKey;
+        _baseUiUrl = _configuration.GetValue<string>("UI:BaseUrl");
     }
 
     public string CreateCustomer()
@@ -70,8 +72,8 @@ public class StripePaymentServiceProvider:IPaymentService
         var options = new AccountLinkCreateOptions
         {
             Account = accountId,
-            RefreshUrl = "https://example.com/reauth",
-            ReturnUrl = "https://example.com/return",
+            RefreshUrl = $"{_baseUiUrl}/artistDashboard",
+            ReturnUrl = $"{_baseUiUrl}/artistDashboard",
             Type = "account_onboarding",
         };
         var service = new AccountLinkService();
