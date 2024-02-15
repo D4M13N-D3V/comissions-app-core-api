@@ -29,7 +29,7 @@ namespace comissions.app.api.Services.Storage
 
             if (!response.IsSuccessStatusCode)
             {
-                throw new Exception("Failed to upload image.");
+                throw new Exception(response.Content.ReadAsStringAsync().Result);
             }
 
             var responseContent = await response.Content.ReadAsStringAsync();
