@@ -15,12 +15,10 @@ namespace comissions.app.api.Services.Storage
             _client = new HttpClient { BaseAddress = new Uri("https://imgcdn.dev/") };
         }
 
-        public async Task<string> UploadImageAsync(IFormFile file, string fileName)
+        public async Task<string> UploadImageAsync(Stream fileStream, string fileName)
         {
             using var content = new MultipartFormDataContent();
             content.Add(new StringContent(ApiKey), "key");
-
-            using var fileStream = file.OpenReadStream();
             content.Add(new StreamContent(fileStream), "source", fileName);
 
             var response = await _client.PostAsync("api/1/upload", content);

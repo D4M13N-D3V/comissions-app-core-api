@@ -154,7 +154,7 @@ public class SellerProfileController : Controller
     [HttpPost]
     [Route("Portfolio")]
     [Authorize("write:seller-profile")]
-    public async Task<IActionResult> AddPortfolio([FromBody]IFormFile newImage)
+    public async Task<IActionResult> AddPortfolio()
     {
         var userId = User.GetUserId();
         var existingSellerProfile = await _dbContext.UserSellerProfiles.FirstOrDefaultAsync(sellerProfile=>sellerProfile.UserId==userId);
@@ -165,7 +165,7 @@ public class SellerProfileController : Controller
 
         if(existingSellerProfile.Suspended)
             return BadRequest();
-        var url = await _storageService.UploadImageAsync(newImage, Guid.NewGuid().ToString());
+        var url = await _storageService.UploadImageAsync(HttpContext.Request.Body, Guid.NewGuid().ToString());
         var portfolio = new SellerProfilePortfolioPiece()
         {
             SellerProfileId = existingSellerProfile.Id,
