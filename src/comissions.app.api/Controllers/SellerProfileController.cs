@@ -154,7 +154,7 @@ public class SellerProfileController : Controller
     [HttpPost]
     [Route("Portfolio")]
     [Authorize("write:seller-profile")]
-    public async Task<IActionResult> AddPortfolio([FromBody]IFormFile newImage)
+    public async Task<IActionResult> AddPortfolio([FromForm]IFormFile newImage)
     {
         var userId = User.GetUserId();
         var existingSellerProfile = await _dbContext.UserSellerProfiles.FirstOrDefaultAsync(sellerProfile=>sellerProfile.UserId==userId);
