@@ -231,7 +231,7 @@ public class SellerProfileController : Controller
         existingSellerProfile = _dbContext.UserSellerProfiles.Update(existingSellerProfile).Entity;
         await _dbContext.SaveChangesAsync();
         var result = _paymentService.CreateSellerAccountOnboardingUrl(accountId);
-        return Ok(new { onboardUrl = result });
+        return Ok(new SellerOnboardUrlModel(){ OnboardUrl= result });
     }
     
     [HttpGet]
@@ -259,7 +259,7 @@ public class SellerProfileController : Controller
         existingSellerProfile = _dbContext.UserSellerProfiles.Update(existingSellerProfile).Entity;
         await _dbContext.SaveChangesAsync();
         var result = _paymentService.SellerAccountIsOnboarded(accountId);
-        return Ok(new { onboarded=result });
+        return Ok(new SellerOnboardStatusModel(){ Onboarded= result });
     }
     
     [HttpGet]
@@ -282,7 +282,10 @@ public class SellerProfileController : Controller
             return BadRequest();
 
         var result = _paymentService.CreateSellerAccountOnboardingUrl(existingSellerProfile.StripeAccountId);
-        return Ok(new { onboardUrl = result });
+        return Ok(new SellerOnboardUrlModel()
+        {
+            OnboardUrl = result
+        });
     }
     
 }
