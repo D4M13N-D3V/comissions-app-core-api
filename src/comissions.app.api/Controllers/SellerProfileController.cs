@@ -11,6 +11,7 @@ using comissions.app.database.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 
 namespace comissions.app.api.Controllers;
 
@@ -153,7 +154,7 @@ public class SellerProfileController : Controller
     [HttpPost]
     [Route("Portfolio")]
     [Authorize("write:seller-profile")]
-    public async Task<IActionResult> AddPortfolio([FromForm]IFormFile file)
+    public async Task<IActionResult> AddPortfolio([FromBody]IFormFile newImage)
     {
         var userId = User.GetUserId();
         var existingSellerProfile = await _dbContext.UserSellerProfiles.FirstOrDefaultAsync(sellerProfile=>sellerProfile.UserId==userId);
@@ -164,7 +165,7 @@ public class SellerProfileController : Controller
 
         if(existingSellerProfile.Suspended)
             return BadRequest();
-        var url = await _storageService.UploadImageAsync(file, Guid.NewGuid().ToString());
+        var url = await _storageService.UploadImageAsync(newImage, Guid.NewGuid().ToString());
         var portfolio = new SellerProfilePortfolioPiece()
         {
             SellerProfileId = existingSellerProfile.Id,
