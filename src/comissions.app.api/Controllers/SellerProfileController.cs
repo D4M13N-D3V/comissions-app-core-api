@@ -223,14 +223,7 @@ public class SellerProfileController : Controller
         
         if(existingSellerProfile.Suspended)
             return BadRequest();
-        if(existingSellerProfile.StripeAccountId!=null)
-            return BadRequest();
-
-        var accountId = _paymentService.CreateSellerAccount();
-        existingSellerProfile.StripeAccountId = accountId;
-        existingSellerProfile = _dbContext.UserSellerProfiles.Update(existingSellerProfile).Entity;
-        await _dbContext.SaveChangesAsync();
-        var result = _paymentService.SellerAccountIsOnboarded(accountId);
+        var result = _paymentService.SellerAccountIsOnboarded(existingSellerProfile.StripeAccountId);
         return Ok(new SellerOnboardStatusModel(){ Onboarded= result });
     }
     
