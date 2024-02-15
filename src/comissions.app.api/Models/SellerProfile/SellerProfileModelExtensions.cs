@@ -10,11 +10,13 @@ public static class SellerProfileModelExtensions
     {
         return new SellerProfileModel()
         {
+            Id = sellerProfile.Id,
             SocialMediaLinks = sellerProfile.SocialMediaLinks,
             Biography = sellerProfile.Biography,
             PrepaymentRequired = sellerProfile.PrepaymentRequired
         };
     }
+    
     public static DiscoverySellerModel ToDiscoveryModelWithoutReviews(this UserSellerProfile sellerProfile)
     {
         return new DiscoverySellerModel()
