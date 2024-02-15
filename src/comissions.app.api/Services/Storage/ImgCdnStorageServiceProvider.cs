@@ -24,7 +24,7 @@ namespace comissions.app.api.Services.Storage
             using var content = new MultipartFormDataContent();
             content.Add(new StringContent(ApiKey), "key");
             content.Add(new StreamContent(fileStream), "source", fileName);
-
+            
             var response = await _client.PostAsync("api/1/upload", content);
 
             if (!response.IsSuccessStatusCode)
