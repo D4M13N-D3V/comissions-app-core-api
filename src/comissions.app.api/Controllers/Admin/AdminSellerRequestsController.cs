@@ -1,6 +1,7 @@
 using comissions.app.api.Models.SellerProfileRequest;
 using ArtPlatform.Database;
 using ArtPlatform.Database.Entities;
+using comissions.app.api.Services.Payment;
 using comissions.app.database;
 using comissions.app.database.Entities;
 using Microsoft.AspNetCore.Authorization;
@@ -15,9 +16,11 @@ namespace comissions.app.api.Controllers;
 public class AdminSellerRequestsController : Controller
 {
     private readonly ApplicationDbContext _dbContext;
+    private readonly IPaymentService _paymentService;
 
-    public AdminSellerRequestsController(ApplicationDbContext dbContext)
+    public AdminSellerRequestsController(ApplicationDbContext dbContext, IPaymentService paymentService)
     {
+        _paymentService = paymentService;
         _dbContext = dbContext;
     }
     
@@ -69,12 +72,13 @@ public class AdminSellerRequestsController : Controller
 
         request.Accepted = true;
         request.AcceptedDate = DateTime.UtcNow;
-
+        var accountId = _paymentService.CreateSellerAccount();
         var newSellerProfile = new UserSellerProfile()
         {
             UserId = userId,
             AgeRestricted = false,
             Biography = string.Empty,
+            StripeAccountId = accountId,
             SocialMediaLinks = new List<string>(){}
         };
         _dbContext.UserSellerProfiles.Add(newSellerProfile);

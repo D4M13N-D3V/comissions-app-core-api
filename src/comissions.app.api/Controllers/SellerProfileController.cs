@@ -206,37 +206,9 @@ public class SellerProfileController : Controller
         return Ok();
     }
     
-    [HttpPost]
-    [Authorize("write:seller-profile")]
-    [Route("Payment")]
-    public async Task<IActionResult> CreatePaymentAccount()
-    {
-        var userId = User.GetUserId();
-        var existingSellerProfile = await _dbContext.UserSellerProfiles.FirstOrDefaultAsync(sellerProfile=>sellerProfile.UserId==userId);
-        if (existingSellerProfile == null)
-        {
-            var sellerProfileRequest = await _dbContext.SellerProfileRequests.FirstOrDefaultAsync(request=>request.UserId==userId && request.Accepted==false);
-            if(sellerProfileRequest!=null)
-                return BadRequest();
-            return Unauthorized();
-        }
-        
-        if(existingSellerProfile.Suspended)
-            return BadRequest();
-        if(existingSellerProfile.StripeAccountId!=null)
-            return BadRequest();
-
-        var accountId = _paymentService.CreateSellerAccount();
-        existingSellerProfile.StripeAccountId = accountId;
-        existingSellerProfile = _dbContext.UserSellerProfiles.Update(existingSellerProfile).Entity;
-        await _dbContext.SaveChangesAsync();
-        var result = _paymentService.CreateSellerAccountOnboardingUrl(accountId);
-        return Ok(new SellerOnboardUrlModel(){ OnboardUrl= result });
-    }
-    
     [HttpGet]
     [Authorize("write:seller-profile")]
-    [Route("Payment/Onboarded")]
+    [Route("Onboard")]
     public async Task<IActionResult> PaymentAccountStatus()
     {
         var userId = User.GetUserId();
@@ -264,7 +236,7 @@ public class SellerProfileController : Controller
     
     [HttpGet]
     [Authorize("write:seller-profile")]
-    [Route("Payment")]
+    [Route("Onboard/Url")]
     public async Task<IActionResult> GetPaymentAccount()
     {
         var userId = User.GetUserId();
