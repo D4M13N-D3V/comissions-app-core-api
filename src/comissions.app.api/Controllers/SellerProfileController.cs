@@ -159,10 +159,7 @@ public class SellerProfileController : Controller
         var existingSellerProfile = await _dbContext.UserSellerProfiles.FirstOrDefaultAsync(sellerProfile=>sellerProfile.UserId==userId);
         if (existingSellerProfile == null)
         {
-            var sellerProfileRequest = await _dbContext.SellerProfileRequests.FirstOrDefaultAsync(request=>request.UserId==userId && request.Accepted==false);
-            if(sellerProfileRequest!=null)
-                return BadRequest();
-            return Unauthorized();
+            return BadRequest();
         }
 
         if(existingSellerProfile.Suspended)
