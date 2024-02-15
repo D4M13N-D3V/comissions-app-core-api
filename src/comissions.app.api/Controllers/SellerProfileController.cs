@@ -78,7 +78,7 @@ public class SellerProfileController : Controller
             return NotFound();
         var result = sellerProfileRequest.ToModel();
         return Ok(result);
-    }
+    }   
     
     [HttpPost]
     [Authorize("write:seller-profile")]
@@ -230,8 +230,36 @@ public class SellerProfileController : Controller
         existingSellerProfile.StripeAccountId = accountId;
         existingSellerProfile = _dbContext.UserSellerProfiles.Update(existingSellerProfile).Entity;
         await _dbContext.SaveChangesAsync();
-        var result = existingSellerProfile.ToModel();
-        return Ok(result);
+        var result = _paymentService.CreateSellerAccountOnboardingUrl(accountId);
+        return Ok(new { onboardUrl = result });
+    }
+    
+    [HttpGet]
+    [Authorize("write:seller-profile")]
+    [Route("Payment/Onboarded")]
+    public async Task<IActionResult> PaymentAccountStatus()
+    {
+        var userId = User.GetUserId();
+        var existingSellerProfile = await _dbContext.UserSellerProfiles.FirstOrDefaultAsync(sellerProfile=>sellerProfile.UserId==userId);
+        if (existingSellerProfile == null)
+        {
+            var sellerProfileRequest = await _dbContext.SellerProfileRequests.FirstOrDefaultAsync(request=>request.UserId==userId && request.Accepted==false);
+            if(sellerProfileRequest!=null)
+                return BadRequest();
+            return Unauthorized();
+        }
+        
+        if(existingSellerProfile.Suspended)
+            return BadRequest();
+        if(existingSellerProfile.StripeAccountId!=null)
+            return BadRequest();
+
+        var accountId = _paymentService.CreateSellerAccount();
+        existingSellerProfile.StripeAccountId = accountId;
+        existingSellerProfile = _dbContext.UserSellerProfiles.Update(existingSellerProfile).Entity;
+        await _dbContext.SaveChangesAsync();
+        var result = _paymentService.SellerAccountIsOnboarded(accountId);
+        return Ok(new { onboarded=result });
     }
     
     [HttpGet]
@@ -254,7 +282,7 @@ public class SellerProfileController : Controller
             return BadRequest();
 
         var result = _paymentService.CreateSellerAccountOnboardingUrl(existingSellerProfile.StripeAccountId);
-        return Ok(result);
+        return Ok(new { onboardUrl = result });
     }
     
 }
