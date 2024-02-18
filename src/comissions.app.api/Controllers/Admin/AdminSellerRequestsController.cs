@@ -84,43 +84,49 @@ public class AdminSellerRequestsController : Controller
             SocialMediaLink3 = "",
             SocialMediaLink4 = "",
             Name = "Default Shop",
-            SellerProfilePageSettings = new SellerProfilePageSettings(){
-                BackgroundColor = "rgb(126, 115, 115)",
-                HeaderColor = "rgb(194, 187, 187)",
-                HeaderTextSize = 5,
-                HeaderUseImage = false,
-                HeaderImageUrl = "",
-                DescriptionHeaderText = "",
-                DescriptionHeaderColor = "rgb(194, 187, 187)",
-                DescriptionHeaderSize = 3,
-                DescriptionHeaderUseImage = false,
-                DescriptionHeaderImageUrl = "",
-                DescriptionBackgroundColor = "rgb(103, 97, 97)",
-                DescriptionTextColor = "rgb(186, 186, 186)",
-                DescriptionTextSize = 1,
-                PortfolionHeaderText = "",
-                PortfolionHeaderColor = "rgb(194, 187, 187)",
-                PortfolionHeaderSize = 3,
-                PortfolionHeaderUseImage = false,
-                PortfolionHeaderImageUrl = "",
-                PortfolioBackgroundColor = "rgb(78, 73, 73)",
-                PortfolioMasonry = true,
-                PortfolioColumns = 3,
-                PortfolioEnabledScrolling = true,
-                PortfolioMaximumSize = 50,
-                RequestHeaderText = "",
-                RequestHeaderColor = "rgb(194, 187, 187)",
-                RequestHeaderSize = 3,
-                RequestHeaderUseImage = false,
-                RequestHeaderImageUrl = "",
-                RequestBackgroundColor = "rgb(103, 97, 97)",
-                RequestTermsColor = "rgb(194, 187, 187)",
-                RequestButtonBGColor = "rgb(101, 97, 97)",
-                RequestButtonTextColor = "rgb(194, 187, 187)",
-                RequestButtonHoverBGColor = "rgb(98, 98, 98)"
-            }
         };
-        _dbContext.UserSellerProfiles.Add(newSellerProfile);
+        var dbProfile = _dbContext.UserSellerProfiles.Add(newSellerProfile).Entity;
+        await _dbContext.SaveChangesAsync();
+        var newSettings = new SellerProfilePageSettings()
+        {
+            SellerProfileId = dbProfile.Id,
+            BackgroundColor = "rgb(126, 115, 115)",
+            HeaderColor = "rgb(194, 187, 187)",
+            HeaderTextSize = 5,
+            HeaderUseImage = false,
+            HeaderImageUrl = "",
+            DescriptionHeaderText = "",
+            DescriptionHeaderColor = "rgb(194, 187, 187)",
+            DescriptionHeaderSize = 3,
+            DescriptionHeaderUseImage = false,
+            DescriptionHeaderImageUrl = "",
+            DescriptionBackgroundColor = "rgb(103, 97, 97)",
+            DescriptionTextColor = "rgb(186, 186, 186)",
+            DescriptionTextSize = 1,
+            PortfolionHeaderText = "",
+            PortfolionHeaderColor = "rgb(194, 187, 187)",
+            PortfolionHeaderSize = 3,
+            PortfolionHeaderUseImage = false,
+            PortfolionHeaderImageUrl = "",
+            PortfolioBackgroundColor = "rgb(78, 73, 73)",
+            PortfolioMasonry = true,
+            PortfolioColumns = 3,
+            PortfolioEnabledScrolling = true,
+            PortfolioMaximumSize = 50,
+            RequestHeaderText = "",
+            RequestHeaderColor = "rgb(194, 187, 187)",
+            RequestHeaderSize = 3,
+            RequestHeaderUseImage = false,
+            RequestHeaderImageUrl = "",
+            RequestBackgroundColor = "rgb(103, 97, 97)",
+            RequestTermsColor = "rgb(194, 187, 187)",
+            RequestButtonBGColor = "rgb(101, 97, 97)",
+            RequestButtonTextColor = "rgb(194, 187, 187)",
+            RequestButtonHoverBGColor = "rgb(98, 98, 98)"
+        };
+        var dbSettings = _dbContext.SellerProfilePageSettings.Add(newSettings).Entity;
+        await _dbContext.SaveChangesAsync();
+        
         request = _dbContext.SellerProfileRequests.Update(request).Entity;
         await _dbContext.SaveChangesAsync();
         var result = request.ToModel();
