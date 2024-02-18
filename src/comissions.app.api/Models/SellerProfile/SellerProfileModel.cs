@@ -10,4 +10,5 @@ public class SellerProfileModel
     public string Description { get; set; }
     public string SocialMeidaLink4 { get; set; }
     public string RequestGuidelines { get; set; }
+    public string Name { get; set; }
 }

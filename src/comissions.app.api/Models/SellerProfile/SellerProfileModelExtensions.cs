@@ -11,6 +11,7 @@ public static class SellerProfileModelExtensions
         return new SellerProfileModel()
         {
             Id = sellerProfile.Id,
+            Name = sellerProfile.Name,
             SocialMeidaLink1 = sellerProfile.SocialMediaLink1,
             SocialMeidaLink2 = sellerProfile.SocialMediaLink2,
             SocialMeidaLink3 = sellerProfile.SocialMediaLink3,
@@ -59,6 +60,7 @@ public static class SellerProfileModelExtensions
     }
     public static UserSellerProfile ToModel(this SellerProfileModel sellerProfile, UserSellerProfile existingSellerProfile)
     {
+        existingSellerProfile.Name = sellerProfile.Name;
         existingSellerProfile.SocialMediaLink1 = sellerProfile.SocialMeidaLink1;
         existingSellerProfile.SocialMediaLink2 = sellerProfile.SocialMeidaLink2;
         existingSellerProfile.SocialMediaLink3 = sellerProfile.SocialMeidaLink3;
