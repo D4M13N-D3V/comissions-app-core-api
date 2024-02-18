@@ -41,6 +41,7 @@ public class ApplicationDbContext:DbContext
     #region DB Sets
 
     public DbSet<User> Users { get; set; } = null!;
+    public DbSet<SellerProfilePageSettings> SellerProfilePageSettings { get; set; }= null!;
     public DbSet<UserSellerProfile> UserSellerProfiles { get; set; }= null!;
     public DbSet<SellerProfileRequest> SellerProfileRequests { get; set; }= null!;
     public DbSet<SellerProfilePortfolioPiece> SellerProfilePortfolioPieces { get; set; }= null!;
