@@ -81,6 +81,40 @@ public class SellerProfileController : Controller
         return Ok(result);
     }   
     
+    [HttpGet]
+    [Authorize("read:seller-profile")]
+    [Route("Page")]
+    public async Task<IActionResult> GetSellerProfilePage()
+    {
+        var userId = User.GetUserId();
+        var sellerProfile = await _dbContext.UserSellerProfiles.Include(x=>x.SellerProfilePageSettings).FirstOrDefaultAsync(sellerProfile=>sellerProfile.UserId==userId);
+        if(sellerProfile==null)
+            return NotFound();
+        var result = sellerProfile.SellerProfilePageSettings.ToModel();
+        return Ok(result);
+    }
+    
+    [HttpPut]
+    [Authorize("write:seller-profile")]
+    [Route("Page")]
+    public async Task<IActionResult> UpdateSellerProfilePage(SellerProfilePageSettingsModel model)
+    {
+        var userId = User.GetUserId();
+        var existingSellerProfile = await _dbContext.UserSellerProfiles.Include(x=>x.SellerProfilePageSettings).FirstOrDefaultAsync(sellerProfile=>sellerProfile.UserId==userId);
+        if (existingSellerProfile == null)
+        {
+            var sellerProfileRequest = await _dbContext.SellerProfileRequests.FirstOrDefaultAsync(request=>request.UserId==userId && request.Accepted==false);
+            if(sellerProfileRequest!=null)
+                return BadRequest();
+            return Unauthorized();
+        }
+        var updatedSellerProfile = model.ToModel(existingSellerProfile.SellerProfilePageSettings);
+        updatedSellerProfile = _dbContext.SellerProfilePageSettings.Update(updatedSellerProfile).Entity;
+        await _dbContext.SaveChangesAsync();
+        var result = updatedSellerProfile.ToModel();
+        return Ok(result);
+    }
+    
     [HttpPost]
     [Authorize("write:seller-profile")]
     public async Task<IActionResult> RequestSellerProfile()
