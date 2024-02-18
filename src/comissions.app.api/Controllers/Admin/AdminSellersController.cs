@@ -134,7 +134,7 @@ public class AdminSellersController:ControllerBase
         if (!seller.Suspended)
             return BadRequest();
 
-        seller.Biography = biography;
+        seller.Description = biography;
         _dbContext.UserSellerProfiles.Update(seller);
         await _dbContext.SaveChangesAsync();
         return Ok();

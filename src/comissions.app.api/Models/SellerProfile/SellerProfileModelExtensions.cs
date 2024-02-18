@@ -11,8 +11,12 @@ public static class SellerProfileModelExtensions
         return new SellerProfileModel()
         {
             Id = sellerProfile.Id,
-            SocialMediaLinks = sellerProfile.SocialMediaLinks,
-            Biography = sellerProfile.Biography,
+            SocialMeidaLink1 = sellerProfile.SocialMediaLink1,
+            SocialMeidaLink2 = sellerProfile.SocialMediaLink2,
+            SocialMeidaLink3 = sellerProfile.SocialMediaLink3,
+            SocialMeidaLink4 = sellerProfile.SocialMediaLink4,
+            Description = sellerProfile.Description,
+            RequestGuidelines = sellerProfile.RequestGuidelines,
             PrepaymentRequired = sellerProfile.PrepaymentRequired
         };
     }
@@ -23,8 +27,12 @@ public static class SellerProfileModelExtensions
         {
             Name = sellerProfile.User.DisplayName,
             Id = sellerProfile.Id,
-            SocialMediaLinks = sellerProfile.SocialMediaLinks,
-            Biography = sellerProfile.Biography,
+            SocialMeidaLink1 = sellerProfile.SocialMediaLink1,
+            SocialMeidaLink2 = sellerProfile.SocialMediaLink2,
+            SocialMeidaLink3 = sellerProfile.SocialMediaLink3,
+            SocialMeidaLink4 = sellerProfile.SocialMediaLink4,
+            Description = sellerProfile.Description,
+            RequestGuidelines = sellerProfile.RequestGuidelines,
             PrepaymentRequired = sellerProfile.PrepaymentRequired,
         };
     }
@@ -38,8 +46,12 @@ public static class SellerProfileModelExtensions
         {
             Name = sellerProfile.User.DisplayName,
             Id = sellerProfile.Id,
-            SocialMediaLinks = sellerProfile.SocialMediaLinks,
-            Biography = sellerProfile.Biography,
+            SocialMeidaLink1 = sellerProfile.SocialMediaLink1,
+            SocialMeidaLink2 = sellerProfile.SocialMediaLink2,
+            SocialMeidaLink3 = sellerProfile.SocialMediaLink3,
+            SocialMeidaLink4 = sellerProfile.SocialMediaLink4,
+            Description = sellerProfile.Description,
+            RequestGuidelines = sellerProfile.RequestGuidelines,
             PrepaymentRequired = sellerProfile.PrepaymentRequired,
             AverageRating =reviewAverage,
             ReviewCount = reviews.Count()
@@ -47,8 +59,12 @@ public static class SellerProfileModelExtensions
     }
     public static UserSellerProfile ToModel(this SellerProfileModel sellerProfile, UserSellerProfile existingSellerProfile)
     {
-        existingSellerProfile.SocialMediaLinks = sellerProfile.SocialMediaLinks;
-        existingSellerProfile.Biography = sellerProfile.Biography;
+        existingSellerProfile.SocialMediaLink1 = sellerProfile.SocialMeidaLink1;
+        existingSellerProfile.SocialMediaLink2 = sellerProfile.SocialMeidaLink2;
+        existingSellerProfile.SocialMediaLink3 = sellerProfile.SocialMeidaLink3;
+        existingSellerProfile.SocialMediaLink4 = sellerProfile.SocialMeidaLink4;
+        existingSellerProfile.Description = sellerProfile.Description;
+        existingSellerProfile.RequestGuidelines = sellerProfile.RequestGuidelines;
         existingSellerProfile.PrepaymentRequired = sellerProfile.PrepaymentRequired;
         return existingSellerProfile;
     }
