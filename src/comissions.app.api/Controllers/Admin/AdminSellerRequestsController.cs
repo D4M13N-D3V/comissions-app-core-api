@@ -83,6 +83,7 @@ public class AdminSellerRequestsController : Controller
             SocialMediaLink2 = "",
             SocialMediaLink3 = "",
             SocialMediaLink4 = "",
+            RequestGuidelines = "",
             Name = "Default Shop",
         };
         var dbProfile = _dbContext.UserSellerProfiles.Add(newSellerProfile).Entity;
