@@ -24,7 +24,7 @@ public record UserSellerProfile
     public string? SuspendAdminId { get; set; }
     public virtual User User { get; set; } = null!;
     
-    public int SellerProfilePageSettingsId { get; set; }
+    public int? SellerProfilePageSettingsId { get; set; }
     public virtual SellerProfilePageSettings SellerProfilePageSettings { get; set; } = null!;
     
     public virtual ICollection<SellerService> SellerServices { get; set; } = new List<SellerService>();
