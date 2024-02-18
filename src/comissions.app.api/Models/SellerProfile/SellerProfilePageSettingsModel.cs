@@ -1,17 +1,9 @@
-using System.ComponentModel.DataAnnotations.Schema;
+namespace comissions.app.api.Models.SellerProfile;
 
-namespace comissions.app.database.Entities;
-
-public class SellerProfilePageSettings
+public class SellerProfilePageSettingsModel
 {
-    public int Id { get; set; }
-    
-    [ForeignKey("SellerProfile")]
-    public int SellerProfileId { get; set; }
-    public virtual UserSellerProfile SellerProfile { get; set; } = null!;
     
     public string RequestButtonHoverBGColor { get; set; }
-    public string RequestButtonHoverTextColor { get; set; }
     public string RequestButtonTextColor { get; set; }
     public string RequestButtonBGColor { get; set; }
     public string RequestTermsColor { get; set; }
@@ -44,4 +36,5 @@ public class SellerProfilePageSettings
     public int HeaderTextSize { get; set; }
     public string HeaderColor { get; set; }
     public string BackgroundColor { get; set; }
+    public string RequestButtonHoverTextColor { get; set; }
 }
