@@ -61,6 +61,10 @@ public class SellerProfileController : Controller
                 return BadRequest();
             return Unauthorized();
         }
+
+        if (_dbContext.UserSellerProfiles.Any(x => x.Name.ToLower() == model.Name.ToLower()))
+            return BadRequest();
+        
         var updatedSellerProfile = model.ToModel(existingSellerProfile);
         updatedSellerProfile = _dbContext.UserSellerProfiles.Update(updatedSellerProfile).Entity;
         await _dbContext.SaveChangesAsync();
@@ -100,7 +104,8 @@ public class SellerProfileController : Controller
     public async Task<IActionResult> UpdateSellerProfilePage([FromBody]SellerProfilePageSettingsModel model)
     {
         var userId = User.GetUserId();
-        var existingSellerProfile = await _dbContext.UserSellerProfiles.Include(x=>x.SellerProfilePageSettings).FirstOrDefaultAsync(sellerProfile=>sellerProfile.UserId==userId);
+        var existingSellerProfile = await _dbContext.UserSellerProfiles
+            .Include(x=>x.SellerProfilePageSettings).FirstOrDefaultAsync(sellerProfile=>sellerProfile.UserId==userId);
         if (existingSellerProfile == null)
         {
             var sellerProfileRequest = await _dbContext.SellerProfileRequests.FirstOrDefaultAsync(request=>request.UserId==userId && request.Accepted==false);
