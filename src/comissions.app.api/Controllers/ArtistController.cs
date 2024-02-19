@@ -120,7 +120,7 @@ public class ArtistController : Controller
     
     [HttpPost]
     [Authorize("write:seller-profile")]
-    public async Task<IActionResult> RequestArtist()
+    public async Task<IActionResult> RequestArtist([FromBody] string message)
     {
         var userId = User.GetUserId();
         
@@ -137,6 +137,7 @@ public class ArtistController : Controller
         ArtistRequest = new ArtistRequest()
         {
             Accepted = false,
+            Message = message,
             RequestDate = DateTime.UtcNow,
             UserId = userId
         };
@@ -144,6 +145,7 @@ public class ArtistController : Controller
         await _dbContext.SaveChangesAsync();
         return Ok();
     }   
+    
     [HttpGet]
     [Authorize("read:seller-profile")]
     [Route("{sellerServiceId:int}/Portfolio/{portfolioId:int}")]

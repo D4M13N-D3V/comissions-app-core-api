@@ -4,6 +4,7 @@ public class ArtistRequest
 {
     public int Id { get; set; }
     public string UserId { get; set; } = null!;
+    public string Message { get; set; } = null!;
     public DateTime RequestDate { get; set; }
     public DateTime? AcceptedDate { get; set; }
     public bool Accepted { get; set; }
