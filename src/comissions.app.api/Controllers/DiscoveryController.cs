@@ -50,6 +50,20 @@ public class DiscoveryController : Controller
         return Ok(result);
     }
     
+    
+    [HttpGet]
+    [Route("Sellers/{sellerName}/Page")]
+    public async Task<IActionResult> GetSellerPage(string sellerName)
+    {
+        var seller = await _dbContext.UserSellerProfiles
+            .Include(x=>x.SellerProfilePageSettings)
+            .FirstOrDefaultAsync(x=>x.Name==sellerName.Replace('-', ' '));
+        if(seller==null)
+            return NotFound();
+        var result = seller.SellerProfilePageSettings;
+        return Ok(result);
+    }
+    
     [HttpGet]
     [Route("Sellers/{sellerId:int}/Portfolio")]
     public async Task<IActionResult> GetSellerPortfolio(int sellerId, int offset = 0, int pageSize = 10)
