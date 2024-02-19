@@ -15,6 +15,7 @@ public static class SellerProfilePageSettingsModelExtensions
             HeaderUseImage = sellerProfile.HeaderUseImage,
             HeaderImageUrl = sellerProfile.HeaderImageUrl,
             DescriptionHeaderColor = sellerProfile.DescriptionHeaderColor,
+            DescriptionHeaderText = sellerProfile.DescriptionHeaderText,
             DescriptionHeaderSize = sellerProfile.DescriptionHeaderSize,
             DescriptionHeaderUseImage = sellerProfile.DescriptionHeaderUseImage,
             DescriptionHeaderImageUrl = sellerProfile.DescriptionHeaderImageUrl,
@@ -55,6 +56,7 @@ public static class SellerProfilePageSettingsModelExtensions
             existing.DescriptionHeaderSize = sellerProfile.DescriptionHeaderSize;
             existing.DescriptionHeaderUseImage = sellerProfile.DescriptionHeaderUseImage;
             existing.DescriptionHeaderImageUrl = sellerProfile.DescriptionHeaderImageUrl;
+            existing.DescriptionHeaderText = sellerProfile.DescriptionHeaderText;
             existing.DescriptionBackgroundColor = sellerProfile.DescriptionBackgroundColor;
             existing.DescriptionTextColor = sellerProfile.DescriptionTextColor;
             existing.DescriptionTextSize = sellerProfile.DescriptionTextSize;
