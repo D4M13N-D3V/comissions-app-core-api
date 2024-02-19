@@ -1,6 +1,6 @@
-namespace comissions.app.api.Models.SellerProfileRequest;
+namespace comissions.app.api.Models.ArtistRequest;
 
-public class SellerProfileRequestModel
+public class ArtistRequestModel
 {
     public int Id { get; set; }
     public DateTime RequestDate { get; set; }

@@ -25,7 +25,7 @@ namespace comissions.app.api.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("comissions.app.database.Entities.SellerProfilePageSettings", b =>
+            modelBuilder.Entity("comissions.app.database.Entities.ArtistPageSettings", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -156,18 +156,18 @@ namespace comissions.app.api.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int>("SellerProfileId")
+                    b.Property<int>("ArtistId")
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("SellerProfileId")
+                    b.HasIndex("ArtistId")
                         .IsUnique();
 
-                    b.ToTable("SellerProfilePageSettings");
+                    b.ToTable("ArtistPageSettings");
                 });
 
-            modelBuilder.Entity("comissions.app.database.Entities.SellerProfilePortfolioPiece", b =>
+            modelBuilder.Entity("comissions.app.database.Entities.ArtistPortfolioPiece", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -179,22 +179,22 @@ namespace comissions.app.api.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int>("SellerProfileId")
+                    b.Property<int>("ArtistId")
                         .HasColumnType("integer");
 
-                    b.Property<int?>("SellerServiceId")
+                    b.Property<int?>("ArtistServiceId")
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("SellerProfileId");
+                    b.HasIndex("ArtistId");
 
-                    b.HasIndex("SellerServiceId");
+                    b.HasIndex("ArtistServiceId");
 
-                    b.ToTable("SellerProfilePortfolioPieces");
+                    b.ToTable("ArtistPortfolioPieces");
                 });
 
-            modelBuilder.Entity("comissions.app.database.Entities.SellerProfileRequest", b =>
+            modelBuilder.Entity("comissions.app.database.Entities.ArtistRequest", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -219,10 +219,10 @@ namespace comissions.app.api.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("SellerProfileRequests");
+                    b.ToTable("ArtistRequests");
                 });
 
-            modelBuilder.Entity("comissions.app.database.Entities.SellerService", b =>
+            modelBuilder.Entity("comissions.app.database.Entities.ArtistService", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -244,17 +244,17 @@ namespace comissions.app.api.Migrations
                     b.Property<double>("Price")
                         .HasColumnType("double precision");
 
-                    b.Property<int>("SellerProfileId")
+                    b.Property<int>("ArtistId")
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("SellerProfileId");
+                    b.HasIndex("ArtistId");
 
-                    b.ToTable("SellerServices");
+                    b.ToTable("ArtistServices");
                 });
 
-            modelBuilder.Entity("comissions.app.database.Entities.SellerServiceOrder", b =>
+            modelBuilder.Entity("comissions.app.database.Entities.ArtistServiceOrder", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -278,10 +278,10 @@ namespace comissions.app.api.Migrations
                     b.Property<double>("Price")
                         .HasColumnType("double precision");
 
-                    b.Property<int>("SellerId")
+                    b.Property<int>("ArtistId")
                         .HasColumnType("integer");
 
-                    b.Property<int>("SellerServiceId")
+                    b.Property<int>("ArtistServiceId")
                         .HasColumnType("integer");
 
                     b.Property<int>("Status")
@@ -294,14 +294,14 @@ namespace comissions.app.api.Migrations
 
                     b.HasIndex("BuyerId");
 
-                    b.HasIndex("SellerId");
+                    b.HasIndex("ArtistId");
 
-                    b.HasIndex("SellerServiceId");
+                    b.HasIndex("ArtistServiceId");
 
-                    b.ToTable("SellerServiceOrders");
+                    b.ToTable("ArtistServiceOrders");
                 });
 
-            modelBuilder.Entity("comissions.app.database.Entities.SellerServiceOrderReview", b =>
+            modelBuilder.Entity("comissions.app.database.Entities.ArtistServiceOrderReview", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -322,21 +322,21 @@ namespace comissions.app.api.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int>("SellerServiceId")
+                    b.Property<int>("ArtistServiceId")
                         .HasColumnType("integer");
 
-                    b.Property<int>("SellerServiceOrderId")
+                    b.Property<int>("ArtistServiceOrderId")
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
 
                     b.HasIndex("ReviewerId");
 
-                    b.HasIndex("SellerServiceId");
+                    b.HasIndex("ArtistServiceId");
 
-                    b.HasIndex("SellerServiceOrderId");
+                    b.HasIndex("ArtistServiceOrderId");
 
-                    b.ToTable("SellerServiceOrderReviews");
+                    b.ToTable("ArtistServiceOrderReviews");
                 });
 
             modelBuilder.Entity("comissions.app.database.Entities.User", b =>
@@ -386,7 +386,7 @@ namespace comissions.app.api.Migrations
                     b.Property<DateTime?>("UnsuspendDate")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<int?>("UserSellerProfileId")
+                    b.Property<int?>("UserArtistId")
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
@@ -394,7 +394,7 @@ namespace comissions.app.api.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("comissions.app.database.Entities.UserSellerProfile", b =>
+            modelBuilder.Entity("comissions.app.database.Entities.UserArtist", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -420,7 +420,7 @@ namespace comissions.app.api.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int>("SellerProfilePageSettingsId")
+                    b.Property<int>("ArtistPageSettingsId")
                         .HasColumnType("integer");
 
                     b.Property<string>("SocialMediaLink1")
@@ -466,38 +466,38 @@ namespace comissions.app.api.Migrations
                     b.HasIndex("UserId")
                         .IsUnique();
 
-                    b.ToTable("UserSellerProfiles");
+                    b.ToTable("UserArtists");
                 });
 
-            modelBuilder.Entity("comissions.app.database.Entities.SellerProfilePageSettings", b =>
+            modelBuilder.Entity("comissions.app.database.Entities.ArtistPageSettings", b =>
                 {
-                    b.HasOne("comissions.app.database.Entities.UserSellerProfile", "SellerProfile")
-                        .WithOne("SellerProfilePageSettings")
-                        .HasForeignKey("comissions.app.database.Entities.SellerProfilePageSettings", "SellerProfileId")
+                    b.HasOne("comissions.app.database.Entities.UserArtist", "Artist")
+                        .WithOne("ArtistPageSettings")
+                        .HasForeignKey("comissions.app.database.Entities.ArtistPageSettings", "ArtistId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("SellerProfile");
+                    b.Navigation("Artist");
                 });
 
-            modelBuilder.Entity("comissions.app.database.Entities.SellerProfilePortfolioPiece", b =>
+            modelBuilder.Entity("comissions.app.database.Entities.ArtistPortfolioPiece", b =>
                 {
-                    b.HasOne("comissions.app.database.Entities.UserSellerProfile", "SellerProfile")
+                    b.HasOne("comissions.app.database.Entities.UserArtist", "Artist")
                         .WithMany("PortfolioPieces")
-                        .HasForeignKey("SellerProfileId")
+                        .HasForeignKey("ArtistId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("comissions.app.database.Entities.SellerService", "SellerService")
+                    b.HasOne("comissions.app.database.Entities.ArtistService", "ArtistService")
                         .WithMany("PortfolioPieces")
-                        .HasForeignKey("SellerServiceId");
+                        .HasForeignKey("ArtistServiceId");
 
-                    b.Navigation("SellerProfile");
+                    b.Navigation("Artist");
 
-                    b.Navigation("SellerService");
+                    b.Navigation("ArtistService");
                 });
 
-            modelBuilder.Entity("comissions.app.database.Entities.SellerProfileRequest", b =>
+            modelBuilder.Entity("comissions.app.database.Entities.ArtistRequest", b =>
                 {
                     b.HasOne("comissions.app.database.Entities.User", "User")
                         .WithMany()
@@ -508,18 +508,18 @@ namespace comissions.app.api.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("comissions.app.database.Entities.SellerService", b =>
+            modelBuilder.Entity("comissions.app.database.Entities.ArtistService", b =>
                 {
-                    b.HasOne("comissions.app.database.Entities.UserSellerProfile", "SellerProfile")
-                        .WithMany("SellerServices")
-                        .HasForeignKey("SellerProfileId")
+                    b.HasOne("comissions.app.database.Entities.UserArtist", "Artist")
+                        .WithMany("ArtistServices")
+                        .HasForeignKey("ArtistId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("SellerProfile");
+                    b.Navigation("Artist");
                 });
 
-            modelBuilder.Entity("comissions.app.database.Entities.SellerServiceOrder", b =>
+            modelBuilder.Entity("comissions.app.database.Entities.ArtistServiceOrder", b =>
                 {
                     b.HasOne("comissions.app.database.Entities.User", "Buyer")
                         .WithMany("Orders")
@@ -527,26 +527,26 @@ namespace comissions.app.api.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("comissions.app.database.Entities.UserSellerProfile", "Seller")
+                    b.HasOne("comissions.app.database.Entities.UserArtist", "Artist")
                         .WithMany()
-                        .HasForeignKey("SellerId")
+                        .HasForeignKey("ArtistId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("comissions.app.database.Entities.SellerService", "SellerService")
+                    b.HasOne("comissions.app.database.Entities.ArtistService", "ArtistService")
                         .WithMany()
-                        .HasForeignKey("SellerServiceId")
+                        .HasForeignKey("ArtistServiceId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Buyer");
 
-                    b.Navigation("Seller");
+                    b.Navigation("Artist");
 
-                    b.Navigation("SellerService");
+                    b.Navigation("ArtistService");
                 });
 
-            modelBuilder.Entity("comissions.app.database.Entities.SellerServiceOrderReview", b =>
+            modelBuilder.Entity("comissions.app.database.Entities.ArtistServiceOrderReview", b =>
                 {
                     b.HasOne("comissions.app.database.Entities.User", "Reviewer")
                         .WithMany()
@@ -554,44 +554,44 @@ namespace comissions.app.api.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("comissions.app.database.Entities.SellerService", "SellerService")
+                    b.HasOne("comissions.app.database.Entities.ArtistService", "ArtistService")
                         .WithMany("Reviews")
-                        .HasForeignKey("SellerServiceId")
+                        .HasForeignKey("ArtistServiceId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("comissions.app.database.Entities.SellerServiceOrder", "SellerServiceOrder")
+                    b.HasOne("comissions.app.database.Entities.ArtistServiceOrder", "ArtistServiceOrder")
                         .WithMany("Reviews")
-                        .HasForeignKey("SellerServiceOrderId")
+                        .HasForeignKey("ArtistServiceOrderId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Reviewer");
 
-                    b.Navigation("SellerService");
+                    b.Navigation("ArtistService");
 
-                    b.Navigation("SellerServiceOrder");
+                    b.Navigation("ArtistServiceOrder");
                 });
 
-            modelBuilder.Entity("comissions.app.database.Entities.UserSellerProfile", b =>
+            modelBuilder.Entity("comissions.app.database.Entities.UserArtist", b =>
                 {
                     b.HasOne("comissions.app.database.Entities.User", "User")
-                        .WithOne("UserSellerProfile")
-                        .HasForeignKey("comissions.app.database.Entities.UserSellerProfile", "UserId")
+                        .WithOne("UserArtist")
+                        .HasForeignKey("comissions.app.database.Entities.UserArtist", "UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("comissions.app.database.Entities.SellerService", b =>
+            modelBuilder.Entity("comissions.app.database.Entities.ArtistService", b =>
                 {
                     b.Navigation("PortfolioPieces");
 
                     b.Navigation("Reviews");
                 });
 
-            modelBuilder.Entity("comissions.app.database.Entities.SellerServiceOrder", b =>
+            modelBuilder.Entity("comissions.app.database.Entities.ArtistServiceOrder", b =>
                 {
                     b.Navigation("Reviews");
                 });
@@ -600,17 +600,17 @@ namespace comissions.app.api.Migrations
                 {
                     b.Navigation("Orders");
 
-                    b.Navigation("UserSellerProfile");
+                    b.Navigation("UserArtist");
                 });
 
-            modelBuilder.Entity("comissions.app.database.Entities.UserSellerProfile", b =>
+            modelBuilder.Entity("comissions.app.database.Entities.UserArtist", b =>
                 {
                     b.Navigation("PortfolioPieces");
 
-                    b.Navigation("SellerProfilePageSettings")
+                    b.Navigation("ArtistPageSettings")
                         .IsRequired();
 
-                    b.Navigation("SellerServices");
+                    b.Navigation("ArtistServices");
                 });
 #pragma warning restore 612, 618
         }

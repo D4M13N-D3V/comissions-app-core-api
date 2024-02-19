@@ -10,7 +10,7 @@ public record User
     public string DisplayName { get; set; } = null!;
     public string Biography { get; set; } = null!;
     public string Email { get; set; } = null!;
-    public int? UserSellerProfileId { get; set; }
+    public int? UserArtistId { get; set; }
     
     public bool Banned { get; set; } = false;
     public DateTime? BannedDate { get; set; }
@@ -24,5 +24,5 @@ public record User
     public string? SuspendedReason { get; set; }
     public string? SuspendAdminId { get; set; }
     
-    [JsonIgnore] public virtual UserSellerProfile? UserSellerProfile { get; set; }
+    [JsonIgnore] public virtual UserArtist? UserArtist { get; set; }
 }

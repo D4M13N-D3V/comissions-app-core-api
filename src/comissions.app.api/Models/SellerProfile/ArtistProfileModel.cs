@@ -1,6 +1,6 @@
-namespace comissions.app.api.Models.SellerProfile;
+namespace comissions.app.api.Models.Artist;
 
-public class SellerProfileModel
+public class ArtistModel
 {
     public int Id { get; set; }
     public bool PrepaymentRequired { get; set; }

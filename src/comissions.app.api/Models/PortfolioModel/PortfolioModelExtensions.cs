@@ -4,12 +4,11 @@ namespace comissions.app.api.Models.PortfolioModel;
 
 public static class PortfolioModelExtensions
 {
-    public static PortfolioModel ToModel(this SellerProfilePortfolioPiece sellerProfileRequest)
+    public static PortfolioModel ToModel(this ArtistPortfolioPiece sellerProfileRequest)
     {
         return new PortfolioModel()
         {
-            Id = sellerProfileRequest.Id,
-            SellerServiceId = sellerProfileRequest.SellerServiceId
+            Id = sellerProfileRequest.Id
         };
     }
 }

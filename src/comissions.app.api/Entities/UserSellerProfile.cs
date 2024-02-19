@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace comissions.app.database.Entities;
 
-public record UserSellerProfile
+public record UserArtist
 {
     public int Id { get; set; }
     [ForeignKey(nameof(User))]
@@ -24,9 +24,7 @@ public record UserSellerProfile
     public string? SuspendAdminId { get; set; }
     public virtual User User { get; set; } = null!;
     
-    public int SellerProfilePageSettingsId { get; set; }
-    public virtual SellerProfilePageSettings SellerProfilePageSettings { get; set; } = null!;
-    
-    public virtual ICollection<SellerService> SellerServices { get; set; } = new List<SellerService>();
-    public virtual ICollection<SellerProfilePortfolioPiece> PortfolioPieces { get; set; } = new List<SellerProfilePortfolioPiece>();
+    public int ArtistPageSettingsId { get; set; }
+    public virtual ArtistPageSettings ArtistPageSettings { get; set; } = null!;
+    public virtual ICollection<ArtistPortfolioPiece> PortfolioPieces { get; set; } = new List<ArtistPortfolioPiece>();
 }

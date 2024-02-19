@@ -10,37 +10,37 @@ namespace comissions.app.api.Controllers;
 [ApiController]
 [Authorize("admin")]
 [Route("api/admin/[controller]")]
-public class AdminSellersController:ControllerBase
+public class AdminArtistsController:ControllerBase
 {
     private readonly ApplicationDbContext _dbContext;
 
-    public AdminSellersController(ApplicationDbContext dbContext)
+    public AdminArtistsController(ApplicationDbContext dbContext)
     {
         _dbContext = dbContext;
     }
     
     [HttpGet]
-    public async Task<IActionResult> GetSellers(string search="", int offset = 0, int pageSize = 10)
+    public async Task<IActionResult> GetArtists(string search="", int offset = 0, int pageSize = 10)
     {
-        var sellers = await _dbContext.UserSellerProfiles.Include(x=>x.User)
+        var sellers = await _dbContext.UserArtists.Include(x=>x.User)
             .Where(x=>x.User.DisplayName.Contains(search) || x.User.Email.Contains(search))
             .Skip(offset).Take(pageSize).ToListAsync();
         return Ok(sellers);
     }
     
     [HttpGet("Count")]
-    public async Task<IActionResult> GetSellersCount(string search="")
+    public async Task<IActionResult> GetArtistsCount(string search="")
     {
-        var result = await _dbContext.UserSellerProfiles.Include(x=>x.User)
+        var result = await _dbContext.UserArtists.Include(x=>x.User)
             .Where(x=>x.User.DisplayName.Contains(search) || x.User.Email.Contains(search))
             .CountAsync();
         return Ok(result);
     }
     
     [HttpGet("{sellerId:int}")]
-    public async Task<IActionResult> GetSeller(int sellerId)
+    public async Task<IActionResult> GetArtist(int sellerId)
     {
-        var seller = await _dbContext.UserSellerProfiles.Include(x=>x.User)
+        var seller = await _dbContext.UserArtists.Include(x=>x.User)
             .FirstOrDefaultAsync(x=>x.Id==sellerId);
 
         if (seller == null)
@@ -51,9 +51,9 @@ public class AdminSellersController:ControllerBase
     
     
     [HttpPut("{sellerId:int}/Suspend")]
-    public async Task<IActionResult> SuspendSeller(int sellerId, [FromQuery]string reason, [FromQuery]int days)
+    public async Task<IActionResult> SuspendArtist(int sellerId, [FromQuery]string reason, [FromQuery]int days)
     {
-        var seller = _dbContext.UserSellerProfiles.FirstOrDefault(x=>x.Id==sellerId);
+        var seller = _dbContext.UserArtists.FirstOrDefault(x=>x.Id==sellerId);
         
         if (seller == null)
             return NotFound();
@@ -66,16 +66,16 @@ public class AdminSellersController:ControllerBase
         seller.UnsuspendDate = DateTime.UtcNow.AddDays(days);
         seller.SuspendedReason = reason;
         seller.SuspendAdminId = User.GetUserId();
-        _dbContext.UserSellerProfiles.Update(seller);
+        _dbContext.UserArtists.Update(seller);
         
         await _dbContext.SaveChangesAsync();
         return Ok();
     }
     
     [HttpPut("{sellerId:int}/Unsuspend")]
-    public async Task<IActionResult> UnsuspendSeller(int sellerId)
+    public async Task<IActionResult> UnsuspendArtist(int sellerId)
     {
-        var seller = _dbContext.UserSellerProfiles.FirstOrDefault(x=>x.Id==sellerId);
+        var seller = _dbContext.UserArtists.FirstOrDefault(x=>x.Id==sellerId);
         
         if (seller == null)
             return NotFound();
@@ -88,16 +88,16 @@ public class AdminSellersController:ControllerBase
         seller.UnsuspendDate = null;
         seller.SuspendedReason = null;
         seller.SuspendAdminId = null;
-        _dbContext.UserSellerProfiles.Update(seller);
+        _dbContext.UserArtists.Update(seller);
         
         await _dbContext.SaveChangesAsync();
         return Ok();
     }
     
     [HttpPut("{sellerId:int}/Terminate")]
-    public async Task<IActionResult> TerminateSeller(int sellerId)
+    public async Task<IActionResult> TerminateArtist(int sellerId)
     {
-        var seller = _dbContext.UserSellerProfiles.FirstOrDefault(x=>x.Id==sellerId);
+        var seller = _dbContext.UserArtists.FirstOrDefault(x=>x.Id==sellerId);
         
         if (seller == null)
             return NotFound();
@@ -105,7 +105,7 @@ public class AdminSellersController:ControllerBase
         if (!seller.Suspended)
             return BadRequest();
 
-        _dbContext.UserSellerProfiles.Remove(seller);
+        _dbContext.UserArtists.Remove(seller);
         await _dbContext.SaveChangesAsync();
         return Ok();
     }
@@ -113,7 +113,7 @@ public class AdminSellersController:ControllerBase
     [HttpPut("{sellerId:int}/SetBiography")]
     public async Task<IActionResult> SetBiography(int sellerId, [FromBody]string biography)
     {
-        var seller = _dbContext.UserSellerProfiles.FirstOrDefault(x=>x.Id==sellerId);
+        var seller = _dbContext.UserArtists.FirstOrDefault(x=>x.Id==sellerId);
         
         if (seller == null)
             return NotFound();
@@ -122,7 +122,7 @@ public class AdminSellersController:ControllerBase
             return BadRequest();
 
         seller.Description = biography;
-        _dbContext.UserSellerProfiles.Update(seller);
+        _dbContext.UserArtists.Update(seller);
         await _dbContext.SaveChangesAsync();
         return Ok();
     }
