@@ -1,10 +1,10 @@
-namespace comissions.app.api.Models.SellerProfileRequest;
+namespace comissions.app.api.Models.ArtistRequest;
 
-public static class SellerProfileRequestModelExtensions
+public static class ArtistRequestModelExtensions
 {
-    public static SellerProfileRequestModel ToModel(this database.Entities.SellerProfileRequest sellerProfileRequest)
+    public static ArtistRequestModel ToModel(this database.Entities.ArtistRequest sellerProfileRequest)
     {
-        return new SellerProfileRequestModel()
+        return new ArtistRequestModel()
         {
             Id = sellerProfileRequest.Id,
             UserId = sellerProfileRequest.UserId,

@@ -22,7 +22,7 @@ public class UserMiddleware
         {
             var userId = context.User.Claims.First(c => c.Type == ClaimTypes.NameIdentifier).Value;
 
-            var user = await dbContext.Users.Include(x=>x.UserSellerProfile).FirstOrDefaultAsync(x=>x.Id==userId);
+            var user = await dbContext.Users.Include(x=>x.UserArtist).FirstOrDefaultAsync(x=>x.Id==userId);
 
             if (user == null)
             {
@@ -87,23 +87,23 @@ public class UserMiddleware
                 }
             }
 
-            if (user.UserSellerProfile != null && user.UserSellerProfile.Suspended)
+            if (user.UserArtist != null && user.UserArtist.Suspended)
             {
-                if (user.UserSellerProfile.UnsuspendDate < DateTime.UtcNow)
+                if (user.UserArtist.UnsuspendDate < DateTime.UtcNow)
                 {
-                    user.UserSellerProfile.Suspended = false;
-                    user.UserSellerProfile.SuspendedDate = null;
-                    user.UserSellerProfile.UnsuspendDate = null;
-                    user.UserSellerProfile.SuspendedReason = null;
-                    user.UserSellerProfile.SuspendAdminId = null;
+                    user.UserArtist.Suspended = false;
+                    user.UserArtist.SuspendedDate = null;
+                    user.UserArtist.UnsuspendDate = null;
+                    user.UserArtist.SuspendedReason = null;
+                    user.UserArtist.SuspendAdminId = null;
                     dbContext.Users.Update(user);
                     await dbContext.SaveChangesAsync();
                 }
                 else
                 {
-                    var suspendDate = user.UserSellerProfile.SuspendedDate.Value.ToString("MM/dd/yyyy");
-                    var unsuspendDate = user.UserSellerProfile.UnsuspendDate.Value.ToString("MM/dd/yyyy");
-                    await context.Response.WriteAsync($"Banned on {suspendDate} until {unsuspendDate} for {user.UserSellerProfile.SuspendedReason} by {user.UserSellerProfile.SuspendAdminId}.");
+                    var suspendDate = user.UserArtist.SuspendedDate.Value.ToString("MM/dd/yyyy");
+                    var unsuspendDate = user.UserArtist.UnsuspendDate.Value.ToString("MM/dd/yyyy");
+                    await context.Response.WriteAsync($"Banned on {suspendDate} until {unsuspendDate} for {user.UserArtist.SuspendedReason} by {user.UserArtist.SuspendAdminId}.");
                     context.Response.StatusCode = StatusCodes.Status403Forbidden;
                     return;
                 }

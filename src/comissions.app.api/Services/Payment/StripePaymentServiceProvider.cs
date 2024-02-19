@@ -48,7 +48,7 @@ public class StripePaymentServiceProvider:IPaymentService
     //     var intent = service.Create(options, requestOptions);
     //     throw new NotImplementedException();
     // }
-    public string CreateSellerAccount()
+    public string CreateArtistAccount()
     {
         var accountCreateOptions = new AccountCreateOptions { Type = "express",
             Capabilities
@@ -66,7 +66,7 @@ public class StripePaymentServiceProvider:IPaymentService
         return account.Id;
     }
     
-    public string CreateSellerAccountOnboardingUrl(string accountId)
+    public string CreateArtistAccountOnboardingUrl(string accountId)
     {
         var options = new AccountLinkCreateOptions
         {
@@ -80,14 +80,14 @@ public class StripePaymentServiceProvider:IPaymentService
         return url.Url;
     }
     
-    public bool SellerAccountIsOnboarded(string accountId)
+    public bool ArtistAccountIsOnboarded(string accountId)
     {
         var service = new AccountService();
         var account = service.Get(accountId);
         return account.Requirements.CurrentlyDue.Count == 0 && account.ChargesEnabled==true && account.DetailsSubmitted==true;
     }
 
-    public string ChargeForService(int orderSellerServiceOrderId, string? sellerStripeAccountId,
+    public string ChargeForService(int orderArtistServiceOrderId, string? sellerStripeAccountId,
         double orderPrice)
     {
         var feeAmount = (long)Math.Round((orderPrice*0.05) * 100);
@@ -117,7 +117,7 @@ public class StripePaymentServiceProvider:IPaymentService
             CancelUrl = "https://example.com/failure",
             Metadata = new Dictionary<string, string>()
             {
-                ["orderId"] = orderSellerServiceOrderId.ToString()
+                ["orderId"] = orderArtistServiceOrderId.ToString()
             }
         };
         var requestOptions = new RequestOptions

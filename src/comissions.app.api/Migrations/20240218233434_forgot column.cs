@@ -12,7 +12,7 @@ namespace comissions.app.api.Migrations
         {
             migrationBuilder.AddColumn<string>(
                 name: "RequestButtonHoverTextColor",
-                table: "SellerProfilePageSettings",
+                table: "ArtistPageSettings",
                 type: "text",
                 nullable: false,
                 defaultValue: "");
@@ -23,7 +23,7 @@ namespace comissions.app.api.Migrations
         {
             migrationBuilder.DropColumn(
                 name: "RequestButtonHoverTextColor",
-                table: "SellerProfilePageSettings");
+                table: "ArtistPageSettings");
         }
     }
 }

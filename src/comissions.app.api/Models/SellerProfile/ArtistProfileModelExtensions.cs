@@ -1,13 +1,13 @@
 using comissions.app.api.Models.Discovery;
 using comissions.app.database.Entities;
 
-namespace comissions.app.api.Models.SellerProfile;
+namespace comissions.app.api.Models.Artist;
 
-public static class SellerProfileModelExtensions
+public static class ArtistModelExtensions
 {
-    public static SellerProfileModel ToModel(this UserSellerProfile sellerProfile)
+    public static ArtistModel ToModel(this UserArtist sellerProfile)
     {
-        return new SellerProfileModel()
+        return new ArtistModel()
         {
             Id = sellerProfile.Id,
             Name = sellerProfile.Name,
@@ -21,9 +21,9 @@ public static class SellerProfileModelExtensions
         };
     }
     
-    public static DiscoverySellerModel ToDiscoveryModelWithoutReviews(this UserSellerProfile sellerProfile)
+    public static DiscoveryArtistModel ToDiscoveryModelWithoutReviews(this UserArtist sellerProfile)
     {
-        return new DiscoverySellerModel()
+        return new DiscoveryArtistModel()
         {
             Name = sellerProfile.User.DisplayName,
             Id = sellerProfile.Id,
@@ -36,10 +36,10 @@ public static class SellerProfileModelExtensions
             PrepaymentRequired = sellerProfile.PrepaymentRequired,
         };
     }
-    public static DiscoverySellerModel ToDiscoveryModel(this UserSellerProfile sellerProfile)
+    public static DiscoveryArtistModel ToDiscoveryModel(this UserArtist sellerProfile)
     {
         
-        return new DiscoverySellerModel()
+        return new DiscoveryArtistModel()
         {
             Name = sellerProfile.User.DisplayName,
             Id = sellerProfile.Id,
@@ -52,16 +52,16 @@ public static class SellerProfileModelExtensions
             PrepaymentRequired = sellerProfile.PrepaymentRequired
         };
     }
-    public static UserSellerProfile ToModel(this SellerProfileModel sellerProfile, UserSellerProfile existingSellerProfile)
+    public static UserArtist ToModel(this ArtistModel sellerProfile, UserArtist existingArtist)
     {
-        existingSellerProfile.Name = sellerProfile.Name;
-        existingSellerProfile.SocialMediaLink1 = sellerProfile.SocialMeidaLink1;
-        existingSellerProfile.SocialMediaLink2 = sellerProfile.SocialMeidaLink2;
-        existingSellerProfile.SocialMediaLink3 = sellerProfile.SocialMeidaLink3;
-        existingSellerProfile.SocialMediaLink4 = sellerProfile.SocialMeidaLink4;
-        existingSellerProfile.Description = sellerProfile.Description;
-        existingSellerProfile.RequestGuidelines = sellerProfile.RequestGuidelines;
-        existingSellerProfile.PrepaymentRequired = sellerProfile.PrepaymentRequired;
-        return existingSellerProfile;
+        existingArtist.Name = sellerProfile.Name;
+        existingArtist.SocialMediaLink1 = sellerProfile.SocialMeidaLink1;
+        existingArtist.SocialMediaLink2 = sellerProfile.SocialMeidaLink2;
+        existingArtist.SocialMediaLink3 = sellerProfile.SocialMeidaLink3;
+        existingArtist.SocialMediaLink4 = sellerProfile.SocialMeidaLink4;
+        existingArtist.Description = sellerProfile.Description;
+        existingArtist.RequestGuidelines = sellerProfile.RequestGuidelines;
+        existingArtist.PrepaymentRequired = sellerProfile.PrepaymentRequired;
+        return existingArtist;
     }
 }

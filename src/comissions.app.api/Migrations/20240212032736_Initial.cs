@@ -21,7 +21,7 @@ namespace comissions.app.api.Migrations
                     DisplayName = table.Column<string>(type: "text", nullable: false),
                     Biography = table.Column<string>(type: "text", nullable: false),
                     Email = table.Column<string>(type: "text", nullable: false),
-                    UserSellerProfileId = table.Column<int>(type: "integer", nullable: true),
+                    UserArtistId = table.Column<int>(type: "integer", nullable: true),
                     Banned = table.Column<bool>(type: "boolean", nullable: false),
                     BannedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     UnbanDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
@@ -39,7 +39,7 @@ namespace comissions.app.api.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "SellerProfileRequests",
+                name: "ArtistRequests",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
@@ -51,9 +51,9 @@ namespace comissions.app.api.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_SellerProfileRequests", x => x.Id);
+                    table.PrimaryKey("PK_ArtistRequests", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_SellerProfileRequests_Users_UserId",
+                        name: "FK_ArtistRequests_Users_UserId",
                         column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "Id",
@@ -61,7 +61,7 @@ namespace comissions.app.api.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "UserSellerProfiles",
+                name: "UserArtists",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
@@ -80,9 +80,9 @@ namespace comissions.app.api.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_UserSellerProfiles", x => x.Id);
+                    table.PrimaryKey("PK_UserArtists", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_UserSellerProfiles_Users_UserId",
+                        name: "FK_UserArtists_Users_UserId",
                         column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "Id",
@@ -90,12 +90,12 @@ namespace comissions.app.api.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "SellerServices",
+                name: "ArtistServices",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    SellerProfileId = table.Column<int>(type: "integer", nullable: false),
+                    ArtistId = table.Column<int>(type: "integer", nullable: false),
                     Name = table.Column<string>(type: "text", nullable: false),
                     Description = table.Column<string>(type: "text", nullable: false),
                     Price = table.Column<double>(type: "double precision", nullable: false),
@@ -103,50 +103,50 @@ namespace comissions.app.api.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_SellerServices", x => x.Id);
+                    table.PrimaryKey("PK_ArtistServices", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_SellerServices_UserSellerProfiles_SellerProfileId",
-                        column: x => x.SellerProfileId,
-                        principalTable: "UserSellerProfiles",
+                        name: "FK_ArtistServices_UserArtists_ArtistId",
+                        column: x => x.ArtistId,
+                        principalTable: "UserArtists",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "SellerProfilePortfolioPieces",
+                name: "ArtistPortfolioPieces",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    SellerProfileId = table.Column<int>(type: "integer", nullable: false),
+                    ArtistId = table.Column<int>(type: "integer", nullable: false),
                     FileReference = table.Column<string>(type: "text", nullable: false),
-                    SellerServiceId = table.Column<int>(type: "integer", nullable: true)
+                    ArtistServiceId = table.Column<int>(type: "integer", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_SellerProfilePortfolioPieces", x => x.Id);
+                    table.PrimaryKey("PK_ArtistPortfolioPieces", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_SellerProfilePortfolioPieces_SellerServices_SellerServiceId",
-                        column: x => x.SellerServiceId,
-                        principalTable: "SellerServices",
+                        name: "FK_ArtistPortfolioPieces_ArtistServices_ArtistServiceId",
+                        column: x => x.ArtistServiceId,
+                        principalTable: "ArtistServices",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_SellerProfilePortfolioPieces_UserSellerProfiles_SellerProfi~",
-                        column: x => x.SellerProfileId,
-                        principalTable: "UserSellerProfiles",
+                        name: "FK_ArtistPortfolioPieces_UserArtists_ArtistProfi~",
+                        column: x => x.ArtistId,
+                        principalTable: "UserArtists",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "SellerServiceOrders",
+                name: "ArtistServiceOrders",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     BuyerId = table.Column<string>(type: "text", nullable: false),
-                    SellerServiceId = table.Column<int>(type: "integer", nullable: false),
-                    SellerId = table.Column<int>(type: "integer", nullable: false),
+                    ArtistServiceId = table.Column<int>(type: "integer", nullable: false),
+                    ArtistId = table.Column<int>(type: "integer", nullable: false),
                     Status = table.Column<int>(type: "integer", nullable: false),
                     Price = table.Column<double>(type: "double precision", nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
@@ -156,21 +156,21 @@ namespace comissions.app.api.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_SellerServiceOrders", x => x.Id);
+                    table.PrimaryKey("PK_ArtistServiceOrders", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_SellerServiceOrders_SellerServices_SellerServiceId",
-                        column: x => x.SellerServiceId,
-                        principalTable: "SellerServices",
+                        name: "FK_ArtistServiceOrders_ArtistServices_ArtistServiceId",
+                        column: x => x.ArtistServiceId,
+                        principalTable: "ArtistServices",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_SellerServiceOrders_UserSellerProfiles_SellerId",
-                        column: x => x.SellerId,
-                        principalTable: "UserSellerProfiles",
+                        name: "FK_ArtistServiceOrders_UserArtists_ArtistId",
+                        column: x => x.ArtistId,
+                        principalTable: "UserArtists",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_SellerServiceOrders_Users_BuyerId",
+                        name: "FK_ArtistServiceOrders_Users_BuyerId",
                         column: x => x.BuyerId,
                         principalTable: "Users",
                         principalColumn: "Id",
@@ -178,35 +178,35 @@ namespace comissions.app.api.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "SellerServiceOrderReviews",
+                name: "ArtistServiceOrderReviews",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     ReviewerId = table.Column<string>(type: "text", nullable: false),
-                    SellerServiceOrderId = table.Column<int>(type: "integer", nullable: false),
-                    SellerServiceId = table.Column<int>(type: "integer", nullable: false),
+                    ArtistServiceOrderId = table.Column<int>(type: "integer", nullable: false),
+                    ArtistServiceId = table.Column<int>(type: "integer", nullable: false),
                     ReviewDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     Review = table.Column<string>(type: "text", nullable: true),
                     Rating = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_SellerServiceOrderReviews", x => x.Id);
+                    table.PrimaryKey("PK_ArtistServiceOrderReviews", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_SellerServiceOrderReviews_SellerServiceOrders_SellerService~",
-                        column: x => x.SellerServiceOrderId,
-                        principalTable: "SellerServiceOrders",
+                        name: "FK_ArtistServiceOrderReviews_ArtistServiceOrders_ArtistService~",
+                        column: x => x.ArtistServiceOrderId,
+                        principalTable: "ArtistServiceOrders",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_SellerServiceOrderReviews_SellerServices_SellerServiceId",
-                        column: x => x.SellerServiceId,
-                        principalTable: "SellerServices",
+                        name: "FK_ArtistServiceOrderReviews_ArtistServices_ArtistServiceId",
+                        column: x => x.ArtistServiceId,
+                        principalTable: "ArtistServices",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_SellerServiceOrderReviews_Users_ReviewerId",
+                        name: "FK_ArtistServiceOrderReviews_Users_ReviewerId",
                         column: x => x.ReviewerId,
                         principalTable: "Users",
                         principalColumn: "Id",
@@ -214,58 +214,58 @@ namespace comissions.app.api.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_SellerProfilePortfolioPieces_SellerProfileId",
-                table: "SellerProfilePortfolioPieces",
-                column: "SellerProfileId");
+                name: "IX_ArtistPortfolioPieces_ArtistId",
+                table: "ArtistPortfolioPieces",
+                column: "ArtistId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_SellerProfilePortfolioPieces_SellerServiceId",
-                table: "SellerProfilePortfolioPieces",
-                column: "SellerServiceId");
+                name: "IX_ArtistPortfolioPieces_ArtistServiceId",
+                table: "ArtistPortfolioPieces",
+                column: "ArtistServiceId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_SellerProfileRequests_UserId",
-                table: "SellerProfileRequests",
+                name: "IX_ArtistRequests_UserId",
+                table: "ArtistRequests",
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_SellerServiceOrderReviews_ReviewerId",
-                table: "SellerServiceOrderReviews",
+                name: "IX_ArtistServiceOrderReviews_ReviewerId",
+                table: "ArtistServiceOrderReviews",
                 column: "ReviewerId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_SellerServiceOrderReviews_SellerServiceId",
-                table: "SellerServiceOrderReviews",
-                column: "SellerServiceId");
+                name: "IX_ArtistServiceOrderReviews_ArtistServiceId",
+                table: "ArtistServiceOrderReviews",
+                column: "ArtistServiceId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_SellerServiceOrderReviews_SellerServiceOrderId",
-                table: "SellerServiceOrderReviews",
-                column: "SellerServiceOrderId");
+                name: "IX_ArtistServiceOrderReviews_ArtistServiceOrderId",
+                table: "ArtistServiceOrderReviews",
+                column: "ArtistServiceOrderId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_SellerServiceOrders_BuyerId",
-                table: "SellerServiceOrders",
+                name: "IX_ArtistServiceOrders_BuyerId",
+                table: "ArtistServiceOrders",
                 column: "BuyerId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_SellerServiceOrders_SellerId",
-                table: "SellerServiceOrders",
-                column: "SellerId");
+                name: "IX_ArtistServiceOrders_ArtistId",
+                table: "ArtistServiceOrders",
+                column: "ArtistId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_SellerServiceOrders_SellerServiceId",
-                table: "SellerServiceOrders",
-                column: "SellerServiceId");
+                name: "IX_ArtistServiceOrders_ArtistServiceId",
+                table: "ArtistServiceOrders",
+                column: "ArtistServiceId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_SellerServices_SellerProfileId",
-                table: "SellerServices",
-                column: "SellerProfileId");
+                name: "IX_ArtistServices_ArtistId",
+                table: "ArtistServices",
+                column: "ArtistId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_UserSellerProfiles_UserId",
-                table: "UserSellerProfiles",
+                name: "IX_UserArtists_UserId",
+                table: "UserArtists",
                 column: "UserId",
                 unique: true);
         }
@@ -274,22 +274,22 @@ namespace comissions.app.api.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "SellerProfilePortfolioPieces");
+                name: "ArtistPortfolioPieces");
 
             migrationBuilder.DropTable(
-                name: "SellerProfileRequests");
+                name: "ArtistRequests");
 
             migrationBuilder.DropTable(
-                name: "SellerServiceOrderReviews");
+                name: "ArtistServiceOrderReviews");
 
             migrationBuilder.DropTable(
-                name: "SellerServiceOrders");
+                name: "ArtistServiceOrders");
 
             migrationBuilder.DropTable(
-                name: "SellerServices");
+                name: "ArtistServices");
 
             migrationBuilder.DropTable(
-                name: "UserSellerProfiles");
+                name: "UserArtists");
 
             migrationBuilder.DropTable(
                 name: "Users");

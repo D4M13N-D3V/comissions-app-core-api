@@ -1,9 +1,17 @@
-namespace comissions.app.api.Models.SellerProfile;
+using System.ComponentModel.DataAnnotations.Schema;
 
-public class SellerProfilePageSettingsModel
+namespace comissions.app.database.Entities;
+
+public class ArtistPageSettings
 {
+    public int Id { get; set; }
+    
+    [ForeignKey("Artist")]
+    public int ArtistId { get; set; }
+    public virtual UserArtist Artist { get; set; } = null!;
     
     public string RequestButtonHoverBGColor { get; set; }
+    public string RequestButtonHoverTextColor { get; set; }
     public string RequestButtonTextColor { get; set; }
     public string RequestButtonBGColor { get; set; }
     public string RequestTermsColor { get; set; }
@@ -18,11 +26,11 @@ public class SellerProfilePageSettingsModel
     public int PortfolioColumns { get; set; }
     public bool PortfolioMasonry { get; set; }
     public string PortfolioBackgroundColor { get; set; }
-    public string PortfolioHeaderImageUrl { get; set; }
-    public bool PortfolioHeaderUseImage { get; set; }
-    public int PortfolioHeaderSize { get; set; }
-    public string PortfolioHeaderColor { get; set; }
-    public string PortfolioHeaderText { get; set; }
+    public string PortfolionHeaderImageUrl { get; set; }
+    public bool PortfolionHeaderUseImage { get; set; }
+    public int PortfolionHeaderSize { get; set; }
+    public string PortfolionHeaderColor { get; set; }
+    public string PortfolionHeaderText { get; set; }
     public int DescriptionTextSize { get; set; }
     public string DescriptionTextColor { get; set; }
     public string DescriptionBackgroundColor { get; set; }
@@ -36,5 +44,4 @@ public class SellerProfilePageSettingsModel
     public int HeaderTextSize { get; set; }
     public string HeaderColor { get; set; }
     public string BackgroundColor { get; set; }
-    public string RequestButtonHoverTextColor { get; set; }
 }

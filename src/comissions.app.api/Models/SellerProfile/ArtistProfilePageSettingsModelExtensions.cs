@@ -1,14 +1,15 @@
 using comissions.app.database.Entities;
 
-namespace comissions.app.api.Models.SellerProfile;
+namespace comissions.app.api.Models.Artist;
 
-public static class SellerProfilePageSettingsModelExtensions
+public static class ArtistPageSettingsModelExtensions
 {
     
-    public static SellerProfilePageSettingsModel ToModel(this SellerProfilePageSettings sellerProfile)
+    public static ArtistPageSettingsModel ToModel(this ArtistPageSettings sellerProfile)
     {
-        return new SellerProfilePageSettingsModel()
+        return new ArtistPageSettingsModel()
         {
+            Artist = sellerProfile.Artist.ToModel(),
             BackgroundColor = sellerProfile.BackgroundColor,
             HeaderColor = sellerProfile.HeaderColor,
             HeaderTextSize = sellerProfile.HeaderTextSize,
@@ -45,7 +46,7 @@ public static class SellerProfilePageSettingsModelExtensions
             RequestButtonHoverTextColor = sellerProfile.RequestButtonHoverTextColor
         };
     }
-    public static SellerProfilePageSettings ToModel(this SellerProfilePageSettingsModel sellerProfile, SellerProfilePageSettings existing)
+    public static ArtistPageSettings ToModel(this ArtistPageSettingsModel sellerProfile, ArtistPageSettings existing)
     {
             existing.BackgroundColor = sellerProfile.BackgroundColor;
             existing.HeaderColor = sellerProfile.HeaderColor;

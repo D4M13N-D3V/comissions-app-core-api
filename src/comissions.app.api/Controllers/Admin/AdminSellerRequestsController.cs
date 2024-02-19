@@ -1,4 +1,4 @@
-using comissions.app.api.Models.SellerProfileRequest;
+using comissions.app.api.Models.ArtistRequest;
 using comissions.app.api.Services.Payment;
 using comissions.app.database;
 using comissions.app.database.Entities;
@@ -11,12 +11,12 @@ namespace comissions.app.api.Controllers;
 [ApiController]
 [Authorize("admin")]
 [Route("api/admin/[controller]")]
-public class AdminSellerRequestsController : Controller
+public class AdminArtistRequestsController : Controller
 {
     private readonly ApplicationDbContext _dbContext;
     private readonly IPaymentService _paymentService;
 
-    public AdminSellerRequestsController(ApplicationDbContext dbContext, IPaymentService paymentService)
+    public AdminArtistRequestsController(ApplicationDbContext dbContext, IPaymentService paymentService)
     {
         _paymentService = paymentService;
         _dbContext = dbContext;
@@ -30,9 +30,9 @@ public class AdminSellerRequestsController : Controller
     /// <returns>A list of seller profile requests</returns>
     [HttpGet]
     [Authorize("read:seller-profile-request")]
-    public async Task<IActionResult> GetSellerRequests(int offset = 0, int pageSize = 10)
+    public async Task<IActionResult> GetArtistRequests(int offset = 0, int pageSize = 10)
     {
-        var requests = _dbContext.SellerProfileRequests.Skip(offset).Take(pageSize).ToList();
+        var requests = _dbContext.ArtistRequests.Skip(offset).Take(pageSize).ToList();
         var result = requests.Select(x=>x.ToModel()).ToList();
         return Ok(result);
     }
@@ -44,9 +44,9 @@ public class AdminSellerRequestsController : Controller
     [HttpGet]
     [Authorize("read:seller-profile-request")]
     [Route("Count")]
-    public async Task<IActionResult> GetSellerRequestsCount()
+    public async Task<IActionResult> GetArtistRequestsCount()
     {
-        var result = _dbContext.SellerProfileRequests.Count();
+        var result = _dbContext.ArtistRequests.Count();
         return Ok(result);
     }
     
@@ -58,9 +58,9 @@ public class AdminSellerRequestsController : Controller
     [HttpPut]
     [Authorize("write:seller-profile-request")]
     [Route("{userId}")]
-    public async Task<IActionResult> AcceptSellerRequest(string userId)
+    public async Task<IActionResult> AcceptArtistRequest(string userId)
     {
-        var request = await _dbContext.SellerProfileRequests.FirstOrDefaultAsync(request=>request.UserId==userId);
+        var request = await _dbContext.ArtistRequests.FirstOrDefaultAsync(request=>request.UserId==userId);
         
         if(request==null)
             return NotFound("No request for that user exists.");
@@ -70,8 +70,8 @@ public class AdminSellerRequestsController : Controller
 
         request.Accepted = true;
         request.AcceptedDate = DateTime.UtcNow;
-        var accountId = _paymentService.CreateSellerAccount();
-        var newSellerProfile = new UserSellerProfile()
+        var accountId = _paymentService.CreateArtistAccount();
+        var newArtist = new UserArtist()
         {
             UserId = userId,
             AgeRestricted = false,
@@ -84,11 +84,11 @@ public class AdminSellerRequestsController : Controller
             RequestGuidelines = "",
             Name = "Default Shop",
         };
-        var dbProfile = _dbContext.UserSellerProfiles.Add(newSellerProfile).Entity;
+        var dbProfile = _dbContext.UserArtists.Add(newArtist).Entity;
         await _dbContext.SaveChangesAsync();
-        var newSettings = new SellerProfilePageSettings()
+        var newSettings = new ArtistPageSettings()
         {
-            SellerProfileId = dbProfile.Id,
+            ArtistId = dbProfile.Id,
             BackgroundColor = "rgb(126, 115, 115)",
             HeaderColor = "rgb(194, 187, 187)",
             HeaderTextSize = 5,
@@ -123,10 +123,10 @@ public class AdminSellerRequestsController : Controller
             RequestButtonTextColor = "rgb(194, 187, 187)",
             RequestButtonHoverBGColor = "rgb(98, 98, 98)"
         };
-        var dbSettings = _dbContext.SellerProfilePageSettings.Add(newSettings).Entity;
+        var dbSettings = _dbContext.ArtistPageSettings.Add(newSettings).Entity;
         await _dbContext.SaveChangesAsync();
         
-        request = _dbContext.SellerProfileRequests.Update(request).Entity;
+        request = _dbContext.ArtistRequests.Update(request).Entity;
         await _dbContext.SaveChangesAsync();
         var result = request.ToModel();
         return Ok(result);

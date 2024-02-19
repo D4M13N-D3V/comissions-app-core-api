@@ -14,69 +14,69 @@ namespace comissions.app.api.Migrations
         {
             migrationBuilder.DropColumn(
                 name: "SocialMediaLinks",
-                table: "UserSellerProfiles");
+                table: "UserArtists");
 
             migrationBuilder.RenameColumn(
                 name: "Biography",
-                table: "UserSellerProfiles",
+                table: "UserArtists",
                 newName: "SocialMediaLink4");
 
             migrationBuilder.AddColumn<string>(
                 name: "Description",
-                table: "UserSellerProfiles",
+                table: "UserArtists",
                 type: "text",
                 nullable: false,
                 defaultValue: "");
 
             migrationBuilder.AddColumn<string>(
                 name: "Name",
-                table: "UserSellerProfiles",
+                table: "UserArtists",
                 type: "text",
                 nullable: false,
                 defaultValue: "");
 
             migrationBuilder.AddColumn<string>(
                 name: "RequestGuidelines",
-                table: "UserSellerProfiles",
+                table: "UserArtists",
                 type: "text",
                 nullable: false,
                 defaultValue: "");
 
             migrationBuilder.AddColumn<int>(
-                name: "SellerProfilePageSettingsId",
-                table: "UserSellerProfiles",
+                name: "ArtistPageSettingsId",
+                table: "UserArtists",
                 type: "integer",
                 nullable: false,
                 defaultValue: 0);
 
             migrationBuilder.AddColumn<string>(
                 name: "SocialMediaLink1",
-                table: "UserSellerProfiles",
+                table: "UserArtists",
                 type: "text",
                 nullable: false,
                 defaultValue: "");
 
             migrationBuilder.AddColumn<string>(
                 name: "SocialMediaLink2",
-                table: "UserSellerProfiles",
+                table: "UserArtists",
                 type: "text",
                 nullable: false,
                 defaultValue: "");
 
             migrationBuilder.AddColumn<string>(
                 name: "SocialMediaLink3",
-                table: "UserSellerProfiles",
+                table: "UserArtists",
                 type: "text",
                 nullable: false,
                 defaultValue: "");
 
             migrationBuilder.CreateTable(
-                name: "SellerProfilePageSettings",
+                name: "ArtistPageSettings",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    SellerProfileId = table.Column<int>(type: "integer", nullable: false),
+                    ArtistId = table.Column<int>(type: "integer", nullable: false),
                     RequestButtonHoverBGColor = table.Column<string>(type: "text", nullable: false),
                     RequestButtonTextColor = table.Column<string>(type: "text", nullable: false),
                     RequestButtonBGColor = table.Column<string>(type: "text", nullable: false),
@@ -113,19 +113,19 @@ namespace comissions.app.api.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_SellerProfilePageSettings", x => x.Id);
+                    table.PrimaryKey("PK_ArtistPageSettings", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_SellerProfilePageSettings_UserSellerProfiles_SellerProfileId",
-                        column: x => x.SellerProfileId,
-                        principalTable: "UserSellerProfiles",
+                        name: "FK_ArtistPageSettings_UserArtists_ArtistId",
+                        column: x => x.ArtistId,
+                        principalTable: "UserArtists",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_SellerProfilePageSettings_SellerProfileId",
-                table: "SellerProfilePageSettings",
-                column: "SellerProfileId",
+                name: "IX_ArtistPageSettings_ArtistId",
+                table: "ArtistPageSettings",
+                column: "ArtistId",
                 unique: true);
         }
 
@@ -133,44 +133,44 @@ namespace comissions.app.api.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "SellerProfilePageSettings");
+                name: "ArtistPageSettings");
 
             migrationBuilder.DropColumn(
                 name: "Description",
-                table: "UserSellerProfiles");
+                table: "UserArtists");
 
             migrationBuilder.DropColumn(
                 name: "Name",
-                table: "UserSellerProfiles");
+                table: "UserArtists");
 
             migrationBuilder.DropColumn(
                 name: "RequestGuidelines",
-                table: "UserSellerProfiles");
+                table: "UserArtists");
 
             migrationBuilder.DropColumn(
-                name: "SellerProfilePageSettingsId",
-                table: "UserSellerProfiles");
+                name: "ArtistPageSettingsId",
+                table: "UserArtists");
 
             migrationBuilder.DropColumn(
                 name: "SocialMediaLink1",
-                table: "UserSellerProfiles");
+                table: "UserArtists");
 
             migrationBuilder.DropColumn(
                 name: "SocialMediaLink2",
-                table: "UserSellerProfiles");
+                table: "UserArtists");
 
             migrationBuilder.DropColumn(
                 name: "SocialMediaLink3",
-                table: "UserSellerProfiles");
+                table: "UserArtists");
 
             migrationBuilder.RenameColumn(
                 name: "SocialMediaLink4",
-                table: "UserSellerProfiles",
+                table: "UserArtists",
                 newName: "Biography");
 
             migrationBuilder.AddColumn<List<string>>(
                 name: "SocialMediaLinks",
-                table: "UserSellerProfiles",
+                table: "UserArtists",
                 type: "text[]",
                 nullable: false);
         }

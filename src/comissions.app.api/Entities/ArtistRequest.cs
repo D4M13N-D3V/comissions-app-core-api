@@ -1,6 +1,6 @@
 namespace comissions.app.database.Entities;
 
-public class SellerProfileRequest
+public class ArtistRequest
 {
     public int Id { get; set; }
     public string UserId { get; set; } = null!;
