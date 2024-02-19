@@ -18,11 +18,11 @@ public class SellerProfilePageSettingsModel
     public int PortfolioColumns { get; set; }
     public bool PortfolioMasonry { get; set; }
     public string PortfolioBackgroundColor { get; set; }
-    public string PortfolionHeaderImageUrl { get; set; }
-    public bool PortfolionHeaderUseImage { get; set; }
+    public string PortfolioHeaderImageUrl { get; set; }
+    public bool PortfolioHeaderUseImage { get; set; }
     public int PortfolionHeaderSize { get; set; }
-    public string PortfolionHeaderColor { get; set; }
-    public string PortfolionHeaderText { get; set; }
+    public string PortfolioHeaderColor { get; set; }
+    public string PortfolioHeaderText { get; set; }
     public int DescriptionTextSize { get; set; }
     public string DescriptionTextColor { get; set; }
     public string DescriptionBackgroundColor { get; set; }
