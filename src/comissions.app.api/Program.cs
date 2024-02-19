@@ -4,7 +4,6 @@ using comissions.app.api.Middleware;
 using comissions.app.api.Middleware.Authentication;
 using comissions.app.api.Services.Payment;
 using comissions.app.api.Services.Storage;
-using ArtPlatform.Database;
 using Auth0.AspNetCore.Authentication;
 using comissions.app.database;
 using Microsoft.AspNetCore.Authentication.JwtBearer;

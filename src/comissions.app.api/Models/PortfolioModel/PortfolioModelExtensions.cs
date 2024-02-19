@@ -1,4 +1,3 @@
-using ArtPlatform.Database.Entities;
 using comissions.app.database.Entities;
 
 namespace comissions.app.api.Models.PortfolioModel;

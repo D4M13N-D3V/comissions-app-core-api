@@ -1,4 +1,3 @@
-using ArtPlatform.Database.Entities;
 using Stripe;
 
 namespace comissions.app.api.Services.Payment;

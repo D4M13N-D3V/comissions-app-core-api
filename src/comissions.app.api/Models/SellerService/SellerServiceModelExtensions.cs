@@ -7,12 +7,6 @@ public static class SellerServiceModelExtensions
     {
         double avgRating = 0;
         int reviewCount = 0;
-        var ratings = sellerProfileRequest.Reviews;
-        if (ratings.Any())
-        {
-            avgRating = ratings.Average(x => x.Rating);
-            reviewCount = sellerProfileRequest.Reviews.Count;
-        }
         return new SellerServiceModel()
         {
             Id = sellerProfileRequest.Id,

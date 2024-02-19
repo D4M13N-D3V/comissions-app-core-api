@@ -1,5 +1,4 @@
 using comissions.app.api.Extensions;
-using ArtPlatform.Database;
 using comissions.app.database;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -48,16 +47,6 @@ public class AdminUsersController:ControllerBase
         return Ok(user);
     }
     
-    [HttpGet("{userId}/Orders")]
-    public async Task<IActionResult> GetUserOrders(string userId)
-    {
-        var user = await _dbContext.Users.Include(x=>x.Orders).FirstOrDefaultAsync(x=>x.Id==userId);
-        
-        if (user == null)
-            return NotFound();
-        
-        return Ok(user.Orders);
-    }
     
     [HttpPut("{userId}/Suspend")]
     public async Task<IActionResult> SuspendUser(string userId, [FromQuery]string reason, [FromQuery]int days)

@@ -25,5 +25,4 @@ public record User
     public string? SuspendAdminId { get; set; }
     
     [JsonIgnore] public virtual UserSellerProfile? UserSellerProfile { get; set; }
-    [JsonIgnore] public virtual ICollection<SellerServiceOrder> Orders { get; set; }
 }
