@@ -1,7 +1,5 @@
 using comissions.app.api.Extensions;
 using comissions.app.api.Models.PortfolioModel;
-using ArtPlatform.Database;
-using ArtPlatform.Database.Entities;
 using comissions.app.api.Models.SellerProfile;
 using comissions.app.api.Models.SellerProfileRequest;
 using comissions.app.api.Services.Payment;

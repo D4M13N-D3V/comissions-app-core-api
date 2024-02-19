@@ -1,6 +1,5 @@
 using System.Security.Claims;
 using comissions.app.api.Extensions;
-using ArtPlatform.Database;
 using comissions.app.api.Models.User;
 using comissions.app.database;
 using Microsoft.AspNetCore.Authorization;

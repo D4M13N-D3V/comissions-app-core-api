@@ -10,6 +10,5 @@ public class SellerService
     public bool Archived { get; set; } = false;
 
     public virtual ICollection<SellerProfilePortfolioPiece> PortfolioPieces { get; set; } = new List<SellerProfilePortfolioPiece>();
-    public virtual ICollection<SellerServiceOrderReview> Reviews { get; set; } = new List<SellerServiceOrderReview>();
     public virtual UserSellerProfile SellerProfile { get; set; } = null!;
 }

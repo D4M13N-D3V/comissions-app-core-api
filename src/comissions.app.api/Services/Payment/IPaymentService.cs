@@ -1,4 +1,3 @@
-using ArtPlatform.Database.Entities;
 
 namespace comissions.app.api.Services.Payment;
 

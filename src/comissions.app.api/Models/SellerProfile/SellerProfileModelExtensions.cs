@@ -1,4 +1,3 @@
-using ArtPlatform.Database.Entities;
 using comissions.app.api.Models.Discovery;
 using comissions.app.database.Entities;
 
@@ -39,9 +38,6 @@ public static class SellerProfileModelExtensions
     }
     public static DiscoverySellerModel ToDiscoveryModel(this UserSellerProfile sellerProfile)
     {
-        var reviews = sellerProfile.SellerServices.SelectMany(x => x.Reviews);
-        double reviewAverage = 0;
-        if(reviews.Count()>0) reviewAverage = reviews.Average(x=>x.Rating);
         
         return new DiscoverySellerModel()
         {
@@ -53,9 +49,7 @@ public static class SellerProfileModelExtensions
             SocialMeidaLink4 = sellerProfile.SocialMediaLink4,
             Description = sellerProfile.Description,
             RequestGuidelines = sellerProfile.RequestGuidelines,
-            PrepaymentRequired = sellerProfile.PrepaymentRequired,
-            AverageRating =reviewAverage,
-            ReviewCount = reviews.Count()
+            PrepaymentRequired = sellerProfile.PrepaymentRequired
         };
     }
     public static UserSellerProfile ToModel(this SellerProfileModel sellerProfile, UserSellerProfile existingSellerProfile)
