@@ -97,7 +97,7 @@ public class SellerProfileController : Controller
     [HttpPut]
     [Authorize("write:seller-profile")]
     [Route("Page")]
-    public async Task<IActionResult> UpdateSellerProfilePage(SellerProfilePageSettingsModel model)
+    public async Task<IActionResult> UpdateSellerProfilePage([FromBody]SellerProfilePageSettingsModel model)
     {
         var userId = User.GetUserId();
         var existingSellerProfile = await _dbContext.UserSellerProfiles.Include(x=>x.SellerProfilePageSettings).FirstOrDefaultAsync(sellerProfile=>sellerProfile.UserId==userId);
