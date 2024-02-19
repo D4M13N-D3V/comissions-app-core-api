@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -67,8 +66,13 @@ namespace comissions.app.api.Migrations
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     UserId = table.Column<string>(type: "text", nullable: false),
-                    Biography = table.Column<string>(type: "text", nullable: false),
-                    SocialMediaLinks = table.Column<List<string>>(type: "text[]", nullable: false),
+                    Name = table.Column<string>(type: "text", nullable: false),
+                    Description = table.Column<string>(type: "text", nullable: false),
+                    RequestGuidelines = table.Column<string>(type: "text", nullable: false),
+                    SocialMediaLink1 = table.Column<string>(type: "text", nullable: false),
+                    SocialMediaLink2 = table.Column<string>(type: "text", nullable: false),
+                    SocialMediaLink3 = table.Column<string>(type: "text", nullable: false),
+                    SocialMediaLink4 = table.Column<string>(type: "text", nullable: false),
                     AgeRestricted = table.Column<bool>(type: "boolean", nullable: false),
                     StripeAccountId = table.Column<string>(type: "text", nullable: true),
                     PrepaymentRequired = table.Column<bool>(type: "boolean", nullable: false),
@@ -76,7 +80,8 @@ namespace comissions.app.api.Migrations
                     SuspendedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     UnsuspendDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     SuspendedReason = table.Column<string>(type: "text", nullable: true),
-                    SuspendAdminId = table.Column<string>(type: "text", nullable: true)
+                    SuspendAdminId = table.Column<string>(type: "text", nullable: true),
+                    ArtistPageSettingsId = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -90,22 +95,52 @@ namespace comissions.app.api.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "ArtistServices",
+                name: "ArtistPageSettings",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     ArtistId = table.Column<int>(type: "integer", nullable: false),
-                    Name = table.Column<string>(type: "text", nullable: false),
-                    Description = table.Column<string>(type: "text", nullable: false),
-                    Price = table.Column<double>(type: "double precision", nullable: false),
-                    Archived = table.Column<bool>(type: "boolean", nullable: false)
+                    RequestButtonHoverBGColor = table.Column<string>(type: "text", nullable: false),
+                    RequestButtonHoverTextColor = table.Column<string>(type: "text", nullable: false),
+                    RequestButtonTextColor = table.Column<string>(type: "text", nullable: false),
+                    RequestButtonBGColor = table.Column<string>(type: "text", nullable: false),
+                    RequestTermsColor = table.Column<string>(type: "text", nullable: false),
+                    RequestBackgroundColor = table.Column<string>(type: "text", nullable: false),
+                    RequestHeaderImageUrl = table.Column<string>(type: "text", nullable: false),
+                    RequestHeaderUseImage = table.Column<bool>(type: "boolean", nullable: false),
+                    RequestHeaderSize = table.Column<int>(type: "integer", nullable: false),
+                    RequestHeaderColor = table.Column<string>(type: "text", nullable: false),
+                    RequestHeaderText = table.Column<string>(type: "text", nullable: false),
+                    PortfolioMaximumSize = table.Column<int>(type: "integer", nullable: false),
+                    PortfolioEnabledScrolling = table.Column<bool>(type: "boolean", nullable: false),
+                    PortfolioColumns = table.Column<int>(type: "integer", nullable: false),
+                    PortfolioMasonry = table.Column<bool>(type: "boolean", nullable: false),
+                    PortfolioBackgroundColor = table.Column<string>(type: "text", nullable: false),
+                    PortfolionHeaderImageUrl = table.Column<string>(type: "text", nullable: false),
+                    PortfolionHeaderUseImage = table.Column<bool>(type: "boolean", nullable: false),
+                    PortfolionHeaderSize = table.Column<int>(type: "integer", nullable: false),
+                    PortfolionHeaderColor = table.Column<string>(type: "text", nullable: false),
+                    PortfolionHeaderText = table.Column<string>(type: "text", nullable: false),
+                    DescriptionTextSize = table.Column<int>(type: "integer", nullable: false),
+                    DescriptionTextColor = table.Column<string>(type: "text", nullable: false),
+                    DescriptionBackgroundColor = table.Column<string>(type: "text", nullable: false),
+                    DescriptionHeaderImageUrl = table.Column<string>(type: "text", nullable: false),
+                    DescriptionHeaderUseImage = table.Column<bool>(type: "boolean", nullable: false),
+                    DescriptionHeaderSize = table.Column<int>(type: "integer", nullable: false),
+                    DescriptionHeaderColor = table.Column<string>(type: "text", nullable: false),
+                    DescriptionHeaderText = table.Column<string>(type: "text", nullable: false),
+                    HeaderImageUrl = table.Column<string>(type: "text", nullable: false),
+                    HeaderUseImage = table.Column<bool>(type: "boolean", nullable: false),
+                    HeaderTextSize = table.Column<int>(type: "integer", nullable: false),
+                    HeaderColor = table.Column<string>(type: "text", nullable: false),
+                    BackgroundColor = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ArtistServices", x => x.Id);
+                    table.PrimaryKey("PK_ArtistPageSettings", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_ArtistServices_UserArtists_ArtistId",
+                        name: "FK_ArtistPageSettings_UserArtists_ArtistId",
                         column: x => x.ArtistId,
                         principalTable: "UserArtists",
                         principalColumn: "Id",
@@ -119,19 +154,13 @@ namespace comissions.app.api.Migrations
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     ArtistId = table.Column<int>(type: "integer", nullable: false),
-                    FileReference = table.Column<string>(type: "text", nullable: false),
-                    ArtistServiceId = table.Column<int>(type: "integer", nullable: true)
+                    FileReference = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_ArtistPortfolioPieces", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_ArtistPortfolioPieces_ArtistServices_ArtistServiceId",
-                        column: x => x.ArtistServiceId,
-                        principalTable: "ArtistServices",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_ArtistPortfolioPieces_UserArtists_ArtistProfi~",
+                        name: "FK_ArtistPortfolioPieces_UserArtists_ArtistId",
                         column: x => x.ArtistId,
                         principalTable: "UserArtists",
                         principalColumn: "Id",
@@ -139,79 +168,45 @@ namespace comissions.app.api.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "ArtistServiceOrders",
+                name: "Requests",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    BuyerId = table.Column<string>(type: "text", nullable: false),
-                    ArtistServiceId = table.Column<int>(type: "integer", nullable: false),
+                    Message = table.Column<string>(type: "text", nullable: false),
+                    Amount = table.Column<decimal>(type: "numeric", nullable: false),
+                    UserId = table.Column<string>(type: "text", nullable: false),
                     ArtistId = table.Column<int>(type: "integer", nullable: false),
-                    Status = table.Column<int>(type: "integer", nullable: false),
-                    Price = table.Column<double>(type: "double precision", nullable: false),
-                    CreatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    TermsAcceptedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    EndDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    PaymentUrl = table.Column<string>(type: "text", nullable: true)
+                    RequestDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    Accepted = table.Column<bool>(type: "boolean", nullable: false),
+                    AcceptedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    Declined = table.Column<bool>(type: "boolean", nullable: false),
+                    DeclinedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    Completed = table.Column<bool>(type: "boolean", nullable: false),
+                    CompletedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ArtistServiceOrders", x => x.Id);
+                    table.PrimaryKey("PK_Requests", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_ArtistServiceOrders_ArtistServices_ArtistServiceId",
-                        column: x => x.ArtistServiceId,
-                        principalTable: "ArtistServices",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_ArtistServiceOrders_UserArtists_ArtistId",
+                        name: "FK_Requests_UserArtists_ArtistId",
                         column: x => x.ArtistId,
                         principalTable: "UserArtists",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_ArtistServiceOrders_Users_BuyerId",
-                        column: x => x.BuyerId,
+                        name: "FK_Requests_Users_UserId",
+                        column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
-            migrationBuilder.CreateTable(
-                name: "ArtistServiceOrderReviews",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    ReviewerId = table.Column<string>(type: "text", nullable: false),
-                    ArtistServiceOrderId = table.Column<int>(type: "integer", nullable: false),
-                    ArtistServiceId = table.Column<int>(type: "integer", nullable: false),
-                    ReviewDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    Review = table.Column<string>(type: "text", nullable: true),
-                    Rating = table.Column<int>(type: "integer", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ArtistServiceOrderReviews", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_ArtistServiceOrderReviews_ArtistServiceOrders_ArtistService~",
-                        column: x => x.ArtistServiceOrderId,
-                        principalTable: "ArtistServiceOrders",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_ArtistServiceOrderReviews_ArtistServices_ArtistServiceId",
-                        column: x => x.ArtistServiceId,
-                        principalTable: "ArtistServices",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_ArtistServiceOrderReviews_Users_ReviewerId",
-                        column: x => x.ReviewerId,
-                        principalTable: "Users",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
+            migrationBuilder.CreateIndex(
+                name: "IX_ArtistPageSettings_ArtistId",
+                table: "ArtistPageSettings",
+                column: "ArtistId",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_ArtistPortfolioPieces_ArtistId",
@@ -219,49 +214,19 @@ namespace comissions.app.api.Migrations
                 column: "ArtistId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ArtistPortfolioPieces_ArtistServiceId",
-                table: "ArtistPortfolioPieces",
-                column: "ArtistServiceId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_ArtistRequests_UserId",
                 table: "ArtistRequests",
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ArtistServiceOrderReviews_ReviewerId",
-                table: "ArtistServiceOrderReviews",
-                column: "ReviewerId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ArtistServiceOrderReviews_ArtistServiceId",
-                table: "ArtistServiceOrderReviews",
-                column: "ArtistServiceId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ArtistServiceOrderReviews_ArtistServiceOrderId",
-                table: "ArtistServiceOrderReviews",
-                column: "ArtistServiceOrderId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ArtistServiceOrders_BuyerId",
-                table: "ArtistServiceOrders",
-                column: "BuyerId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ArtistServiceOrders_ArtistId",
-                table: "ArtistServiceOrders",
+                name: "IX_Requests_ArtistId",
+                table: "Requests",
                 column: "ArtistId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ArtistServiceOrders_ArtistServiceId",
-                table: "ArtistServiceOrders",
-                column: "ArtistServiceId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ArtistServices_ArtistId",
-                table: "ArtistServices",
-                column: "ArtistId");
+                name: "IX_Requests_UserId",
+                table: "Requests",
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_UserArtists_UserId",
@@ -274,19 +239,16 @@ namespace comissions.app.api.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "ArtistPageSettings");
+
+            migrationBuilder.DropTable(
                 name: "ArtistPortfolioPieces");
 
             migrationBuilder.DropTable(
                 name: "ArtistRequests");
 
             migrationBuilder.DropTable(
-                name: "ArtistServiceOrderReviews");
-
-            migrationBuilder.DropTable(
-                name: "ArtistServiceOrders");
-
-            migrationBuilder.DropTable(
-                name: "ArtistServices");
+                name: "Requests");
 
             migrationBuilder.DropTable(
                 name: "UserArtists");
