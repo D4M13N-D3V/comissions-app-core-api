@@ -20,7 +20,7 @@ public class SellerProfilePageSettingsModel
     public string PortfolioBackgroundColor { get; set; }
     public string PortfolioHeaderImageUrl { get; set; }
     public bool PortfolioHeaderUseImage { get; set; }
-    public int PortfolionHeaderSize { get; set; }
+    public int PortfolioHeaderSize { get; set; }
     public string PortfolioHeaderColor { get; set; }
     public string PortfolioHeaderText { get; set; }
     public int DescriptionTextSize { get; set; }
