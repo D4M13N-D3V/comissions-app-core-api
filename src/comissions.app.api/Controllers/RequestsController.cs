@@ -62,11 +62,22 @@ public class RequestsController : Controller
     [Route("Requests")]
     public async Task<IActionResult> CreateRequest([FromBody] RequestModel model)
     {
+        var openRequests = await _dbContext.Requests
+            .Where(x=>x.UserId==User.GetUserId())
+            .CountAsync();
+        
+        if(openRequests>3)
+            return BadRequest("You can only have 3 open requests at a time.");
+        
         var request = new Request()
         {
             Amount = model.Amount,
             Message = model.Message,
-            RequestDate = DateTime.Now
+            RequestDate = DateTime.Now,
+            Accepted = false,
+            AcceptedDate = null,
+            UserId = User.GetUserId(),
+            ArtistId = model.ArtistId
         };
         _dbContext.Requests.Add(request);
         await _dbContext.SaveChangesAsync();
