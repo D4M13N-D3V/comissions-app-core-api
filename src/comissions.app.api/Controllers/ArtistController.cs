@@ -256,7 +256,7 @@ public class ArtistController : Controller
             var ArtistRequest = await _dbContext.ArtistRequests.FirstOrDefaultAsync(request=>request.UserId==userId && request.Accepted==false);
             if(ArtistRequest!=null)
                 return BadRequest();
-            return Unauthorized();
+            return BadRequest();
         }
         
         if(existingArtist.Suspended)
