@@ -44,6 +44,7 @@ namespace comissions.app.api.Migrations
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     UserId = table.Column<string>(type: "text", nullable: false),
+                    Message = table.Column<string>(type: "text", nullable: false),
                     RequestDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     AcceptedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     Accepted = table.Column<bool>(type: "boolean", nullable: false)
