@@ -56,6 +56,7 @@ public class DiscoveryController : Controller
         if(seller==null)
             return NotFound();
         var result = seller.ArtistPageSettings.ToModel();
+        result.Artist = seller.ToModel();
         return Ok(result);
     }
     

@@ -9,7 +9,6 @@ public static class ArtistPageSettingsModelExtensions
     {
         return new ArtistPageSettingsModel()
         {
-            Artist = sellerProfile.Artist.ToModel(),
             BackgroundColor = sellerProfile.BackgroundColor,
             HeaderColor = sellerProfile.HeaderColor,
             HeaderTextSize = sellerProfile.HeaderTextSize,
