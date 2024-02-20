@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-    
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -98,16 +98,19 @@ builder.Services.AddAuthorization(options =>
     
     options.AddPolicy("read:user", policy => policy.Requirements.Add(new 
         HasScopeRequirement("read:user", builder.Configuration.GetValue<string>("Auth0:Domain"))));
+    
     options.AddPolicy("write:user", policy => policy.Requirements.Add(new 
         HasScopeRequirement("write:user", builder.Configuration.GetValue<string>("Auth0:Domain"))));
     
     options.AddPolicy("read:artist", policy => policy.Requirements.Add(new 
         HasScopeRequirement("read:artist", builder.Configuration.GetValue<string>("Auth0:Domain"))));
+    
     options.AddPolicy("write:artist", policy => policy.Requirements.Add(new 
         HasScopeRequirement("write:artist", builder.Configuration.GetValue<string>("Auth0:Domain"))));
     
     options.AddPolicy("read:request", policy => policy.Requirements.Add(new 
         HasScopeRequirement("read:request", builder.Configuration.GetValue<string>("Auth0:Domain"))));
+    
     options.AddPolicy("write:request", policy => policy.Requirements.Add(new 
         HasScopeRequirement("write:request", builder.Configuration.GetValue<string>("Auth0:Domain"))));
 });

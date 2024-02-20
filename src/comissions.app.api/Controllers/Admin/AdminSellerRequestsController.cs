@@ -29,7 +29,6 @@ public class AdminArtistRequestsController : Controller
     /// <param name="pageSize"> The amount of records to return.</param>
     /// <returns>A list of seller profile requests</returns>
     [HttpGet]
-    [Authorize("read:seller-profile-request")]
     public async Task<IActionResult> GetArtistRequests(int offset = 0, int pageSize = 10)
     {
         var requests = _dbContext.ArtistRequests.Skip(offset).Take(pageSize).ToList();
@@ -42,7 +41,6 @@ public class AdminArtistRequestsController : Controller
     /// </summary>
     /// <returns>The number of requests.</returns>
     [HttpGet]
-    [Authorize("read:seller-profile-request")]
     [Route("Count")]
     public async Task<IActionResult> GetArtistRequestsCount()
     {
@@ -56,7 +54,6 @@ public class AdminArtistRequestsController : Controller
     /// <param name="userId">The ID of the user to accept the request for.</param>
     /// <returns>The new seller profile.</returns>
     [HttpPut]
-    [Authorize("write:seller-profile-request")]
     [Route("{userId}")]
     public async Task<IActionResult> AcceptArtistRequest(string userId)
     {
