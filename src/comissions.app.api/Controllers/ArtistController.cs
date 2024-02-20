@@ -30,7 +30,7 @@ public class ArtistController : Controller
     }
     
     [HttpGet]
-    [Authorize("read:seller-profile")]
+    [Authorize("read:artist")]
     public async Task<IActionResult> GetArtist()
     {
         var userId = User.GetUserId();
@@ -47,7 +47,7 @@ public class ArtistController : Controller
     }
     
     [HttpPut]
-    [Authorize("write:seller-profile")]
+    [Authorize("write:artist")]
     public async Task<IActionResult> UpdateArtist(ArtistModel model)
     {
         var userId = User.GetUserId();
@@ -71,7 +71,7 @@ public class ArtistController : Controller
     }
     
     [HttpGet]
-    [Authorize("read:seller-profile")]
+    [Authorize("read:artist")]
     [Route("Request")]
     public async Task<IActionResult> GetArtistRequest()
     {
@@ -84,7 +84,7 @@ public class ArtistController : Controller
     }   
     
     [HttpGet]
-    [Authorize("read:seller-profile")]
+    [Authorize("read:artist")]
     [Route("Page")]
     public async Task<IActionResult> GetArtistPage()
     {
@@ -97,7 +97,7 @@ public class ArtistController : Controller
     }
     
     [HttpPut]
-    [Authorize("write:seller-profile")]
+    [Authorize("write:artist")]
     [Route("Page")]
     public async Task<IActionResult> UpdateArtistPage([FromBody]ArtistPageSettingsModel model)
     {
@@ -119,7 +119,7 @@ public class ArtistController : Controller
     }
     
     [HttpPost]
-    [Authorize("write:seller-profile")]
+    [Authorize("write:artist")]
     public async Task<IActionResult> RequestArtist([FromBody] string message)
     {
         var userId = User.GetUserId();
@@ -148,7 +148,7 @@ public class ArtistController : Controller
     }   
     
     [HttpGet]
-    [Authorize("read:seller-profile")]
+    [Authorize("read:artist")]
     [Route("{sellerServiceId:int}/Portfolio/{portfolioId:int}")]
     public async Task<IActionResult> GetPortfolio(int sellerServiceId, int portfolioId)
     {
@@ -172,7 +172,7 @@ public class ArtistController : Controller
 
     [HttpGet]
     [Route("Portfolio")]
-    [Authorize("read:seller-profile")]
+    [Authorize("read:artist")]
     public async Task<IActionResult> GetPortfolio()
     {
         var userId = User.GetUserId();
@@ -193,7 +193,7 @@ public class ArtistController : Controller
     
     [HttpPost]
     [Route("Portfolio")]
-    [Authorize("write:seller-profile")]
+    [Authorize("write:artist")]
     public async Task<IActionResult> AddPortfolio()
     {
         var userId = User.GetUserId();
@@ -219,7 +219,7 @@ public class ArtistController : Controller
     }
     
     [HttpDelete]
-    [Authorize("write:seller-profile")]
+    [Authorize("write:artist")]
     [Route("Portfolio/{portfolioId:int}")]
     public async Task<IActionResult> DeletePortfolio(int portfolioId)
     {
@@ -245,7 +245,7 @@ public class ArtistController : Controller
     }
     
     [HttpGet]
-    [Authorize("write:seller-profile")]
+    [Authorize("write:artist")]
     [Route("Onboard")]
     public async Task<IActionResult> PaymentAccountStatus()
     {
@@ -266,7 +266,7 @@ public class ArtistController : Controller
     }
     
     [HttpGet]
-    [Authorize("write:seller-profile")]
+    [Authorize("write:artist")]
     [Route("Onboard/Url")]
     public async Task<IActionResult> GetPaymentAccount()
     {

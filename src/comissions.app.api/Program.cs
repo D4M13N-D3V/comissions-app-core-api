@@ -49,20 +49,12 @@ builder.Services.AddSwaggerGen(options =>
                     { "openid", "OpenId" },
                     { "email", "Email" },
                     { "profile", "Profile" },
-                    { "read:user",  "Read your profile information." },
-                    { "write:user", "Update your profile information." },
-                    { "read:billing-information", "Read your billing information." },
-                    { "write:billing-information", "Update your billing information." },
-                    { "read:seller-profile", "Read your seller profile information."},
-                    { "write:seller-profile", "Update your seller profile information."},
-                    { "write:seller-profile-request", "Accept seller profile requests."},
-                    { "read:seller-profile-request", "Read seller profile requests."},
-                    { "read:seller-service", "Read services on your seller profile."},
-                    { "write:seller-service", "Update services on your seller profile."},
-                    { "write:orders", "Create new orders and take action against existing ones."},
-                    { "read:orders", "View your orders."},
-                    { "read:seller-orders", "View orders on your seller profile."},
-                    { "write:seller-orders", "Update orders on your seller profile."}
+                    { "read:user",  "Read your user information." },
+                    { "write:user", "Update your user information." },
+                    { "read:artist", "Read settings and information about your artist profile."},
+                    { "write:artist", "Update settings, page design, and other things about your artist profile."},
+                    { "read:request", "View existing requests and their artwork."},
+                    { "write:request", "Create new requests."},
                 }
             }
         }
@@ -109,35 +101,15 @@ builder.Services.AddAuthorization(options =>
     options.AddPolicy("write:user", policy => policy.Requirements.Add(new 
         HasScopeRequirement("write:user", builder.Configuration.GetValue<string>("Auth0:Domain"))));
     
-    options.AddPolicy("read:billing-information", policy => policy.Requirements.Add(new 
-        HasScopeRequirement("read:billing-information", builder.Configuration.GetValue<string>("Auth0:Domain"))));
-    options.AddPolicy("write:billing-information", policy => policy.Requirements.Add(new 
-        HasScopeRequirement("write:billing-information", builder.Configuration.GetValue<string>("Auth0:Domain"))));
+    options.AddPolicy("read:artist", policy => policy.Requirements.Add(new 
+        HasScopeRequirement("read:artist", builder.Configuration.GetValue<string>("Auth0:Domain"))));
+    options.AddPolicy("write:artist", policy => policy.Requirements.Add(new 
+        HasScopeRequirement("write:artist", builder.Configuration.GetValue<string>("Auth0:Domain"))));
     
-    options.AddPolicy("read:seller-profile", policy => policy.Requirements.Add(new 
-        HasScopeRequirement("read:seller-profile", builder.Configuration.GetValue<string>("Auth0:Domain"))));
-    options.AddPolicy("write:seller-profile", policy => policy.Requirements.Add(new 
-        HasScopeRequirement("write:seller-profile", builder.Configuration.GetValue<string>("Auth0:Domain"))));
-    
-    options.AddPolicy("read:seller-profile-request", policy => policy.Requirements.Add(new 
-        HasScopeRequirement("read:seller-profile-request", builder.Configuration.GetValue<string>("Auth0:Domain"))));
-    options.AddPolicy("write:seller-profile-request", policy => policy.Requirements.Add(new 
-        HasScopeRequirement("write:seller-profile-request", builder.Configuration.GetValue<string>("Auth0:Domain"))));
-    
-    options.AddPolicy("read:seller-service", policy => policy.Requirements.Add(new 
-        HasScopeRequirement("read:seller-service", builder.Configuration.GetValue<string>("Auth0:Domain"))));
-    options.AddPolicy("write:seller-service", policy => policy.Requirements.Add(new 
-        HasScopeRequirement("write:seller-service", builder.Configuration.GetValue<string>("Auth0:Domain"))));
-    
-    options.AddPolicy("write:orders", policy => policy.Requirements.Add(new 
-        HasScopeRequirement("write:orders", builder.Configuration.GetValue<string>("Auth0:Domain"))));
-    options.AddPolicy("read:orders", policy => policy.Requirements.Add(new 
-        HasScopeRequirement("read:orders", builder.Configuration.GetValue<string>("Auth0:Domain"))));
-    
-    options.AddPolicy("read:seller-orders", policy => policy.Requirements.Add(new 
-        HasScopeRequirement("read:seller-orders", builder.Configuration.GetValue<string>("Auth0:Domain"))));
-    options.AddPolicy("write:seller-orders", policy => policy.Requirements.Add(new 
-        HasScopeRequirement("write:seller-orders", builder.Configuration.GetValue<string>("Auth0:Domain"))));
+    options.AddPolicy("read:request", policy => policy.Requirements.Add(new 
+        HasScopeRequirement("read:request", builder.Configuration.GetValue<string>("Auth0:Domain"))));
+    options.AddPolicy("write:request", policy => policy.Requirements.Add(new 
+        HasScopeRequirement("write:request", builder.Configuration.GetValue<string>("Auth0:Domain"))));
 });
 
 builder.Services.AddSingleton<IAuthorizationHandler, HasScopeHandler>();
