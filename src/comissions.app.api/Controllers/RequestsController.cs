@@ -1,8 +1,10 @@
+using comissions.app.api.Extensions;
 using comissions.app.api.Services.Payment;
 using comissions.app.api.Services.Storage;
 using comissions.app.database;
 using comissions.app.database.Entities;
 using comissions.app.database.Models.Request;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -24,11 +26,14 @@ public class RequestsController : Controller
         _dbContext = dbContext;
     }
     
+    [Authorize("read:request")]
     [HttpGet]
     [Route("Requests")]
     public async Task<IActionResult> GetRequests(string search="",int offset = 0, int pageSize = 10)
     {
+        var userId = User.GetUserId();
         var requests = await _dbContext.Requests
+            .Where(x=>x.UserId==userId)
             .Include(x=>x.Artist)
             .Where(x=>x.Artist.Name.Contains(search) || x.Message.Contains(search))
             .Skip(offset).Take(pageSize).ToListAsync();
@@ -36,11 +41,14 @@ public class RequestsController : Controller
         return Ok(result);
     }
     
+    [Authorize("read:request")]
     [HttpGet]
     [Route("Requests/{requestId:int}")]
     public async Task<IActionResult> GetRequest(int requestId)
     {
+        var userId = User.GetUserId();
         var request = await _dbContext.Requests
+            .Where(x=>x.UserId==userId)
             .Include(x=>x.Artist)
             .FirstOrDefaultAsync(x=>x.Id==requestId);
         if(request==null)
@@ -49,6 +57,7 @@ public class RequestsController : Controller
         return Ok(result);
     }
     
+    [Authorize("write:request")]
     [HttpPost]
     [Route("Requests")]
     public async Task<IActionResult> CreateRequest([FromBody] RequestModel model)
