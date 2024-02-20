@@ -39,5 +39,5 @@ public class ArtistPageSettingsModel
     public string HeaderColor { get; set; }
     public string BackgroundColor { get; set; }
     public string RequestButtonHoverTextColor { get; set; }
-    public ArtistModel Artist { get; set; }
+    public ArtistModel? Artist { get; set; }
 }
