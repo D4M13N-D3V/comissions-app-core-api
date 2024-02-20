@@ -9,7 +9,8 @@ public static class ArtistRequestModelExtensions
             Id = sellerProfileRequest.Id,
             UserId = sellerProfileRequest.UserId,
             RequestDate = sellerProfileRequest.RequestDate,
-            Accepted = sellerProfileRequest.Accepted
+            Accepted = sellerProfileRequest.Accepted,
+            Message = sellerProfileRequest.Message
         };
     }
 }
