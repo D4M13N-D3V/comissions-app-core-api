@@ -5,6 +5,7 @@ public class RequestModel
     public int Id { get; set; }
     public string Message { get; set; }
     public decimal Amount { get; set; }
+    public int ArtistId { get; set; }
     public string UserId { get; set; }
     public DateTime RequestDate { get; set; }
     public bool Accepted { get; set; } = false;
