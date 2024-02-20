@@ -128,4 +128,21 @@ public class AdminArtistRequestsController : Controller
         var result = request.ToModel();
         return Ok(result);
     }
+    
+    [HttpDelete]
+    [Route("{userId}")]
+    public async Task<IActionResult> DenyArtistRequest(string userId)
+    {
+        var request = await _dbContext.ArtistRequests.FirstOrDefaultAsync(request=>request.UserId==userId);
+        
+        if(request==null)
+            return NotFound("No request for that user exists.");
+        
+        if (request.Accepted == true)
+            return BadRequest("User is already a seller.");
+        
+        _dbContext.ArtistRequests.Remove(request);
+        await _dbContext.SaveChangesAsync();
+        return Ok();
+    }
 }
