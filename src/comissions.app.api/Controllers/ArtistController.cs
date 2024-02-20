@@ -141,6 +141,7 @@ public class ArtistController : Controller
             RequestDate = DateTime.UtcNow,
             UserId = userId
         };
+                
         _dbContext.ArtistRequests.Add(ArtistRequest);
         await _dbContext.SaveChangesAsync();
         return Ok();

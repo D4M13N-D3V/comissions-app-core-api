@@ -8,4 +8,5 @@ public class ArtistRequestModel
     public bool Accepted { get; set; }
     
     public virtual database.Entities.User User { get; set; } = null!;
+    public string Message { get; set; }
 }
