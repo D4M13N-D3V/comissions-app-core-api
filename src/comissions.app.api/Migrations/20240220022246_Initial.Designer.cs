@@ -12,7 +12,7 @@ using comissions.app.database;
 namespace comissions.app.api.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240219095441_Initial")]
+    [Migration("20240220022246_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -202,6 +202,10 @@ namespace comissions.app.api.Migrations
 
                     b.Property<DateTime?>("AcceptedDate")
                         .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Message")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<DateTime>("RequestDate")
                         .HasColumnType("timestamp with time zone");
