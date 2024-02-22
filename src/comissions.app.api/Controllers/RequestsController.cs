@@ -98,6 +98,16 @@ public class RequestsController : Controller
             .Include(x=>x.Artist)
             .Where(x=>x.Artist.UserId==userId)
             .FirstOrDefaultAsync(x=>x.Id==requestId);
+        
+        if(request.Completed)
+            return BadRequest("Request has already been completed.");
+        
+        if(request.Accepted)
+            return BadRequest("Request has already been accepted.");
+
+        if (request.Declined)
+            return BadRequest("Request has already been declined.");
+        
         if(request==null)
             return NotFound();
         
@@ -123,6 +133,15 @@ public class RequestsController : Controller
             .FirstOrDefaultAsync(x=>x.Id==requestId);
         if(request==null)
             return NotFound();
+        
+        if(request.Completed)
+            return BadRequest("Request has already been completed.");
+        
+        if(request.Accepted)
+            return BadRequest("Request has already been accepted.");
+
+        if (request.Declined)
+            return BadRequest("Request has already been declined.");
         request.Declined = true;
         request.DeclinedDate = DateTime.UtcNow;
         _dbContext.Entry(request).State = EntityState.Modified;
