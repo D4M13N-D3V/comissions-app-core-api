@@ -64,8 +64,8 @@ public class RequestsController : Controller
     {
         var userId = User.GetUserId();
         var requests = await _dbContext.Requests
-            .Where(x=>x.UserId==userId)
             .Include(x=>x.Artist)
+            .Where(x=>x.Artist.UserId==userId)
             .Where(x=>x.Artist.Name.Contains(search) || x.Message.Contains(search))
             .Skip(offset).Take(pageSize).ToListAsync();
         var result = requests.Select(x=>x.ToModel()).ToList();
@@ -79,8 +79,8 @@ public class RequestsController : Controller
     {
         var userId = User.GetUserId();
         var request = await _dbContext.Requests
-            .Where(x=>x.UserId==userId)
             .Include(x=>x.Artist)
+            .Where(x=>x.Artist.UserId==userId)
             .FirstOrDefaultAsync(x=>x.Id==requestId);
         if(request==null)
             return NotFound();
@@ -95,8 +95,8 @@ public class RequestsController : Controller
     {
         var userId = User.GetUserId();
         var request = await _dbContext.Requests
-            .Where(x=>x.UserId==userId)
             .Include(x=>x.Artist)
+            .Where(x=>x.Artist.UserId==userId)
             .FirstOrDefaultAsync(x=>x.Id==requestId);
         if(request==null)
             return NotFound();
@@ -118,8 +118,8 @@ public class RequestsController : Controller
     {
         var userId = User.GetUserId();
         var request = await _dbContext.Requests
-            .Where(x=>x.UserId==userId)
             .Include(x=>x.Artist)
+            .Where(x=>x.Artist.UserId==userId)
             .FirstOrDefaultAsync(x=>x.Id==requestId);
         if(request==null)
             return NotFound();
