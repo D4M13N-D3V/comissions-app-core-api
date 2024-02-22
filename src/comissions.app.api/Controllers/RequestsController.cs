@@ -60,7 +60,7 @@ public class RequestsController : Controller
     [Authorize("write:request")]
     [HttpPost]
     [Route("Requests")]
-    public async Task<IActionResult> CreateRequest([FromBody] RequestModel model)
+    public async Task<IActionResult> CreateRequest([FromBody] RequestCreateModel model)
     {
         var openRequests = await _dbContext.Requests
             .Where(x=>x.UserId==User.GetUserId())
@@ -74,10 +74,14 @@ public class RequestsController : Controller
             Amount = model.Amount,
             Message = model.Message,
             RequestDate = DateTime.Now,
+            UserId = User.GetUserId(),
+            ArtistId = model.ArtistId,
             Accepted = false,
             AcceptedDate = null,
-            UserId = User.GetUserId(),
-            ArtistId = model.ArtistId
+            Declined = false,
+            DeclinedDate = null,
+            Completed = false,
+            CompletedDate = null
         };
         _dbContext.Requests.Add(request);
         await _dbContext.SaveChangesAsync();
