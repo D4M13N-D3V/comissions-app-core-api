@@ -28,7 +28,7 @@ public class RequestsController : Controller
     
     [Authorize("read:request")]
     [HttpGet]
-    [Route("Requests")]
+    [Route("Customer/Requests")]
     public async Task<IActionResult> GetRequests(string search="",int offset = 0, int pageSize = 10)
     {
         var userId = User.GetUserId();
@@ -43,7 +43,7 @@ public class RequestsController : Controller
     
     [Authorize("read:request")]
     [HttpGet]
-    [Route("Requests/{requestId:int}")]
+    [Route("Customer/Requests/{requestId:int}")]
     public async Task<IActionResult> GetRequest(int requestId)
     {
         var userId = User.GetUserId();
@@ -57,9 +57,83 @@ public class RequestsController : Controller
         return Ok(result);
     }
     
+    [Authorize("read:request")]
+    [HttpGet]
+    [Route("Artist/Requests")]
+    public async Task<IActionResult> GetArtistRequests(string search="",int offset = 0, int pageSize = 10)
+    {
+        var userId = User.GetUserId();
+        var requests = await _dbContext.Requests
+            .Where(x=>x.UserId==userId)
+            .Include(x=>x.Artist)
+            .Where(x=>x.Artist.Name.Contains(search) || x.Message.Contains(search))
+            .Skip(offset).Take(pageSize).ToListAsync();
+        var result = requests.Select(x=>x.ToModel()).ToList();
+        return Ok(result);
+    }
+    
+    [Authorize("read:request")]
+    [HttpGet]
+    [Route("Artist/Requests/{requestId:int}")]
+    public async Task<IActionResult> GetArtistRequest(int requestId)
+    {
+        var userId = User.GetUserId();
+        var request = await _dbContext.Requests
+            .Where(x=>x.UserId==userId)
+            .Include(x=>x.Artist)
+            .FirstOrDefaultAsync(x=>x.Id==requestId);
+        if(request==null)
+            return NotFound();
+        var result = request.ToModel();
+        return Ok(result);
+    }
+    
+    [Authorize("write:request")]
+    [HttpGet]
+    [Route("Artist/Requests/{requestId:int}")]
+    public async Task<IActionResult> AcceptRequest(int requestId)
+    {
+        var userId = User.GetUserId();
+        var request = await _dbContext.Requests
+            .Where(x=>x.UserId==userId)
+            .Include(x=>x.Artist)
+            .FirstOrDefaultAsync(x=>x.Id==requestId);
+        if(request==null)
+            return NotFound();
+        
+        request.Accepted = true;
+        request.AcceptedDate = DateTime.UtcNow;
+        _dbContext.Entry(request).State = EntityState.Modified;
+        await _dbContext.SaveChangesAsync();
+        
+        var result = request.ToModel();
+        return Ok(result);
+    }
+
+    
+    [Authorize("write:request")]
+    [HttpGet]
+    [Route("Artist/Requests/{requestId:int}")]
+    public async Task<IActionResult> DenyRequest(int requestId)
+    {
+        var userId = User.GetUserId();
+        var request = await _dbContext.Requests
+            .Where(x=>x.UserId==userId)
+            .Include(x=>x.Artist)
+            .FirstOrDefaultAsync(x=>x.Id==requestId);
+        if(request==null)
+            return NotFound();
+        request.Declined = true;
+        request.DeclinedDate = DateTime.UtcNow;
+        _dbContext.Entry(request).State = EntityState.Modified;
+        await _dbContext.SaveChangesAsync();
+        var result = request.ToModel();
+        return Ok(result);
+    }
+
     [Authorize("write:request")]
     [HttpPost]
-    [Route("Requests")]
+    [Route("Request")]
     public async Task<IActionResult> CreateRequest([FromBody] RequestCreateModel model)
     {
         var openRequests = await _dbContext.Requests
@@ -73,7 +147,7 @@ public class RequestsController : Controller
         {
             Amount = model.Amount,
             Message = model.Message,
-            RequestDate = DateTime.Now,
+            RequestDate = DateTime.UtcNow,
             UserId = User.GetUserId(),
             ArtistId = model.ArtistId,
             Accepted = false,
