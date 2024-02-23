@@ -80,7 +80,7 @@ builder.Services.AddSwaggerGen(options =>
     options.IncludeXmlComments(xmlPath);
 
 });
-builder.Services.RegisterNovuClients(builder.Configuration);
+builder.Services.RegisterNovuClients(builder.Configuration).AddTransient<NovuClient>();
 
 builder.Services.AddControllers()
     .AddJsonOptions(options=>
