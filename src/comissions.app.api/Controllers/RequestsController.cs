@@ -71,7 +71,7 @@ public class RequestsController : Controller
                     request.Artist.StripeAccountId == connectedAccountId)
                     {
                         request.Paid = true;
-                        request.PaidDate = DateTime.UtcNow; 
+                        request.PaidDate = DateTime.UtcNow;
                     }
                 }
                 else if (stripeEvent.Type == Events.AccountUpdated)

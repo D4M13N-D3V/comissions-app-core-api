@@ -71,15 +71,16 @@ public class ArtistController : Controller
         await _dbContext.SaveChangesAsync();
         var result = updatedArtist.ToModel();
 
-        await _client.Event.Trigger(new EventCreateData()
+        var newTriggerModel = new EventCreateData()
         {
             EventName = "artistupdated",
             To =
             {
                 SubscriberId = userId,
             },
-            Payload = {}
-        });
+            Payload = { }
+        };
+        await _client.Event.Trigger(newTriggerModel);
         
         return Ok(result);
     }
