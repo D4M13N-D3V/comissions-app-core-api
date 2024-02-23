@@ -9,6 +9,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Stripe;
+using Novu;
+using Novu.DTO.Events;
 using Stripe.Checkout;
 
 namespace comissions.app.api.Controllers;
@@ -20,11 +22,12 @@ public class RequestsController : Controller
     private readonly ApplicationDbContext _dbContext;
     private readonly IStorageService _storageService;
     private readonly IPaymentService _paymentService;
-
+    private readonly NovuClient _client;
     private readonly string _webHookSecret;
 
-    public RequestsController(ApplicationDbContext dbContext, IPaymentService paymentService, IStorageService storageService, IConfiguration configuration)
+    public RequestsController(ApplicationDbContext dbContext, NovuClient client, IPaymentService paymentService, IStorageService storageService, IConfiguration configuration)
     {
+        _client = client;
         _webHookSecret = configuration.GetValue<string>("Stripe:WebHookSecret");
         _paymentService = paymentService;
         _storageService = storageService;
@@ -746,6 +749,16 @@ public class RequestsController : Controller
         await _dbContext.SaveChangesAsync();
         
         var result = request.ToModel();
+        var newTriggerModel = new EventCreateData()
+        {
+            EventName = "requestcompleted",
+            To =
+            {
+                SubscriberId = request.UserId
+            },
+            Payload = { }
+        };
+        await _client.Event.Trigger(newTriggerModel);
         return Ok(result);
     }
 
@@ -777,6 +790,26 @@ public class RequestsController : Controller
         request.AcceptedDate = DateTime.UtcNow;
         _dbContext.Entry(request).State = EntityState.Modified;
         await _dbContext.SaveChangesAsync();
+        var newTriggerModel = new EventCreateData()
+        {
+            EventName = "requestacceptedbuyer",
+            To =
+            {
+                SubscriberId = request.UserId
+            },
+            Payload = { }
+        };
+        await _client.Event.Trigger(newTriggerModel);
+        var newTriggerArtistModel = new EventCreateData()
+        {
+            EventName = "requestacceptedartist",
+            To =
+            {
+                SubscriberId = request.Artist.UserId
+            },
+            Payload = { }
+        };
+        await _client.Event.Trigger(newTriggerModel);
         
         var result = request.ToModel();
         return Ok(result);
@@ -809,6 +842,16 @@ public class RequestsController : Controller
         _dbContext.Entry(request).State = EntityState.Modified;
         await _dbContext.SaveChangesAsync();
         var result = request.ToModel();
+        var newTriggerModel = new EventCreateData()
+        {
+            EventName = "requestdenied",
+            To =
+            {
+                SubscriberId = request.UserId
+            },
+            Payload = { }
+        };
+        await _client.Event.Trigger(newTriggerModel);
         return Ok(result);
     }
 
@@ -821,15 +864,19 @@ public class RequestsController : Controller
             .Where(x=>x.UserId==User.GetUserId())
             .CountAsync();
         
+        var artist = await _dbContext.UserArtists.FirstOrDefaultAsync(x=>x.Id==model.ArtistId);
+        if(artist==null)
+            return NotFound("Artist not found.");
+        
         if(openRequests>3)
             return BadRequest("You can only have 3 open requests at a time.");
-        
+        var userId = User.GetUserId();
         var request = new Request()
         {
             Amount = model.Amount,
             Message = model.Message,
             RequestDate = DateTime.UtcNow,
-            UserId = User.GetUserId(),
+            UserId = userId,
             ArtistId = model.ArtistId,
             Accepted = false,
             AcceptedDate = null,
@@ -840,6 +887,26 @@ public class RequestsController : Controller
         };
         _dbContext.Requests.Add(request);
         await _dbContext.SaveChangesAsync();
+        var newArtistTriggerModel = new EventCreateData()
+        {
+            EventName = "requestcreatedbuyer",
+            To =
+            {
+                SubscriberId = userId,
+            },
+            Payload = { }
+        };
+        await _client.Event.Trigger(newArtistTriggerModel);
+        var newTriggerModel = new EventCreateData()
+        {
+            EventName = "requestcreatedartist",
+            To =
+            {
+                SubscriberId = artist.UserId,
+            },
+            Payload = { }
+        };
+        await _client.Event.Trigger(newTriggerModel);
         return Ok(request.ToModel());
     }
 }
