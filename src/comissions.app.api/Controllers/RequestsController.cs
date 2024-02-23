@@ -35,7 +35,7 @@ public class RequestsController : Controller
     }
     
     [Route("PaymentWebhook")]
-    [HttpPost]
+    [HttpPost   ]
     [AllowAnonymous]
     public async Task<IActionResult> ProcessWebhookEvent()
     {
@@ -660,21 +660,49 @@ public class RequestsController : Controller
                 }
         return Ok();
     }
-    
+        
     [Authorize("read:request")]
     [HttpGet]
     [Route("Customer/Requests")]
-    public async Task<IActionResult> GetRequests(string search="",int offset = 0, int pageSize = 10)
+    public async Task<IActionResult> GetRequests([FromQuery]bool completed = true, [FromQuery]bool declined = true, [FromQuery]bool accepted = true, [FromQuery]bool paid = true,
+        string search = "", int offset = 0, int pageSize = 10)
     {
         var userId = User.GetUserId();
-        var requests = await _dbContext.Requests
-            .Where(x=>x.UserId==userId)
-            .Include(x=>x.Artist)
-            .Where(x=>x.Artist.Name.Contains(search) || x.Message.Contains(search))
-            .Skip(offset).Take(pageSize).ToListAsync();
-        var result = requests.Select(x=>x.ToModel()).ToList();
+        var query = _dbContext.Requests
+            .Where(x => x.UserId == userId);
+
+        if (completed)
+        {
+            query = query.Where(x => x.Completed );
+        }
+        if (declined)
+        {
+            query = query.Where(x => x.Declined);
+        }
+        if (accepted)
+        {
+            query = query.Where(x => x.Accepted);
+        }
+        if (paid)
+        {
+            query = query.Where(x => x.Paid);
+        }
+
+        if (!string.IsNullOrWhiteSpace(search))
+        {
+            query = query.Where(x => x.Artist.Name.Contains(search) || x.Message.Contains(search));
+        }
+
+        var requests = await query
+            .Include(x => x.Artist)
+            .Skip(offset)
+            .Take(pageSize)
+            .ToListAsync();
+
+        var result = requests.Select(x => x.ToModel()).ToList();
         return Ok(result);
     }
+
     
     [Authorize("read:request")]
     [HttpGet]
