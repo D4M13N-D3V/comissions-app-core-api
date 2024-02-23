@@ -73,11 +73,12 @@ public class ArtistController : Controller
 
         await _client.Event.Trigger(new EventCreateData()
         {
-            EventName = "ArtistUpdated",
+            EventName = "artistupdated",
             To =
             {
                 SubscriberId = userId,
-            }
+            },
+            Payload = {}
         });
         
         return Ok(result);
