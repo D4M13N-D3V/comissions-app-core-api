@@ -35,7 +35,7 @@ public class RequestsController : Controller
     }
     
     [Route("PaymentWebhook")]
-    [HttpPost("PaymentWebhook")]
+    [HttpPost]
     [AllowAnonymous]
     public async Task<IActionResult> ProcessWebhookEvent()
     {
