@@ -12,6 +12,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Novu;
+using Novu.DTO;
+using Novu.Extensions;
+using Novu.Interfaces;
+using Novu.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -75,6 +80,7 @@ builder.Services.AddSwaggerGen(options =>
     options.IncludeXmlComments(xmlPath);
 
 });
+builder.Services.RegisterNovuClients(builder.Configuration);
 
 builder.Services.AddControllers()
     .AddJsonOptions(options=>

@@ -10,6 +10,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
+using Novu;
+using Novu.DTO.Events;
 
 namespace comissions.app.api.Controllers;
 
@@ -20,10 +22,11 @@ public class ArtistController : Controller
     private readonly ApplicationDbContext _dbContext;
     private readonly IStorageService _storageService;
     private readonly IPaymentService _paymentService;
+    private readonly NovuClient _client;
 
-
-    public ArtistController(ApplicationDbContext dbContext, IPaymentService paymentService, IStorageService storageService)
+    public ArtistController(ApplicationDbContext dbContext, IPaymentService paymentService, IStorageService storageService, NovuClient client)
     {
+        _client = client;
         _paymentService = paymentService;
         _storageService = storageService;
         _dbContext = dbContext;
@@ -67,6 +70,16 @@ public class ArtistController : Controller
         updatedArtist = _dbContext.UserArtists.Update(updatedArtist).Entity;
         await _dbContext.SaveChangesAsync();
         var result = updatedArtist.ToModel();
+
+        _client.Event.Trigger(new EventCreateData()
+        {
+            EventName = "ArtistUpdated",
+            To =
+            {
+                SubscriberId = userId,
+            }
+        });
+        
         return Ok(result);
     }
     

@@ -3,6 +3,10 @@ using comissions.app.api.Services.Payment;
 using comissions.app.database;
 using comissions.app.database.Entities;
 using Microsoft.EntityFrameworkCore;
+using Novu;
+using Novu.Interfaces;
+using Novu.DTO;
+using Novu.DTO.Subscribers;
 
 namespace comissions.app.api.Middleware;
 
@@ -10,10 +14,11 @@ namespace comissions.app.api.Middleware;
 public class UserMiddleware
 {
     private readonly RequestDelegate _next;
-
-    public UserMiddleware(RequestDelegate next)
+    private readonly NovuClient _client;
+    public UserMiddleware(RequestDelegate next, NovuClient client)
     {
         _next = next;
+        _client = client;
     }
 
     public async Task InvokeAsync(HttpContext context, ApplicationDbContext dbContext, IPaymentService paymentService)
@@ -43,6 +48,15 @@ public class UserMiddleware
                 await dbContext.SaveChangesAsync();
             }
 
+            var newSubscriberDto = new SubscriberCreateData()
+            {
+                SubscriberId = userId, //replace with system_internal_user_id
+                FirstName = user.DisplayName,
+                LastName = "",
+                Email = user.Email
+            };
+            var subscriber = await _client.Subscriber.Create(newSubscriberDto);
+            
             if (user.Suspended)
             {
                 if (user.UnsuspendDate < DateTime.UtcNow)

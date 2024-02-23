@@ -7,5 +7,5 @@ public interface IPaymentService
     string CreateArtistAccount();
     string CreateArtistAccountOnboardingUrl(string accountId); 
     bool ArtistAccountIsOnboarded(string accountId);
-    string ChargeForService(int orderArtistServiceId, string? sellerStripeAccountId, double orderPrice);
+    string Charge(int orderArtistServiceId, string? sellerStripeAccountId, double orderPrice);
 }
