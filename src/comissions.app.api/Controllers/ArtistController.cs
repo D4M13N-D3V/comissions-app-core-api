@@ -71,7 +71,7 @@ public class ArtistController : Controller
         await _dbContext.SaveChangesAsync();
         var result = updatedArtist.ToModel();
 
-        _client.Event.Trigger(new EventCreateData()
+        await _client.Event.Trigger(new EventCreateData()
         {
             EventName = "ArtistUpdated",
             To =
