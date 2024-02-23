@@ -5,6 +5,8 @@ using comissions.app.database.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Novu;
+using Novu.DTO.Events;
 
 namespace comissions.app.api.Controllers;
 
@@ -15,9 +17,10 @@ public class AdminArtistRequestsController : Controller
 {
     private readonly ApplicationDbContext _dbContext;
     private readonly IPaymentService _paymentService;
-
-    public AdminArtistRequestsController(ApplicationDbContext dbContext, IPaymentService paymentService)
+    private readonly NovuClient _client;
+    public AdminArtistRequestsController(NovuClient client, ApplicationDbContext dbContext, IPaymentService paymentService)
     {
+        _client = client;
         _paymentService = paymentService;
         _dbContext = dbContext;
     }
@@ -126,6 +129,16 @@ public class AdminArtistRequestsController : Controller
         request = _dbContext.ArtistRequests.Update(request).Entity;
         await _dbContext.SaveChangesAsync();
         var result = request.ToModel();
+        var newTriggerModel = new EventCreateData()
+        {
+            EventName = "artistrequestaccepted",
+            To =
+            {
+                SubscriberId = userId,
+            },
+            Payload = { }
+        };
+        await _client.Event.Trigger(newTriggerModel);
         return Ok(result);
     }
     
@@ -143,6 +156,16 @@ public class AdminArtistRequestsController : Controller
         
         _dbContext.ArtistRequests.Remove(request);
         await _dbContext.SaveChangesAsync();
+        var newTriggerModel = new EventCreateData()
+        {
+            EventName = "artistrequestdenied",
+            To =
+            {
+                SubscriberId = userId,
+            },
+            Payload = { }
+        };
+        await _client.Event.Trigger(newTriggerModel);
         return Ok();
     }
 }
