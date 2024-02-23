@@ -90,6 +90,36 @@ public class RequestsController : Controller
     
     [Authorize("write:request")]
     [HttpPut]
+    [Route("Artist/Requests/{requestId:int}/Complete")]
+    public async Task<IActionResult> CompleteRequest(int requestId)
+    {
+        var userId = User.GetUserId();
+        var request = await _dbContext.Requests
+            .Include(x=>x.Artist)
+            .Where(x=>x.Artist.UserId==userId)
+            .FirstOrDefaultAsync(x=>x.Id==requestId);
+        
+        if(request.Accepted==false)
+            return BadRequest("Request has not been accepted.");
+
+        if (request.Declined)
+            return BadRequest("Request has already been declined.");
+        
+        if(request==null)
+            return NotFound();
+        
+        request.Completed = true;
+        request.CompletedDate = DateTime.UtcNow;
+        _dbContext.Entry(request).State = EntityState.Modified;
+        await _dbContext.SaveChangesAsync();
+        
+        var result = request.ToModel();
+        return Ok(result);
+    }
+
+    
+    [Authorize("write:request")]
+    [HttpPut]
     [Route("Artist/Requests/{requestId:int}/Accept")]
     public async Task<IActionResult> AcceptRequest(int requestId)
     {
