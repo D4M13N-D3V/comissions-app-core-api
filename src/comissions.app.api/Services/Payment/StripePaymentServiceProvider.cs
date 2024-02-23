@@ -71,8 +71,8 @@ public class StripePaymentServiceProvider:IPaymentService
         var options = new AccountLinkCreateOptions
         {
             Account = accountId,
-            RefreshUrl = $"{_baseUiUrl}/artistDashboard",
-            ReturnUrl = $"{_baseUiUrl}/artistDashboard",
+            RefreshUrl = $"{_baseUiUrl}/dashboard",
+            ReturnUrl = $"{_baseUiUrl}/dashboard",
             Type = "account_onboarding",
         };
         var service = new AccountLinkService();
@@ -87,10 +87,10 @@ public class StripePaymentServiceProvider:IPaymentService
         return account.Requirements.CurrentlyDue.Count == 0 && account.ChargesEnabled==true && account.DetailsSubmitted==true;
     }
 
-    public string ChargeForService(int orderArtistServiceOrderId, string? sellerStripeAccountId,
-        double orderPrice)
+    public string Charge(int requestId, string? sellerStripeAccountId,
+        double requestAmount)
     {
-        var feeAmount = (long)Math.Round((orderPrice*0.05) * 100);
+        var feeAmount = (long)Math.Round((requestAmount*0.05) * 100);
         var options = new Stripe.Checkout.SessionCreateOptions
         {
             LineItems = new List<Stripe.Checkout.SessionLineItemOptions> {
@@ -98,7 +98,7 @@ public class StripePaymentServiceProvider:IPaymentService
                     {
                         PriceData = new Stripe.Checkout.SessionLineItemPriceDataOptions
                         {
-                            UnitAmount = (long)Math.Round(orderPrice * 100),
+                            UnitAmount = (long)Math.Round(requestAmount * 100),
                             Currency = "usd",
                             ProductData = new Stripe.Checkout.SessionLineItemPriceDataProductDataOptions
                             {
@@ -113,11 +113,11 @@ public class StripePaymentServiceProvider:IPaymentService
                     ApplicationFeeAmount = feeAmount,
                 },
             Mode = "payment",
-            SuccessUrl = "https://example.com/success",
-            CancelUrl = "https://example.com/failure",
+            SuccessUrl = $"{_baseUiUrl}/dashboard/requests/{requestId}",
+            CancelUrl = $"{_baseUiUrl}/dashboard/requests/{requestId}",
             Metadata = new Dictionary<string, string>()
             {
-                ["orderId"] = orderArtistServiceOrderId.ToString()
+                ["orderId"] = requestId.ToString()
             }
         };
         var requestOptions = new RequestOptions

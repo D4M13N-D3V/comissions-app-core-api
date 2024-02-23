@@ -12,6 +12,9 @@ public class Request
     public DateTime? AcceptedDate { get; set; }
     public bool Declined { get; set; } = false;
     public DateTime? DeclinedDate { get; set; }
+    public string? PaymentUrl { get; set; }
+    public bool Paid { get; set; } = false;
+    public DateTime? PaidDate { get; set; } = null!;
     public bool Completed { get; set; } = false;
     public DateTime? CompletedDate { get; set; }
     
