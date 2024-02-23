@@ -723,15 +723,42 @@ public class RequestsController : Controller
     [Authorize("read:request")]
     [HttpGet]
     [Route("Artist/Requests")]
-    public async Task<IActionResult> GetArtistRequests(string search="",int offset = 0, int pageSize = 10)
+    public async Task<IActionResult> GetArtistRequests([FromQuery]bool completed = true, [FromQuery]bool declined = true, [FromQuery]bool accepted = true, [FromQuery]bool paid = true,
+        string search="",int offset = 0, int pageSize = 10)
     {
         var userId = User.GetUserId();
-        var requests = await _dbContext.Requests
-            .Include(x=>x.Artist)
-            .Where(x=>x.Artist.UserId==userId)
-            .Where(x=>x.Artist.Name.Contains(search) || x.Message.Contains(search))
-            .Skip(offset).Take(pageSize).ToListAsync();
-        var result = requests.Select(x=>x.ToModel()).ToList();
+        var query = _dbContext.Requests.Include(x=>x.Artist)
+            .Where(x => x.Artist.UserId == userId);
+
+        if (completed)
+        {
+            query = query.Where(x => x.Completed );
+        }
+        if (declined)
+        {
+            query = query.Where(x => x.Declined);
+        }
+        if (accepted)
+        {
+            query = query.Where(x => x.Accepted);
+        }
+        if (paid)
+        {
+            query = query.Where(x => x.Paid);
+        }
+
+        if (!string.IsNullOrWhiteSpace(search))
+        {
+            query = query.Where(x => x.Artist.Name.Contains(search) || x.Message.Contains(search));
+        }
+
+        var requests = await query
+            .Include(x => x.Artist)
+            .Skip(offset)
+            .Take(pageSize)
+            .ToListAsync();
+
+        var result = requests.Select(x => x.ToModel()).ToList();
         return Ok(result);
     }
     
