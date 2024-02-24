@@ -702,6 +702,41 @@ public class RequestsController : Controller
         var result = requests.Select(x => x.ToModel()).ToList();
         return Ok(result);
     }
+    
+    [HttpGet]
+    [Route("Customer/Count")]
+    public async Task<IActionResult> GetRequestCount([FromQuery]bool completed = true, [FromQuery]bool declined = true, [FromQuery]bool accepted = true, [FromQuery]bool paid = true,
+        string search="")
+    {
+        var userId = User.GetUserId();
+        var query = _dbContext.Requests
+            .Where(x => x.UserId == userId);
+
+        if (completed)
+        {
+            query = query.Where(x => x.Completed );
+        }
+        if (declined)
+        {
+            query = query.Where(x => x.Declined);
+        }
+        if (accepted)
+        {
+            query = query.Where(x => x.Accepted);
+        }
+        if (paid)
+        {
+            query = query.Where(x => x.Paid);
+        }
+
+        if (!string.IsNullOrWhiteSpace(search))
+        {
+            query = query.Where(x => x.Artist.Name.Contains(search) || x.Message.Contains(search));
+        }
+
+        var result = query.Count();
+        return Ok(result);
+    }
 
     
     [Authorize("read:request")]
@@ -759,6 +794,42 @@ public class RequestsController : Controller
             .ToListAsync();
 
         var result = requests.Select(x => x.ToModel()).ToList();
+        return Ok(result);
+    }
+    
+    [Authorize("read:request")]
+    [HttpGet]
+    [Route("Artist/Count")]
+    public async Task<IActionResult> GetArtistRequestCount([FromQuery]bool completed = true, [FromQuery]bool declined = true, [FromQuery]bool accepted = true, [FromQuery]bool paid = true,
+        string search="")
+    {
+        var userId = User.GetUserId();
+        var query = _dbContext.Requests.Include(x=>x.Artist)
+            .Where(x => x.Artist.UserId == userId);
+
+        if (completed)
+        {
+            query = query.Where(x => x.Completed );
+        }
+        if (declined)
+        {
+            query = query.Where(x => x.Declined);
+        }
+        if (accepted)
+        {
+            query = query.Where(x => x.Accepted);
+        }
+        if (paid)
+        {
+            query = query.Where(x => x.Paid);
+        }
+
+        if (!string.IsNullOrWhiteSpace(search))
+        {
+            query = query.Where(x => x.Artist.Name.Contains(search) || x.Message.Contains(search));
+        }
+
+        var result = query.Count();
         return Ok(result);
     }
     
