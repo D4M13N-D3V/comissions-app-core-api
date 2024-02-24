@@ -8,7 +8,6 @@ public static class ArtistPageSettingsModelExtensions
     
     public static ArtistPageSettingsModel ToModel(this ArtistPageSettings sellerProfile)
     {
-        Console.WriteLine(JsonConvert.SerializeObject(sellerProfile));
         return new ArtistPageSettingsModel()
         {
             BackgroundColor = sellerProfile.BackgroundColor,

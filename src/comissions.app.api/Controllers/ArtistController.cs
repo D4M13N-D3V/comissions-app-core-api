@@ -104,7 +104,7 @@ public class ArtistController : Controller
     public async Task<IActionResult> GetArtistPage()
     {
         var userId = User.GetUserId();
-        var Artist = await _dbContext.UserArtists.Include(x=>x.ArtistPageSettings).FirstOrDefaultAsync(Artist=>Artist.UserId==userId);
+        var Artist = await _dbContext.UserArtists.Include(x=>x.ArtistPageSettings).FirstOrDefaultAsync(artist=>artist.UserId==userId);
         if(Artist==null)
             return NotFound();
         var result = Artist.ArtistPageSettings.ToModel();
