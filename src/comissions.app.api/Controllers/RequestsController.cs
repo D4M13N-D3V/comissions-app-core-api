@@ -669,24 +669,8 @@ public class RequestsController : Controller
     {
         var userId = User.GetUserId();
         var query = _dbContext.Requests
-            .Where(x => x.UserId == userId);
-
-        if (completed)
-        {
-            query = query.Where(x => x.Completed );
-        }
-        if (declined)
-        {
-            query = query.Where(x => x.Declined);
-        }
-        if (accepted)
-        {
-            query = query.Where(x => x.Accepted);
-        }
-        if (paid)
-        {
-            query = query.Where(x => x.Paid);
-        }
+            .Where(x => x.UserId == userId)
+            .Where(x => x.Completed == completed || x.Declined == declined || x.Accepted == accepted || x.Paid == paid);
 
         if (!string.IsNullOrWhiteSpace(search))
         {
@@ -710,25 +694,9 @@ public class RequestsController : Controller
     {
         var userId = User.GetUserId();
         var query = _dbContext.Requests
-            .Where(x => x.UserId == userId);
-
-        if (completed)
-        {
-            query = query.Where(x => x.Completed );
-        }
-        if (declined)
-        {
-            query = query.Where(x => x.Declined);
-        }
-        if (accepted)
-        {
-            query = query.Where(x => x.Accepted);
-        }
-        if (paid)
-        {
-            query = query.Where(x => x.Paid);
-        }
-
+            .Where(x => x.UserId == userId)
+            .Where(x => x.Completed == completed || x.Declined == declined || x.Accepted == accepted || x.Paid == paid);
+        
         if (!string.IsNullOrWhiteSpace(search))
         {
             query = query.Where(x => x.Artist.Name.Contains(search) || x.Message.Contains(search));
@@ -763,24 +731,9 @@ public class RequestsController : Controller
     {
         var userId = User.GetUserId();
         var query = _dbContext.Requests.Include(x=>x.Artist)
-            .Where(x => x.Artist.UserId == userId);
+            .Where(x => x.Artist.UserId == userId)
+            .Where(x => x.Completed == completed || x.Declined == declined || x.Accepted == accepted || x.Paid == paid);
 
-        if (completed)
-        {
-            query = query.Where(x => x.Completed );
-        }
-        if (declined)
-        {
-            query = query.Where(x => x.Declined);
-        }
-        if (accepted)
-        {
-            query = query.Where(x => x.Accepted);
-        }
-        if (paid)
-        {
-            query = query.Where(x => x.Paid);
-        }
 
         if (!string.IsNullOrWhiteSpace(search))
         {
@@ -805,25 +758,9 @@ public class RequestsController : Controller
     {
         var userId = User.GetUserId();
         var query = _dbContext.Requests.Include(x=>x.Artist)
-            .Where(x => x.Artist.UserId == userId);
-
-        if (completed)
-        {
-            query = query.Where(x => x.Completed );
-        }
-        if (declined)
-        {
-            query = query.Where(x => x.Declined);
-        }
-        if (accepted)
-        {
-            query = query.Where(x => x.Accepted);
-        }
-        if (paid)
-        {
-            query = query.Where(x => x.Paid);
-        }
-
+            .Where(x => x.Artist.UserId == userId)
+            .Where(x => x.Completed == completed || x.Declined == declined || x.Accepted == accepted || x.Paid == paid);
+        
         if (!string.IsNullOrWhiteSpace(search))
         {
             query = query.Where(x => x.Artist.Name.Contains(search) || x.Message.Contains(search));
