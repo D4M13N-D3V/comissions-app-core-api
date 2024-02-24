@@ -664,13 +664,11 @@ public class RequestsController : Controller
     [Authorize("read:request")]
     [HttpGet]
     [Route("Customer")]
-    public async Task<IActionResult> GetRequests([FromQuery]bool completed = true, [FromQuery]bool declined = true, [FromQuery]bool accepted = true, [FromQuery]bool paid = true,
-        string search = "", int offset = 0, int pageSize = 10)
+    public async Task<IActionResult> GetRequests(string search = "", int offset = 0, int pageSize = 10)
     {
         var userId = User.GetUserId();
         var query = _dbContext.Requests
-            .Where(x => x.UserId == userId)
-            .Where(x => x.Completed == completed || x.Declined == declined || x.Accepted == accepted || x.Paid == paid);
+            .Where(x => x.UserId == userId);
 
         if (!string.IsNullOrWhiteSpace(search))
         {
@@ -689,13 +687,11 @@ public class RequestsController : Controller
     
     [HttpGet]
     [Route("Customer/Count")]
-    public async Task<IActionResult> GetRequestCount([FromQuery]bool completed = true, [FromQuery]bool declined = true, [FromQuery]bool accepted = true, [FromQuery]bool paid = true,
-        string search="")
+    public async Task<IActionResult> GetRequestCount(string search="")
     {
         var userId = User.GetUserId();
         var query = _dbContext.Requests
-            .Where(x => x.UserId == userId)
-            .Where(x => x.Completed == completed || x.Declined == declined || x.Accepted == accepted || x.Paid == paid);
+            .Where(x => x.UserId == userId);
         
         if (!string.IsNullOrWhiteSpace(search))
         {
@@ -726,13 +722,11 @@ public class RequestsController : Controller
     [Authorize("read:request")]
     [HttpGet]
     [Route("Artist")]
-    public async Task<IActionResult> GetArtistRequests([FromQuery]bool completed = true, [FromQuery]bool declined = true, [FromQuery]bool accepted = true, [FromQuery]bool paid = true,
-        string search="",int offset = 0, int pageSize = 10)
+    public async Task<IActionResult> GetArtistRequests(string search="",int offset = 0, int pageSize = 10)
     {
         var userId = User.GetUserId();
         var query = _dbContext.Requests.Include(x=>x.Artist)
-            .Where(x => x.Artist.UserId == userId)
-            .Where(x => x.Completed == completed || x.Declined == declined || x.Accepted == accepted || x.Paid == paid);
+            .Where(x => x.Artist.UserId == userId);
 
 
         if (!string.IsNullOrWhiteSpace(search))
@@ -753,13 +747,11 @@ public class RequestsController : Controller
     [Authorize("read:request")]
     [HttpGet]
     [Route("Artist/Count")]
-    public async Task<IActionResult> GetArtistRequestCount([FromQuery]bool completed = true, [FromQuery]bool declined = true, [FromQuery]bool accepted = true, [FromQuery]bool paid = true,
-        string search="")
+    public async Task<IActionResult> GetArtistRequestCount(string search="")
     {
         var userId = User.GetUserId();
         var query = _dbContext.Requests.Include(x=>x.Artist)
-            .Where(x => x.Artist.UserId == userId)
-            .Where(x => x.Completed == completed || x.Declined == declined || x.Accepted == accepted || x.Paid == paid);
+            .Where(x => x.Artist.UserId == userId);
         
         if (!string.IsNullOrWhiteSpace(search))
         {
