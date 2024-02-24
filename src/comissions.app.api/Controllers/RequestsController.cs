@@ -663,7 +663,7 @@ public class RequestsController : Controller
         
     [Authorize("read:request")]
     [HttpGet]
-    [Route("Customer/Requests")]
+    [Route("Customer")]
     public async Task<IActionResult> GetRequests([FromQuery]bool completed = true, [FromQuery]bool declined = true, [FromQuery]bool accepted = true, [FromQuery]bool paid = true,
         string search = "", int offset = 0, int pageSize = 10)
     {
@@ -706,7 +706,7 @@ public class RequestsController : Controller
     
     [Authorize("read:request")]
     [HttpGet]
-    [Route("Customer/Requests/{requestId:int}")]
+    [Route("Customer/{requestId:int}")]
     public async Task<IActionResult> GetRequest(int requestId)
     {
         var userId = User.GetUserId();
@@ -722,7 +722,7 @@ public class RequestsController : Controller
     
     [Authorize("read:request")]
     [HttpGet]
-    [Route("Artist/Requests")]
+    [Route("Artist")]
     public async Task<IActionResult> GetArtistRequests([FromQuery]bool completed = true, [FromQuery]bool declined = true, [FromQuery]bool accepted = true, [FromQuery]bool paid = true,
         string search="",int offset = 0, int pageSize = 10)
     {
@@ -764,7 +764,7 @@ public class RequestsController : Controller
     
     [Authorize("read:request")]
     [HttpGet]
-    [Route("Artist/Requests/{requestId:int}")]
+    [Route("Artist/{requestId:int}")]
     public async Task<IActionResult> GetArtistRequest(int requestId)
     {
         var userId = User.GetUserId();
@@ -780,7 +780,7 @@ public class RequestsController : Controller
     
     [Authorize("write:request")]
     [HttpPut]
-    [Route("Artist/Requests/{requestId:int}/Complete")]
+    [Route("Artist/{requestId:int}/Complete")]
     public async Task<IActionResult> CompleteRequest(int requestId)
     {
         var userId = User.GetUserId();
@@ -820,7 +820,7 @@ public class RequestsController : Controller
     
     [Authorize("write:request")]
     [HttpPut]
-    [Route("Artist/Requests/{requestId:int}/Accept")]
+    [Route("Artist/{requestId:int}/Accept")]
     public async Task<IActionResult> AcceptRequest(int requestId)
     {
         var userId = User.GetUserId();
@@ -873,7 +873,7 @@ public class RequestsController : Controller
     
     [Authorize("write:request")]
     [HttpPut]
-    [Route("Artist/Requests/{requestId:int}/Deny")]
+    [Route("Artist/{requestId:int}/Deny")]
     public async Task<IActionResult> DenyRequest(int requestId)
     {
         var userId = User.GetUserId();
