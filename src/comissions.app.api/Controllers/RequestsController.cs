@@ -1064,14 +1064,14 @@ public class RequestsController : Controller
     public async Task<IActionResult> CreateRequest([FromBody] RequestCreateModel model)
     {
         var openRequests = await _dbContext.Requests
-            .Where(x=>x.UserId==User.GetUserId())
+            .Where(x=>x.UserId==User.GetUserId() && (x.Completed==false || x.Declined==false))
             .CountAsync();
         
         var artist = await _dbContext.UserArtists.FirstOrDefaultAsync(x=>x.Id==model.ArtistId);
         if(artist==null)
             return NotFound("Artist not found.");
         
-        if(openRequests>3)
+        if(openRequests>=3)
             return BadRequest("You can only have 3 open requests at a time.");
         var userId = User.GetUserId();
         var request = new Request()
