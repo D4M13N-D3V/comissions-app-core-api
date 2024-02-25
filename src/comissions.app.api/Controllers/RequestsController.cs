@@ -733,8 +733,11 @@ public class RequestsController : Controller
             .FirstOrDefaultAsync(x=>x.Id==requestId);
         if(request==null)
             return NotFound();
-        var paymentUrl = _paymentService.Charge(request.Id,request.Artist.StripeAccountId,Convert.ToDouble(request.Amount));
-        return Ok(new {paymentUrl});
+        if(request.PaymentUrl==null)
+            request.PaymentUrl = _paymentService.Charge(request.Id,request.Artist.StripeAccountId,Convert.ToDouble(request.Amount));
+        _dbContext.Entry(request).State = EntityState.Modified;
+        _dbContext.SaveChanges();
+        return Ok(new {paymentUrl = request.PaymentUrl});
     }
 
     [Authorize("read:request")]
