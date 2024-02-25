@@ -7,4 +7,5 @@ public class PayoutModel
     public double Balance { get; set; }
     public bool Enabled { get; set; }
     public string PayoutUrl { get; set; }
+    public double PendingBalance { get; set; }
 }
