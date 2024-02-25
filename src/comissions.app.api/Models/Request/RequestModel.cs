@@ -14,4 +14,7 @@ public class RequestModel
     public DateTime? DeclinedDate { get; set; }
     public bool Completed { get; set; } = false;
     public DateTime? CompletedDate { get; set; }
+    public string? PaymentUrl { get; set; }
+    public DateTime? PaidDate { get; set; }
+    public bool Paid { get; set; }
 }
