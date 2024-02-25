@@ -740,6 +740,125 @@ public class RequestsController : Controller
         _dbContext.SaveChanges();
         return Ok(new {paymentUrl = request.PaymentUrl});
     }
+    
+    [Authorize("write:request")]
+    [HttpPost]
+    [Route("Customer/{requestId:int}/Reference")]
+    public async Task<IActionResult> AddRefrence(int requestId, List<IFormFile> referenceImages)
+    {
+        var userId = User.GetUserId();
+        var request = await _dbContext.Requests
+            .Where(x=>x.UserId==userId)
+            .FirstOrDefaultAsync(x=>x.Id==requestId);
+        if(request==null)
+            return NotFound();
+        var references = new List<RequestReference>();
+        foreach (var file in referenceImages)
+        {
+            var reference = new RequestReference()
+            {
+                RequestId = requestId,
+                FileReference = await _storageService.UploadImageAsync(file.OpenReadStream(), Guid.NewGuid().ToString())
+            };
+            references.Add(reference);
+        }
+        _dbContext.RequestReferences.AddRange(references);
+        await _dbContext.SaveChangesAsync();
+        return Ok();
+    }
+    [Authorize("write:request")]
+    [HttpPost]
+    [Route("Artist/{requestId:int}/Asset")]
+    public async Task<IActionResult> AddAsset(int requestId, List<IFormFile> assetImages)
+    {
+        var userId = User.GetUserId();
+        var request = await _dbContext.Requests
+            .Where(x=>x.UserId==userId)
+            .FirstOrDefaultAsync(x=>x.Id==requestId);
+        if(request==null)
+            return NotFound();
+        var references = new List<RequestAsset>();
+        foreach (var file in assetImages)
+        {
+            var reference = new RequestAsset()
+            {
+                RequestId = requestId,
+                FileReference = await _storageService.UploadImageAsync(file.OpenReadStream(), Guid.NewGuid().ToString())
+            };
+            references.Add(reference);
+        }
+        _dbContext.RequestAssets.AddRange(references);
+        await _dbContext.SaveChangesAsync();
+        return Ok();
+    }
+    
+    [HttpGet]
+    [Route("Customer/{requestId:int}/Reference")]
+    public async Task<IActionResult> GetReferences(int requestId)
+    {
+        var userId = User.GetUserId();
+        var request = await _dbContext.Requests
+            .Where(x=>x.UserId==userId)
+            .FirstOrDefaultAsync(x=>x.Id==requestId);
+        if(request==null)
+            return NotFound();
+        var references = await _dbContext.RequestReferences
+            .Where(x=>x.RequestId==requestId)
+            .ToListAsync();
+        var result = references.Select(x=>x.ToModel()).ToList();
+        return Ok(result);
+    }
+    
+    [HttpGet]
+    [Route("Customer/{requestId:int}/Asset")]
+    public async Task<IActionResult> GetAssets(int requestId)
+    {
+        var userId = User.GetUserId();
+        var request = await _dbContext.Requests
+            .Where(x=>x.UserId==userId)
+            .FirstOrDefaultAsync(x=>x.Id==requestId);
+        if(request==null)
+            return NotFound();
+        var references = await _dbContext.RequestAssets
+            .Where(x=>x.RequestId==requestId)
+            .ToListAsync();
+        var result = references.Select(x=>x.ToModel()).ToList();
+        return Ok(result);
+    }
+    
+    [HttpGet]
+    [Route("Artist/{requestId:int}/Reference")]
+    public async Task<IActionResult> GetArtistReferences(int requestId)
+    {
+        var userId = User.GetUserId();
+        var request = await _dbContext.Requests
+            .Where(x=>x.UserId==userId)
+            .FirstOrDefaultAsync(x=>x.Id==requestId);
+        if(request==null)
+            return NotFound();
+        var references = await _dbContext.RequestReferences
+            .Where(x=>x.RequestId==requestId)
+            .ToListAsync();
+        var result = references.Select(x=>x.ToModel()).ToList();
+        return Ok(result);
+    }
+    
+    [HttpGet]
+    [Route("Artist/{requestId:int}/Asset")]
+    public async Task<IActionResult> GetArtistAssets(int requestId)
+    {
+        var userId = User.GetUserId();
+        var request = await _dbContext.Requests
+            .Where(x=>x.UserId==userId)
+            .FirstOrDefaultAsync(x=>x.Id==requestId);
+        if(request==null)
+            return NotFound();
+        var references = await _dbContext.RequestAssets
+            .Where(x=>x.RequestId==requestId)
+            .ToListAsync();
+        var result = references.Select(x=>x.ToModel()).ToList();
+        return Ok(result);
+    }
 
     [Authorize("read:request")]
     [HttpGet]

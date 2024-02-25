@@ -20,4 +20,7 @@ public class Request
     
     public virtual User User { get; set; } = null!;
     public virtual UserArtist Artist { get; set; } = null!;
+    
+    public virtual ICollection<RequestAsset> RequestAssets { get; set; } = null!;
+    public virtual ICollection<RequestReference> RequestReferences { get; set; } = null!;
 }

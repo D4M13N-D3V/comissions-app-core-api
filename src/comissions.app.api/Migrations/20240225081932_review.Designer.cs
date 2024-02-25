@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using comissions.app.database;
@@ -11,9 +12,11 @@ using comissions.app.database;
 namespace comissions.app.api.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240225081932_review")]
+    partial class review
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -288,50 +291,6 @@ namespace comissions.app.api.Migrations
                     b.ToTable("Requests");
                 });
 
-            modelBuilder.Entity("comissions.app.database.Entities.RequestAsset", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("FileReference")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<int>("RequestId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("RequestId");
-
-                    b.ToTable("RequestAssets");
-                });
-
-            modelBuilder.Entity("comissions.app.database.Entities.RequestReference", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("FileReference")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<int>("RequestId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("RequestId");
-
-                    b.ToTable("RequestsReferences");
-                });
-
             modelBuilder.Entity("comissions.app.database.Entities.User", b =>
                 {
                     b.Property<string>("Id")
@@ -514,28 +473,6 @@ namespace comissions.app.api.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("comissions.app.database.Entities.RequestAsset", b =>
-                {
-                    b.HasOne("comissions.app.database.Entities.Request", "Request")
-                        .WithMany("RequestAssets")
-                        .HasForeignKey("RequestId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Request");
-                });
-
-            modelBuilder.Entity("comissions.app.database.Entities.RequestReference", b =>
-                {
-                    b.HasOne("comissions.app.database.Entities.Request", "Request")
-                        .WithMany("RequestReferences")
-                        .HasForeignKey("RequestId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Request");
-                });
-
             modelBuilder.Entity("comissions.app.database.Entities.UserArtist", b =>
                 {
                     b.HasOne("comissions.app.database.Entities.User", "User")
@@ -545,13 +482,6 @@ namespace comissions.app.api.Migrations
                         .IsRequired();
 
                     b.Navigation("User");
-                });
-
-            modelBuilder.Entity("comissions.app.database.Entities.Request", b =>
-                {
-                    b.Navigation("RequestAssets");
-
-                    b.Navigation("RequestReferences");
                 });
 
             modelBuilder.Entity("comissions.app.database.Entities.User", b =>

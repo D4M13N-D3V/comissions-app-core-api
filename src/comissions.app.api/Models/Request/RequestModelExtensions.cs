@@ -2,6 +2,22 @@ namespace comissions.app.database.Models.Request;
 
 public static class RequestModelExtensions
 {
+    public static RequestImageModel ToModel(this Entities.RequestAsset requestAsset)
+    {
+        return new RequestImageModel()
+        {
+            Id = requestAsset.Id,
+            FileReference = requestAsset.FileReference
+        };
+    }
+    public static RequestImageModel ToModel(this Entities.RequestReference requestAsset)
+    {
+        return new RequestImageModel()
+        {
+            Id = requestAsset.Id,
+            FileReference = requestAsset.FileReference
+        };
+    }
     public static RequestModel ToModel(this Entities.Request sellerProfile)
     {
         return new RequestModel()
