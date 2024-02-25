@@ -89,7 +89,8 @@ public class ArtistController : Controller
         {
             Enabled = account.PayoutsEnabled,
             Balance = balance,
-            PayoutUrl =  _paymentService.CreateDashboardUrl(Artist.StripeAccountId)
+            PayoutUrl =  _paymentService.CreateDashboardUrl(Artist.StripeAccountId),
+            OnboardUrl = _paymentService.CreateArtistAccountOnboardingUrl(Artist.StripeAccountId)
         };
         return Ok(result);
     }
