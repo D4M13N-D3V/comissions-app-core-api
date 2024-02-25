@@ -5,6 +5,17 @@ namespace comissions.app.api.Models.Artist;
 
 public static class ArtistModelExtensions
 {
+    public static ArtistStatsModel ToStatsModel(this UserArtist sellerProfile)
+    {
+        return new ArtistStatsModel()
+        {
+            AcceptedRequests = sellerProfile.Requests.Select(x=>x.Accepted).Count(),
+            DeclinedRequests = sellerProfile.Requests.Select(x=>x.Declined).Count(),
+            CompletedRequests = sellerProfile.Requests.Select(x=>x.Completed).Count(),
+            PendingRequests = sellerProfile.Requests.Where(x=>!x.Accepted && !x.Declined && !x.Completed).Count(),
+            Revenue = sellerProfile.Requests.Sum(x=>x.Amount)
+        };
+    }
     public static ArtistModel ToModel(this UserArtist sellerProfile)
     {
         return new ArtistModel()
