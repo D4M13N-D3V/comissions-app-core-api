@@ -71,8 +71,7 @@ public class RequestsController : Controller
             var request = await _dbContext.Requests
                 .Include(x=>x.Artist)
                 .FirstOrDefaultAsync(x=>x.Id==int.Parse(requestId));
-                    if (request != null && request.Accepted && !request.Declined && !request.Completed &&
-                    request.Artist.StripeAccountId == connectedAccountId)
+                    if (request.Artist.StripeAccountId == connectedAccountId)
                     {
                         request.Paid = true;
                         request.PaidDate = DateTime.UtcNow;
