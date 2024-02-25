@@ -48,67 +48,16 @@ public class DiscoveryController : Controller
     
     
     [HttpGet]
-    [Route("Artists/{sellerName}/Page")]
-    public async Task<IActionResult> GetArtistPage(string sellerName)
+    [Route("Artists/{sellerName}")]
+    public async Task<IActionResult> GetArtistByName(string sellerName)
     {
-        var seller = await _dbContext.UserArtists
-            .Include(x=>x.ArtistPageSettings)
-            .FirstOrDefaultAsync(x=>x.Name==sellerName.Replace('-', ' '));
+        
+        var seller = await _dbContext.UserArtists.Include(x=>x.User)
+            .FirstOrDefaultAsync(x=>x.User.DisplayName==sellerName);
         if(seller==null)
             return NotFound();
-
-        if (seller.ArtistPageSettings == null)
-        {
-            var newSettings = new ArtistPageSettings()
-            {
-                ArtistId = seller.Id,
-                BackgroundColor = "rgb(126, 115, 115)",
-                HeaderColor = "rgb(194, 187, 187)",
-                HeaderTextSize = 5,
-                HeaderUseImage = false,
-                HeaderImageUrl = "",
-                DescriptionHeaderText = "",
-                DescriptionHeaderColor = "rgb(194, 187, 187)",
-                DescriptionHeaderSize = 3,
-                DescriptionHeaderUseImage = false,
-                DescriptionHeaderImageUrl = "",
-                DescriptionBackgroundColor = "rgb(103, 97, 97)",
-                DescriptionTextColor = "rgb(186, 186, 186)",
-                DescriptionTextSize = 1,
-                PortfolionHeaderText = "",
-                PortfolionHeaderColor = "rgb(194, 187, 187)",
-                PortfolionHeaderSize = 3,
-                PortfolionHeaderUseImage = false,
-                PortfolionHeaderImageUrl = "",
-                PortfolioBackgroundColor = "rgb(78, 73, 73)",
-                PortfolioMasonry = true,
-                PortfolioColumns = 3,
-                PortfolioEnabledScrolling = true,
-                PortfolioMaximumSize = 50,
-                RequestHeaderText = "",
-                RequestHeaderColor = "rgb(194, 187, 187)",
-                RequestHeaderSize = 3,
-                RequestHeaderUseImage = false,
-                RequestHeaderImageUrl = "",
-                RequestBackgroundColor = "rgb(103, 97, 97)",
-                RequestTermsColor = "rgb(194, 187, 187)",
-                RequestButtonBGColor = "rgb(101, 97, 97)",
-                RequestButtonTextColor = "rgb(194, 187, 187)",
-                RequestButtonHoverBGColor = "rgb(98, 98, 98)"
-            };
-            var dbSettings = _dbContext.ArtistPageSettings.Add(newSettings).Entity;
-            await _dbContext.SaveChangesAsync();
-            var result = dbSettings.ToModel();
-            result.Artist = seller.ToModel();   
-            return Ok(result);
-        }
-        else
-        {
-            var result = seller.ArtistPageSettings.ToModel();
-            result.Artist = seller.ToModel();   
-            return Ok(result);
-        }
-        
+        var result = seller.ToModel();
+        return Ok(result);
     }
     
     [HttpGet]

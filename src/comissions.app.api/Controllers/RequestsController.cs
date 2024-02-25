@@ -919,7 +919,7 @@ public class RequestsController : Controller
             .Where(x=>x.UserId==User.GetUserId())
             .CountAsync();
         
-        var artist = await _dbContext.UserArtists.Include(x=>x.User).FirstOrDefaultAsync(x=>x.User.DisplayName==model.ArtistDisplayName);
+        var artist = await _dbContext.UserArtists.FirstOrDefaultAsync(x=>x.Id==model.ArtistId);
         if(artist==null)
             return NotFound("Artist not found.");
         
@@ -932,7 +932,7 @@ public class RequestsController : Controller
             Message = model.Message,
             RequestDate = DateTime.UtcNow,
             UserId = userId,
-            ArtistId = artist.Id,
+            ArtistId = model.ArtistId,
             Accepted = false,
             AcceptedDate = null,
             Declined = false,
