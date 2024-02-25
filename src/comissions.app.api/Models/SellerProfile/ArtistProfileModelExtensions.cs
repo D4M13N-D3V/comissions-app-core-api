@@ -13,7 +13,8 @@ public static class ArtistModelExtensions
             DeclinedRequests = sellerProfile.Requests.Where(x=>x.Declined).Count(),
             CompletedRequests = sellerProfile.Requests.Where(x=>x.Completed).Count(),
             PendingRequests = sellerProfile.Requests.Where(x=>!x.Accepted && !x.Declined && !x.Completed).Count(),
-            Revenue = sellerProfile.Requests.Sum(x=>x.Amount)
+            Revenue = sellerProfile.Requests.Where(x=>x.Paid).Sum(x=>x.Amount),
+            PaidRequests = sellerProfile.Requests.Where(x=>x.Paid).Count()
         };
     }
     public static ArtistModel ToModel(this UserArtist sellerProfile)
