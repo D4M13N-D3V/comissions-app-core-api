@@ -102,7 +102,7 @@ public class StripePaymentServiceProvider:IPaymentService
                             Currency = "usd",
                             ProductData = new Stripe.Checkout.SessionLineItemPriceDataProductDataOptions
                             {
-                                Name = "Comission Service",
+                                Name = "Skeb-Like Service",
                             },
                         },
                         Quantity = 1,
@@ -113,8 +113,8 @@ public class StripePaymentServiceProvider:IPaymentService
                     ApplicationFeeAmount = feeAmount,
                 },
             Mode = "payment",
-            SuccessUrl = $"{_baseUiUrl}/dashboard/requests/{requestId}",
-            CancelUrl = $"{_baseUiUrl}/dashboard/requests/{requestId}",
+            SuccessUrl = $"{_baseUiUrl}/dashboard/requests",
+            CancelUrl = $"{_baseUiUrl}/dashboard/requests",
             Metadata = new Dictionary<string, string>()
             {
                 ["orderId"] = requestId.ToString()
