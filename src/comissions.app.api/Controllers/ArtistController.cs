@@ -55,7 +55,7 @@ public class ArtistController : Controller
     public async Task<IActionResult> GetArtistStats()
     {
         var userId = User.GetUserId();
-        var Artist = await _dbContext.UserArtists.FirstOrDefaultAsync(Artist=>Artist.UserId==userId);
+        var Artist = await _dbContext.UserArtists.Include(x=>x.Requests).FirstOrDefaultAsync(Artist=>Artist.UserId==userId);
         if(Artist==null)
         {
             var ArtistRequest = await _dbContext.ArtistRequests.FirstOrDefaultAsync(request=>request.UserId==userId && request.Accepted==false);
