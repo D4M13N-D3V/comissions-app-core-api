@@ -85,10 +85,12 @@ public class ArtistController : Controller
 
         var account = _paymentService.GetAccount(Artist.StripeAccountId);
         var balance = _paymentService.GetBalance(Artist.StripeAccountId);
+        var pendingBalance = _paymentService.GetPendingBalance(Artist.StripeAccountId);
         var result = new PayoutModel()
         {
             Enabled = account.PayoutsEnabled,
             Balance = balance,
+            PendingBalance = pendingBalance,
             PayoutUrl =  _paymentService.CreateDashboardUrl(Artist.StripeAccountId)
         };
         return Ok(result);

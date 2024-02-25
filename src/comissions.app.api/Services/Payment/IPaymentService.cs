@@ -13,4 +13,5 @@ public interface IPaymentService
     string CreateDashboardUrl(string accountId);
     Account GetAccount(string? artistStripeAccountId);
     double GetBalance(string accountId);
+    double GetPendingBalance(string accountId);
 }
