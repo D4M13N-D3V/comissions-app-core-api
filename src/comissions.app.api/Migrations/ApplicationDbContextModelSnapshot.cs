@@ -329,7 +329,7 @@ namespace comissions.app.api.Migrations
 
                     b.HasIndex("RequestId");
 
-                    b.ToTable("RequestsReferences");
+                    b.ToTable("RequestReferences");
                 });
 
             modelBuilder.Entity("comissions.app.database.Entities.User", b =>

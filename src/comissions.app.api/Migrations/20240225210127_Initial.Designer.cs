@@ -12,8 +12,8 @@ using comissions.app.database;
 namespace comissions.app.api.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240225081932_review")]
-    partial class review
+    [Migration("20240225210127_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -291,6 +291,50 @@ namespace comissions.app.api.Migrations
                     b.ToTable("Requests");
                 });
 
+            modelBuilder.Entity("comissions.app.database.Entities.RequestAsset", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("FileReference")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("RequestId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RequestId");
+
+                    b.ToTable("RequestAssets");
+                });
+
+            modelBuilder.Entity("comissions.app.database.Entities.RequestReference", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("FileReference")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("RequestId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RequestId");
+
+                    b.ToTable("RequestReferences");
+                });
+
             modelBuilder.Entity("comissions.app.database.Entities.User", b =>
                 {
                     b.Property<string>("Id")
@@ -473,6 +517,28 @@ namespace comissions.app.api.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("comissions.app.database.Entities.RequestAsset", b =>
+                {
+                    b.HasOne("comissions.app.database.Entities.Request", "Request")
+                        .WithMany("RequestAssets")
+                        .HasForeignKey("RequestId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Request");
+                });
+
+            modelBuilder.Entity("comissions.app.database.Entities.RequestReference", b =>
+                {
+                    b.HasOne("comissions.app.database.Entities.Request", "Request")
+                        .WithMany("RequestReferences")
+                        .HasForeignKey("RequestId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Request");
+                });
+
             modelBuilder.Entity("comissions.app.database.Entities.UserArtist", b =>
                 {
                     b.HasOne("comissions.app.database.Entities.User", "User")
@@ -482,6 +548,13 @@ namespace comissions.app.api.Migrations
                         .IsRequired();
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("comissions.app.database.Entities.Request", b =>
+                {
+                    b.Navigation("RequestAssets");
+
+                    b.Navigation("RequestReferences");
                 });
 
             modelBuilder.Entity("comissions.app.database.Entities.User", b =>
