@@ -59,7 +59,8 @@ public class RequestsController : Controller
             if (request != null && request.Accepted && !request.Declined && !request.Completed &&
                 request.Artist.StripeAccountId == connectedAccountId)
             {
-                request.PaymentUrl = null;
+                var paymentUrl = _paymentService.Charge(request.Id,request.Artist.StripeAccountId,Convert.ToDouble(request.Amount));
+                request.PaymentUrl = paymentUrl;
             }
         }
         else if (stripeEvent.Type == Events.CheckoutSessionCompleted)
@@ -718,7 +719,24 @@ public class RequestsController : Controller
         var result = request.ToModel();
         return Ok(result);
     }
+
     
+    [Authorize("read:request")]
+    [HttpGet]
+    [Route("Customer/{requestId:int}/Payment")]
+    public async Task<IActionResult> PaymentUrl(int requestId)
+    {
+        var userId = User.GetUserId();
+        var request = await _dbContext.Requests
+            .Where(x=>x.UserId==userId)
+            .Include(x=>x.Artist)
+            .FirstOrDefaultAsync(x=>x.Id==requestId);
+        if(request==null)
+            return NotFound();
+        var paymentUrl = _paymentService.Charge(request.Id,request.Artist.StripeAccountId,Convert.ToDouble(request.Amount));
+        return Ok(new {paymentUrl});
+    }
+
     [Authorize("read:request")]
     [HttpGet]
     [Route("Artist")]
