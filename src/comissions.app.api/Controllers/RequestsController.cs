@@ -843,6 +843,8 @@ public class RequestsController : Controller
         var paymentUrl = _paymentService.Charge(request.Id,request.Artist.StripeAccountId,Convert.ToDouble(request.Amount));
         request.Accepted = true;
         request.AcceptedDate = DateTime.UtcNow;
+        request.Paid = false;
+        request.PaymentUrl = paymentUrl;
         _dbContext.Entry(request).State = EntityState.Modified;
         await _dbContext.SaveChangesAsync();
         var newTriggerModel = new EventCreateData()

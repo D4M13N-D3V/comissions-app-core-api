@@ -16,6 +16,9 @@ public static class RequestModelExtensions
             CompletedDate = sellerProfile.CompletedDate,
             Declined = sellerProfile.Declined,
             DeclinedDate = sellerProfile.DeclinedDate,
+            Paid = sellerProfile.Paid,
+            PaidDate = sellerProfile.PaidDate,
+            PaymentUrl = sellerProfile.PaymentUrl,
             Message = sellerProfile.Message
         };
     }
