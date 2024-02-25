@@ -67,7 +67,7 @@ public class RequestsController : Controller
         {
             var session = stripeEvent.Data.Object as Session;
             var connectedAccountId = stripeEvent.Account;
-            var requestId = session.Metadata["/OrderId"];
+            var requestId = session.Metadata["orderId"];
             var request = await _dbContext.Requests
                 .Include(x=>x.Artist)
                 .FirstOrDefaultAsync(x=>x.Id==int.Parse(requestId));
