@@ -32,6 +32,7 @@ public class UserMiddleware
             if (user == null)
             {
                 var displayName = context.User.Claims.FirstOrDefault(x=>x.Type==ClaimTypes.Name)?.Value ?? "Anonymous";
+                if(dbContext.Users.Any(x=>x.DisplayName==displayName))
                     displayName = $"{displayName}#{Guid.NewGuid().ToString().Substring(0, 4)}";
                 user = new User
                 {
