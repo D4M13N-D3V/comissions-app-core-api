@@ -1,4 +1,6 @@
 
+using Stripe;
+
 namespace comissions.app.api.Services.Payment;
 
 public interface IPaymentService
@@ -9,4 +11,6 @@ public interface IPaymentService
     bool ArtistAccountIsOnboarded(string accountId);
     string Charge(int orderArtistServiceId, string? sellerStripeAccountId, double orderPrice);
     string CreateDashboardUrl(string accountId);
+    Account GetAccount(string? artistStripeAccountId);
+    double GetBalance(string accountId);
 }

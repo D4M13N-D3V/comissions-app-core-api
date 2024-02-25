@@ -135,4 +135,18 @@ public class StripePaymentServiceProvider:IPaymentService
         var url = service.Create(accountId);
         return url.Url;
     }
+
+    public Account GetAccount(string? artistStripeAccountId)
+    {
+        var AccountService = new AccountService();
+        var account = AccountService.Get(artistStripeAccountId);
+        return account;
+    }
+    
+    public double GetBalance(string accountId)
+    {
+        var balanceService = new BalanceService();
+        var balance = balanceService.Get();
+        return balance.Available[0].Amount/100;
+    }
 }

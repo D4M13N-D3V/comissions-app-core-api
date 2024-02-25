@@ -6,6 +6,7 @@ using comissions.app.api.Services.Payment;
 using comissions.app.api.Services.Storage;
 using comissions.app.database;
 using comissions.app.database.Entities;
+using comissions.app.database.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -66,10 +67,11 @@ public class ArtistController : Controller
         var result = Artist.ToStatsModel();
         return Ok(result);
     }
+    
     [HttpGet]
     [Authorize("read:artist")]
-    [Route("PayoutDashboard")]
-    public async Task<IActionResult> PayoutDashboard()
+    [Route("Payout")]
+    public async Task<IActionResult> Payout()
     {
         var userId = User.GetUserId();
         var Artist = await _dbContext.UserArtists.Include(x=>x.Requests).FirstOrDefaultAsync(Artist=>Artist.UserId==userId);
@@ -80,8 +82,16 @@ public class ArtistController : Controller
                 return BadRequest();
             return Unauthorized();
         }
-        var url = _paymentService.CreateDashboardUrl(Artist.StripeAccountId);
-        return Ok(new {url});
+
+        var account = _paymentService.GetAccount(Artist.StripeAccountId);
+        var balance = _paymentService.GetBalance(Artist.StripeAccountId);
+        var result = new PayoutModel()
+        {
+            Enabled = account.PayoutsEnabled,
+            Balance = balance,
+            PayoutUrl =  _paymentService.CreateDashboardUrl(Artist.StripeAccountId)
+        };
+        return Ok(result);
     }
     
     [HttpPut]
