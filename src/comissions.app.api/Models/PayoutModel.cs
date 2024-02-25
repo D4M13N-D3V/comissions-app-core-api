@@ -7,5 +7,4 @@ public class PayoutModel
     public double Balance { get; set; }
     public bool Enabled { get; set; }
     public string PayoutUrl { get; set; }
-    public string OnboardUrl { get; set; }
 }

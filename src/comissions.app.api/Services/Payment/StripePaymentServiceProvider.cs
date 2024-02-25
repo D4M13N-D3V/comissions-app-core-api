@@ -146,7 +146,10 @@ public class StripePaymentServiceProvider:IPaymentService
     public double GetBalance(string accountId)
     {
         var balanceService = new BalanceService();
-        var balance = balanceService.Get();
+        var balance = balanceService.Get(new RequestOptions()
+        {
+            StripeAccount = accountId
+        });
         return balance.Available[0].Amount/100;
     }
 }
