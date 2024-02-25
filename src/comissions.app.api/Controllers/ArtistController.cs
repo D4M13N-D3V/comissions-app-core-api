@@ -66,6 +66,23 @@ public class ArtistController : Controller
         var result = Artist.ToStatsModel();
         return Ok(result);
     }
+    [HttpGet]
+    [Authorize("read:artist")]
+    [Route("PayoutDashboard")]
+    public async Task<IActionResult> PayoutDashboard()
+    {
+        var userId = User.GetUserId();
+        var Artist = await _dbContext.UserArtists.Include(x=>x.Requests).FirstOrDefaultAsync(Artist=>Artist.UserId==userId);
+        if(Artist==null)
+        {
+            var ArtistRequest = await _dbContext.ArtistRequests.FirstOrDefaultAsync(request=>request.UserId==userId && request.Accepted==false);
+            if(ArtistRequest!=null)
+                return BadRequest();
+            return Unauthorized();
+        }
+        var url = _paymentService.CreateDashboardUrl(Artist.StripeAccountId);
+        return Ok(new {url});
+    }
     
     [HttpPut]
     [Authorize("write:artist")]
