@@ -31,10 +31,12 @@ public class UserMiddleware
 
             if (user == null)
             {
+                var displayName = context.User.Claims.FirstOrDefault(x=>x.Type==ClaimTypes.Name)?.Value ?? "Anonymous";
+                    displayName = $"{displayName}#{Guid.NewGuid().ToString().Substring(0, 4)}";
                 user = new User
                 {
                     Id = userId, 
-                    DisplayName = context.User.Claims.FirstOrDefault(x=>x.Type==ClaimTypes.Name)?.Value ?? "Anonymous", 
+                    DisplayName = displayName, 
                     Biography = string.Empty,
                     Email = context.User.Claims.FirstOrDefault(x=>x.Type==ClaimTypes.Email)?.Value ?? string.Empty,
                 };
