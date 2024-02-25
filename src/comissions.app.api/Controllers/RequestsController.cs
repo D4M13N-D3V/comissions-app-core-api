@@ -76,7 +76,9 @@ public class RequestsController : Controller
                         request.Paid = true;
                         request.PaidDate = DateTime.UtcNow;
                     }
-                }
+                    _dbContext.Entry(request).State = EntityState.Modified;
+                    _dbContext.SaveChanges();
+        }
                 else if (stripeEvent.Type == Events.AccountUpdated)
                 {
                 }
