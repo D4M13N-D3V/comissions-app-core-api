@@ -35,6 +35,10 @@ public class UserController : Controller
     {
         var userId = User.GetUserId();
         var existingUser = await _dbContext.Users.FirstAsync(user=>user.Id==userId);
+        
+        if(_dbContext.Users.Any(x=>x.DisplayName==model.DisplayName && x.Id!=userId))
+            return BadRequest("Display name is already in use.");
+        
         var updatedUser = model.ToEntity(existingUser);
         updatedUser = _dbContext.Users.Update(updatedUser).Entity;
         await _dbContext.SaveChangesAsync();
