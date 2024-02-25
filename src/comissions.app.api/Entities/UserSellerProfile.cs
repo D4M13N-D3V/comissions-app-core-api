@@ -25,6 +25,7 @@ public record UserArtist
     public virtual User User { get; set; } = null!;
     
     public int ArtistPageSettingsId { get; set; }
+    public virtual ICollection<Request> Requests { get; set; } = new List<Request>();
     public virtual ArtistPageSettings ArtistPageSettings { get; set; } = null!;
     public virtual ICollection<ArtistPortfolioPiece> PortfolioPieces { get; set; } = new List<ArtistPortfolioPiece>();
 }

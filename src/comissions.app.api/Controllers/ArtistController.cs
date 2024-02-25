@@ -49,6 +49,24 @@ public class ArtistController : Controller
         return Ok(result);
     }
     
+    [HttpGet]
+    [Authorize("read:artist")]
+    [Route("Stats")]
+    public async Task<IActionResult> GetArtistStats()
+    {
+        var userId = User.GetUserId();
+        var Artist = await _dbContext.UserArtists.FirstOrDefaultAsync(Artist=>Artist.UserId==userId);
+        if(Artist==null)
+        {
+            var ArtistRequest = await _dbContext.ArtistRequests.FirstOrDefaultAsync(request=>request.UserId==userId && request.Accepted==false);
+            if(ArtistRequest!=null)
+                return BadRequest();
+            return Unauthorized();
+        }
+        var result = Artist.ToStatsModel();
+        return Ok(result);
+    }
+    
     [HttpPut]
     [Authorize("write:artist")]
     public async Task<IActionResult> UpdateArtist(ArtistModel model)
@@ -110,6 +128,7 @@ public class ArtistController : Controller
         var result = Artist.ArtistPageSettings.ToModel();
         return Ok(result);
     }
+    
     
     [HttpPut]
     [Authorize("write:artist")]
