@@ -744,7 +744,7 @@ public class RequestsController : Controller
     [Authorize("write:request")]
     [HttpPost]
     [Route("Customer/{requestId:int}/Reference")]
-    public async Task<IActionResult> AddRefrence(int requestId, List<IFormFile> referenceImages)
+    public async Task<IActionResult> AddReference(int requestId, List<IFormFile> referenceImages)
     {
         var userId = User.GetUserId();
         var request = await _dbContext.Requests
@@ -752,6 +752,10 @@ public class RequestsController : Controller
             .FirstOrDefaultAsync(x=>x.Id==requestId);
         if(request==null)
             return NotFound();
+        
+        if(request.Accepted)
+            return BadRequest("Request has already been accepted.");
+        
         var references = new List<RequestReference>();
         foreach (var file in referenceImages)
         {
@@ -777,6 +781,7 @@ public class RequestsController : Controller
             .FirstOrDefaultAsync(x=>x.Id==requestId);
         if(request==null)
             return NotFound();
+        
         var references = new List<RequestAsset>();
         foreach (var file in assetImages)
         {
