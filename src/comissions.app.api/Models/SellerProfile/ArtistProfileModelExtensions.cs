@@ -9,9 +9,9 @@ public static class ArtistModelExtensions
     {
         return new ArtistStatsModel()
         {
-            AcceptedRequests = sellerProfile.Requests.Select(x=>x.Accepted).Count(),
-            DeclinedRequests = sellerProfile.Requests.Select(x=>x.Declined).Count(),
-            CompletedRequests = sellerProfile.Requests.Select(x=>x.Completed).Count(),
+            AcceptedRequests = sellerProfile.Requests.Where(x=>x.Accepted).Count(),
+            DeclinedRequests = sellerProfile.Requests.Where(x=>x.Declined).Count(),
+            CompletedRequests = sellerProfile.Requests.Where(x=>x.Completed).Count(),
             PendingRequests = sellerProfile.Requests.Where(x=>!x.Accepted && !x.Declined && !x.Completed).Count(),
             Revenue = sellerProfile.Requests.Sum(x=>x.Amount)
         };
