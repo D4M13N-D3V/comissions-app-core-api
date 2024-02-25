@@ -128,4 +128,11 @@ public class StripePaymentServiceProvider:IPaymentService
         var session = service.Create(options, requestOptions);
         return session.Url;
     }
+
+    public string CreateDashboardUrl(string accountId)
+    {
+        var service = new LoginLinkService();
+        var url = service.Create(accountId);
+        return url.Url;
+    }
 }
