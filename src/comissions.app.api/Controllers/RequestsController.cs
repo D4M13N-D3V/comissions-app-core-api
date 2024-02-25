@@ -1064,7 +1064,7 @@ public class RequestsController : Controller
     public async Task<IActionResult> CreateRequest([FromBody] RequestCreateModel model)
     {
         var openRequests = await _dbContext.Requests
-            .Where(x=>x.UserId==User.GetUserId() && (x.Completed==false || x.Declined==false))
+            .Where(x=>x.UserId==User.GetUserId() && x.Declined==false && x.Completed==false)
             .CountAsync();
         
         var artist = await _dbContext.UserArtists.FirstOrDefaultAsync(x=>x.Id==model.ArtistId);
