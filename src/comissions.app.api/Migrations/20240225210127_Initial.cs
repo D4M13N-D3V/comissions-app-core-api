@@ -47,7 +47,10 @@ namespace comissions.app.api.Migrations
                     Message = table.Column<string>(type: "text", nullable: false),
                     RequestDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     AcceptedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    Accepted = table.Column<bool>(type: "boolean", nullable: false)
+                    Accepted = table.Column<bool>(type: "boolean", nullable: false),
+                    Reviewed = table.Column<bool>(type: "boolean", nullable: false),
+                    Review = table.Column<string>(type: "text", nullable: true),
+                    ReviewRating = table.Column<double>(type: "double precision", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -183,6 +186,9 @@ namespace comissions.app.api.Migrations
                     AcceptedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     Declined = table.Column<bool>(type: "boolean", nullable: false),
                     DeclinedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    PaymentUrl = table.Column<string>(type: "text", nullable: true),
+                    Paid = table.Column<bool>(type: "boolean", nullable: false),
+                    PaidDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     Completed = table.Column<bool>(type: "boolean", nullable: false),
                     CompletedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
                 },
@@ -203,6 +209,46 @@ namespace comissions.app.api.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "RequestAssets",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    RequestId = table.Column<int>(type: "integer", nullable: false),
+                    FileReference = table.Column<string>(type: "text", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_RequestAssets", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_RequestAssets_Requests_RequestId",
+                        column: x => x.RequestId,
+                        principalTable: "Requests",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "RequestReferences",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    RequestId = table.Column<int>(type: "integer", nullable: false),
+                    FileReference = table.Column<string>(type: "text", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_RequestReferences", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_RequestReferences_Requests_RequestId",
+                        column: x => x.RequestId,
+                        principalTable: "Requests",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_ArtistPageSettings_ArtistId",
                 table: "ArtistPageSettings",
@@ -218,6 +264,16 @@ namespace comissions.app.api.Migrations
                 name: "IX_ArtistRequests_UserId",
                 table: "ArtistRequests",
                 column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_RequestAssets_RequestId",
+                table: "RequestAssets",
+                column: "RequestId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_RequestReferences_RequestId",
+                table: "RequestReferences",
+                column: "RequestId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Requests_ArtistId",
@@ -247,6 +303,12 @@ namespace comissions.app.api.Migrations
 
             migrationBuilder.DropTable(
                 name: "ArtistRequests");
+
+            migrationBuilder.DropTable(
+                name: "RequestAssets");
+
+            migrationBuilder.DropTable(
+                name: "RequestReferences");
 
             migrationBuilder.DropTable(
                 name: "Requests");
