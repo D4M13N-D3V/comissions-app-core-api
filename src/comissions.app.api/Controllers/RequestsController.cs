@@ -1032,7 +1032,7 @@ public class RequestsController : Controller
     [Authorize("write:request")]
     [HttpPost]
     [Route("Request")]
-    public async Task<IActionResult> CreateRequest([FromBody] RequestCreateModel model)
+    public async Task<IActionResult> CreateRequest([FromForm] RequestCreateModel model)
     {
         var openRequests = await _dbContext.Requests
             .Where(x=>x.UserId==User.GetUserId() && x.Declined==false && x.Completed==false)
