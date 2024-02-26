@@ -743,35 +743,6 @@ public class RequestsController : Controller
     
     [Authorize("write:request")]
     [HttpPost]
-    [Route("Customer/{requestId:int}/Reference")]
-    public async Task<IActionResult> AddReference(int requestId, List<IFormFile> referenceImages)
-    {
-        var userId = User.GetUserId();
-        var request = await _dbContext.Requests
-            .Where(x=>x.UserId==userId)
-            .FirstOrDefaultAsync(x=>x.Id==requestId);
-        if(request==null)
-            return NotFound();
-        
-        if(request.Accepted)
-            return BadRequest("Request has already been accepted.");
-        
-        var references = new List<RequestReference>();
-        foreach (var file in referenceImages)
-        {
-            var reference = new RequestReference()
-            {
-                RequestId = requestId,
-                FileReference = await _storageService.UploadImageAsync(file.OpenReadStream(), Guid.NewGuid().ToString())
-            };
-            references.Add(reference);
-        }
-        _dbContext.RequestReferences.AddRange(references);
-        await _dbContext.SaveChangesAsync();
-        return Ok();
-    }
-    [Authorize("write:request")]
-    [HttpPost]
     [Route("Artist/{requestId:int}/Asset")]
     public async Task<IActionResult> AddAsset(int requestId, List<IFormFile> assetImages)
     {
@@ -1088,7 +1059,7 @@ public class RequestsController : Controller
             Completed = false,
             CompletedDate = null
         };
-        _dbContext.Requests.Add(request);
+        var dbRequest = _dbContext.Requests.Add(request).Entity;
         await _dbContext.SaveChangesAsync();
         var newArtistTriggerModel = new EventCreateData()
         {
@@ -1099,6 +1070,20 @@ public class RequestsController : Controller
             },
             Payload = { }
         };
+        
+        var references = new List<RequestReference>();
+        foreach (var file in model.Files)
+        {
+            var reference = new RequestReference()
+            {
+                RequestId = dbRequest.Id,
+                FileReference = await _storageService.UploadImageAsync(file.OpenReadStream(), Guid.NewGuid().ToString())
+            };
+            references.Add(reference);
+        }
+        _dbContext.RequestReferences.AddRange(references);
+        await _dbContext.SaveChangesAsync();
+        
         await _client.Event.Trigger(newArtistTriggerModel);
         var newTriggerModel = new EventCreateData()
         {
