@@ -6,6 +6,7 @@ using comissions.app.api.Services.Payment;
 using comissions.app.api.Services.Storage;
 using Auth0.AspNetCore.Authentication;
 using comissions.app.database;
+using comissions.app.database.Filters;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
@@ -82,7 +83,10 @@ builder.Services.AddSwaggerGen(options =>
 });
 builder.Services.RegisterNovuClients(builder.Configuration).AddTransient<NovuClient>();
 
-builder.Services.AddControllers()
+builder.Services.AddControllers(options =>
+    {
+        options.Filters.Add(new LoggingFilter()); // Register a custom logging filter
+    })
     .AddJsonOptions(options=>
         options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles
         );
