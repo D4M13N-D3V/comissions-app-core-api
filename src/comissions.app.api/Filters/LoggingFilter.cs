@@ -4,11 +4,9 @@ namespace comissions.app.database.Filters;
 
 public class LoggingFilter : IActionFilter
 {
-    private readonly ILogger _logger;
 
-    public LoggingFilter(ILogger<LoggingFilter> logger)
+    public LoggingFilter()
     {
-        _logger = logger;
     }
 
     public void OnActionExecuting(ActionExecutingContext context)
