@@ -5,4 +5,6 @@ public class RequestCreateModel
     public int ArtistId { get; set; }
     public string Message { get; set; }
     public decimal Amount { get; set; }
+    
+    public List<IFormFile> Files { get; set; }
 }
