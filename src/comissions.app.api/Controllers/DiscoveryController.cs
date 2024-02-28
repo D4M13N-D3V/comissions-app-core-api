@@ -3,6 +3,7 @@ using comissions.app.api.Models.PortfolioModel;
 using comissions.app.api.Services.Storage;
 using comissions.app.database;
 using comissions.app.database.Entities;
+using comissions.app.database.Models.Request;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -24,7 +25,7 @@ public class DiscoveryController : Controller
     
     [HttpGet]
     [Route("Artists")]
-    public async Task<IActionResult> GetArtists(string search="",int offset = 0, int pageSize = 10)
+    public async Task<IActionResult> GetArtists(string search="", [FromQuery]int offset = 0, [FromQuery]int pageSize = 10)
     {
         var sellers = await _dbContext.UserArtists
             .Where(x=>x.User.DisplayName.Contains(search))
@@ -61,8 +62,43 @@ public class DiscoveryController : Controller
     }
     
     [HttpGet]
+    [Route("Artists/{sellerId:int}/Reviews")]
+    public async Task<IActionResult> GetArtistReviews(int sellerId,  [FromQuery]int offset = 0, [FromQuery]int pageSize = 10)
+    {
+        var seller = await _dbContext.UserArtists
+            .Include(x=>x.User)
+            .FirstOrDefaultAsync(x=>x.Id==sellerId);
+        if(seller==null)
+            return NotFound();
+        var sellerReviews = await _dbContext.Requests
+            .Where(x=>x.ArtistId==sellerId && x.Reviewed)
+            .Skip(offset).Take(pageSize).ToListAsync();
+        var result = sellerReviews.Select(x=>new RequestReviewModel()
+        {
+            RequestId = x.Id,
+            Message = x.ReviewMessage,
+            Rating = x.Rating.Value,
+            ReviewDate = x.ReviewDate
+        }).ToList();
+        return Ok(result);
+    }
+    
+    public async Task<IActionResult> GetArtistReviewsCount(int sellerId)
+    {
+        var seller = await _dbContext.UserArtists
+            .Include(x=>x.User)
+            .FirstOrDefaultAsync(x=>x.Id==sellerId);
+        if(seller==null)
+            return NotFound();
+        var sellerReviews = await _dbContext.Requests
+            .Where(x=>x.ArtistId==sellerId && x.Reviewed)
+            .CountAsync();
+        return Ok(sellerReviews);
+    }
+    
+    [HttpGet]
     [Route("Artists/{sellerId:int}/Portfolio")]
-    public async Task<IActionResult> GetArtistPortfolio(int sellerId, int offset = 0, int pageSize = 10)
+    public async Task<IActionResult> GetArtistPortfolio(int sellerId,  [FromQuery]int offset = 0, [FromQuery]int pageSize = 10)
     {
         var seller = await _dbContext.UserArtists
             .Include(x=>x.User)
