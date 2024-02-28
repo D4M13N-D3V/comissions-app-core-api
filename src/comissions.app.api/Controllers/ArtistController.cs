@@ -93,7 +93,8 @@ public class ArtistController : Controller
         {
             RequestId = x.Id,
             Message = x.ReviewMessage,
-            Rating = x.Rating.Value
+            Rating = x.Rating.Value,
+            ReviewDate = x.ReviewDate
         }).ToList().Count;
         
         return Ok(result);
