@@ -83,6 +83,8 @@ public class DiscoveryController : Controller
         return Ok(result);
     }
     
+    [HttpGet]
+    [Route("Artists/{sellerId:int}/Reviews/Count")]
     public async Task<IActionResult> GetArtistReviewsCount(int sellerId)
     {
         var seller = await _dbContext.UserArtists
