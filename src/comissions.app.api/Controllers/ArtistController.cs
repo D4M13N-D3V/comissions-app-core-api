@@ -77,7 +77,7 @@ public class ArtistController : Controller
     
     [HttpGet]
     [Authorize("read:artist")]
-    [Route("Requests")]
+    [Route("Reviews/Count")]
     public async Task<IActionResult> ReviewCount()
     {
         var userId = User.GetUserId();
