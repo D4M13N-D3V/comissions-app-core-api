@@ -17,7 +17,10 @@ public class Request
     public DateTime? PaidDate { get; set; } = null!;
     public bool Completed { get; set; } = false;
     public DateTime? CompletedDate { get; set; }
-    
+    public bool Reviewed { get; set; }
+    public DateTime? ReviewDate { get; set; }
+    public string? ReviewMessage { get; set; }
+    public double? Rating { get; set; }
     public virtual User User { get; set; } = null!;
     public virtual UserArtist Artist { get; set; } = null!;
     

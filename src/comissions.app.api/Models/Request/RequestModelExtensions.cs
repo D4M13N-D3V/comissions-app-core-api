@@ -35,7 +35,11 @@ public static class RequestModelExtensions
             Paid = sellerProfile.Paid,
             PaidDate = sellerProfile.PaidDate,
             PaymentUrl = sellerProfile.PaymentUrl,
-            Message = sellerProfile.Message
+            Message = sellerProfile.Message,
+            Reviewed = sellerProfile.Reviewed,
+            ReviewDate = sellerProfile.ReviewDate,
+            ReviewMessage = sellerProfile.ReviewMessage,
+            ReviewRating = sellerProfile.Rating,
         };
     }
 }
