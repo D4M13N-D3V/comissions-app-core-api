@@ -7,6 +7,7 @@ using comissions.app.api.Services.Storage;
 using comissions.app.database;
 using comissions.app.database.Entities;
 using comissions.app.database.Models;
+using comissions.app.database.Models.Request;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -49,6 +50,31 @@ public class ArtistController : Controller
         var result = Artist.ToModel();
         return Ok(result);
     }
+    
+    [HttpGet]
+    [Authorize("read:artist")]
+    [Route("Reviews")]
+    public async Task<IActionResult> GetArtistReviews(int offset = 0, int limit = 10)
+    {
+        var userId = User.GetUserId();
+        var Artist = await _dbContext.UserArtists.Include(x=>x.Requests).FirstOrDefaultAsync(Artist=>Artist.UserId==userId);
+        if(Artist==null)
+        {
+            var ArtistRequest = await _dbContext.ArtistRequests.FirstOrDefaultAsync(request=>request.UserId==userId && request.Accepted==false);
+            if(ArtistRequest!=null)
+                return BadRequest();
+            return Unauthorized();
+        }
+        var result = Artist.Requests.Where(x=>x.Reviewed).Skip(offset).Take(limit).Select(x=> new RequestReviewModel()
+        {
+            RequestId = x.Id,
+            Message = x.ReviewMessage,
+            Rating = x.Rating.Value
+        }).ToList();
+        
+        return Ok(result);
+    }
+    
     
     [HttpGet]
     [Authorize("read:artist")]
