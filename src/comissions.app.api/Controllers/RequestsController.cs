@@ -742,6 +742,31 @@ public class RequestsController : Controller
     }
     
     [Authorize("write:request")]
+    [HttpPut]
+    [Route("Customer/{requestId:int}/Review")]
+    public async Task<IActionResult> ReviewRequest(int requestId, RequestReviewModel model)
+    {
+        var userId = User.GetUserId();
+        var request = await _dbContext.Requests
+            .Where(x=>x.UserId==userId)
+            .FirstOrDefaultAsync(x=>x.Id==requestId);
+        if(request==null)
+            return NotFound();
+        
+        if(request.Completed==false || request.Accepted==false || request.Reviewed )
+            return BadRequest("Request has not been completed or accepted or has already been reviewed.");
+        
+        request.Reviewed = true;
+        request.ReviewDate = DateTime.UtcNow;
+        request.ReviewMessage = model.Message;
+        request.Rating = model.Rating;
+        _dbContext.Entry(request).State = EntityState.Modified;
+        await _dbContext.SaveChangesAsync();
+        var result = request.ToModel();
+        return Ok(result);
+    }
+    
+    [Authorize("write:request")]
     [HttpPost]
     [Route("Artist/{requestId:int}/Asset")]
     public async Task<IActionResult> AddAsset(int requestId, List<IFormFile> assetImages)

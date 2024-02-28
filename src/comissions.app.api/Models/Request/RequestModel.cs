@@ -17,4 +17,8 @@ public class RequestModel
     public string? PaymentUrl { get; set; }
     public DateTime? PaidDate { get; set; }
     public bool Paid { get; set; }
+    public bool Reviewed { get; set; }
+    public double? ReviewRating { get; set; }
+    public string? ReviewMessage { get; set; }
+    public DateTime? ReviewDate { get; set; }
 }
