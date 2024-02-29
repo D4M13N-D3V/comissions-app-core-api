@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("comissions.app.database.migrator")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+4a368fa6a4bcab54e27c3e60b022ebc300fae2c5")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+dee6f607da0fa6862b53f3ad21799f11d3d32851")]
 [assembly: System.Reflection.AssemblyProductAttribute("comissions.app.database.migrator")]
 [assembly: System.Reflection.AssemblyTitleAttribute("comissions.app.database.migrator")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
