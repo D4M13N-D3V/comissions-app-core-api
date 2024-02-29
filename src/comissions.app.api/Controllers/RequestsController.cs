@@ -1054,16 +1054,21 @@ public class RequestsController : Controller
         return Ok(result);
     }
 
+    // public int ArtistId { get; set; }
+    // public string Message { get; set; }
+    // public decimal Amount { get; set; }
+    //
+    // public List<IFormFile> Files { get; set; }
     [Authorize("write:request")]
     [HttpPost]
     [Route("Request")]
-    public async Task<IActionResult> CreateRequest([FromForm] RequestCreateModel model)
+    public async Task<IActionResult> CreateRequest([FromForm]int artistId, [FromForm]string message, [FromForm]decimal amount, [FromForm]List<IFormFile> files)
     {
         var openRequests = await _dbContext.Requests
             .Where(x=>x.UserId==User.GetUserId() && x.Declined==false && x.Completed==false)
             .CountAsync();
         
-        var artist = await _dbContext.UserArtists.FirstOrDefaultAsync(x=>x.Id==model.ArtistId);
+        var artist = await _dbContext.UserArtists.FirstOrDefaultAsync(x=>x.Id==artistId);
         if(artist==null)
             return NotFound("Artist not found.");
         
@@ -1072,11 +1077,11 @@ public class RequestsController : Controller
         var userId = User.GetUserId();
         var request = new Request()
         {
-            Amount = model.Amount,
-            Message = model.Message,
+            Amount = amount,
+            Message = message,
             RequestDate = DateTime.UtcNow,
             UserId = userId,
-            ArtistId = model.ArtistId,
+            ArtistId = artistId,
             Accepted = false,
             AcceptedDate = null,
             Declined = false,
@@ -1097,7 +1102,7 @@ public class RequestsController : Controller
         };
         
         var references = new List<RequestReference>();
-        foreach (var file in model.Files)
+        foreach (var file in files)
         {
             var reference = new RequestReference()
             {
