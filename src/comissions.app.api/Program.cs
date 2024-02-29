@@ -139,15 +139,12 @@ app.UseSwaggerUI(settings =>
     settings.OAuthClientId(builder.Configuration.GetValue<string>("Auth0:ClientId"));
     settings.OAuthClientSecret(builder.Configuration.GetValue<string>("Auth0:ClientSecret"));
     settings.OAuthUsePkce();
+    settings.ConfigObject.OAuth2RedirectUrl = "https://core-api.development.comissions.app/swagger/oauth2-redirect.html";
 });
 var defaultFilesOptions = new DefaultFilesOptions();
 defaultFilesOptions.DefaultFileNames.Clear();
 defaultFilesOptions.DefaultFileNames.Add("index.html"); // replace 'yourf
 app.UseStaticFiles();
-app.UseForwardedHeaders(new ForwardedHeadersOptions
-{
-    ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
-});
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseMiddleware<UserMiddleware>();
