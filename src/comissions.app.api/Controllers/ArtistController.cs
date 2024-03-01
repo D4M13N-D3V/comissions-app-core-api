@@ -34,6 +34,7 @@ public class ArtistController : Controller
         _dbContext = dbContext;
     }
     
+    
     [HttpGet]
     [Authorize("read:artist")]
     public async Task<IActionResult> GetArtist()
@@ -48,103 +49,6 @@ public class ArtistController : Controller
             return Unauthorized();
         }
         var result = Artist.ToModel();
-        return Ok(result);
-    }
-    
-    [HttpGet]
-    [Authorize("read:artist")]
-    [Route("Reviews")]
-    public async Task<IActionResult> GetArtistReviews([FromQuery]int offset = 0, [FromQuery]int limit = 10)
-    {
-        var userId = User.GetUserId();
-        var Artist = await _dbContext.UserArtists.Include(x=>x.Requests).FirstOrDefaultAsync(Artist=>Artist.UserId==userId);
-        if(Artist==null)
-        {
-            var ArtistRequest = await _dbContext.ArtistRequests.FirstOrDefaultAsync(request=>request.UserId==userId && request.Accepted==false);
-            if(ArtistRequest!=null)
-                return BadRequest();
-            return Unauthorized();
-        }
-        var result = Artist.Requests.Where(x=>x.Reviewed).Skip(offset).Take(limit).Select(x=> new RequestReviewModel()
-        {
-            RequestId = x.Id,
-            Message = x.ReviewMessage,
-            Rating = x.Rating.Value,
-            ReviewDate = x.ReviewDate
-        }).ToList();
-        
-        return Ok(result);
-    }
-    
-    [HttpGet]
-    [Authorize("read:artist")]
-    [Route("Reviews/Count")]
-    public async Task<IActionResult> ReviewCount()
-    {
-        var userId = User.GetUserId();
-        var Artist = await _dbContext.UserArtists.Include(x=>x.Requests).FirstOrDefaultAsync(Artist=>Artist.UserId==userId);
-        if(Artist==null)
-        {
-            var ArtistRequest = await _dbContext.ArtistRequests.FirstOrDefaultAsync(request=>request.UserId==userId && request.Accepted==false);
-            if(ArtistRequest!=null)
-                return BadRequest();
-            return Unauthorized();
-        }
-        var result = Artist.Requests.Where(x=>x.Reviewed).Select(x=> new RequestReviewModel()
-        {
-            RequestId = x.Id,
-            Message = x.ReviewMessage,
-            Rating = x.Rating.Value,
-            ReviewDate = x.ReviewDate
-        }).ToList().Count;
-        
-        return Ok(result);
-    }
-    
-    
-    [HttpGet]
-    [Authorize("read:artist")]
-    [Route("Stats")]
-    public async Task<IActionResult> GetArtistStats()
-    {
-        var userId = User.GetUserId();
-        var Artist = await _dbContext.UserArtists.Include(x=>x.Requests).FirstOrDefaultAsync(Artist=>Artist.UserId==userId);
-        if(Artist==null)
-        {
-            var ArtistRequest = await _dbContext.ArtistRequests.FirstOrDefaultAsync(request=>request.UserId==userId && request.Accepted==false);
-            if(ArtistRequest!=null)
-                return BadRequest();
-            return Unauthorized();
-        }
-        var result = Artist.ToStatsModel();
-        return Ok(result);
-    }
-    
-    [HttpGet]
-    [Authorize("read:artist")]
-    [Route("Payout")]
-    public async Task<IActionResult> Payout()
-    {
-        var userId = User.GetUserId();
-        var Artist = await _dbContext.UserArtists.Include(x=>x.Requests).FirstOrDefaultAsync(Artist=>Artist.UserId==userId);
-        if(Artist==null)
-        {
-            var ArtistRequest = await _dbContext.ArtistRequests.FirstOrDefaultAsync(request=>request.UserId==userId && request.Accepted==false);
-            if(ArtistRequest!=null)
-                return BadRequest();
-            return Unauthorized();
-        }
-
-        var account = _paymentService.GetAccount(Artist.StripeAccountId);
-        var balance = _paymentService.GetBalance(Artist.StripeAccountId);
-        var pendingBalance = _paymentService.GetPendingBalance(Artist.StripeAccountId);
-        var result = new PayoutModel()
-        {
-            Enabled = account.PayoutsEnabled,
-            Balance = balance,
-            PendingBalance = pendingBalance,
-            PayoutUrl =  _paymentService.CreateDashboardUrl(Artist.StripeAccountId)
-        };
         return Ok(result);
     }
     
@@ -186,6 +90,24 @@ public class ArtistController : Controller
     
     [HttpGet]
     [Authorize("read:artist")]
+    [Route("Stats")]
+    public async Task<IActionResult> GetArtistStats()
+    {
+        var userId = User.GetUserId();
+        var Artist = await _dbContext.UserArtists.Include(x=>x.Requests).FirstOrDefaultAsync(Artist=>Artist.UserId==userId);
+        if(Artist==null)
+        {
+            var ArtistRequest = await _dbContext.ArtistRequests.FirstOrDefaultAsync(request=>request.UserId==userId && request.Accepted==false);
+            if(ArtistRequest!=null)
+                return BadRequest();
+            return Unauthorized();
+        }
+        var result = Artist.ToStatsModel();
+        return Ok(result);
+    }
+    
+    [HttpGet]
+    [Authorize("read:artist")]
     [Route("Request")]
     public async Task<IActionResult> GetArtistRequest()
     {
@@ -197,41 +119,6 @@ public class ArtistController : Controller
         return Ok(result);
     }   
     
-    [HttpGet]
-    [Authorize("read:artist")]
-    [Route("Page")]
-    public async Task<IActionResult> GetArtistPage()
-    {
-        var userId = User.GetUserId();
-        var Artist = await _dbContext.UserArtists.Include(x=>x.ArtistPageSettings).FirstOrDefaultAsync(artist=>artist.UserId==userId);
-        if(Artist==null)
-            return NotFound();
-        var result = Artist.ArtistPageSettings.ToModel();
-        return Ok(result);
-    }
-    
-    
-    [HttpPut]
-    [Authorize("write:artist")]
-    [Route("Page")]
-    public async Task<IActionResult> UpdateArtistPage([FromBody]ArtistPageSettingsModel model)
-    {
-        var userId = User.GetUserId();
-        var existingArtist = await _dbContext.UserArtists
-            .Include(x=>x.ArtistPageSettings).FirstOrDefaultAsync(Artist=>Artist.UserId==userId);
-        if (existingArtist == null)
-        {
-            var ArtistRequest = await _dbContext.ArtistRequests.FirstOrDefaultAsync(request=>request.UserId==userId && request.Accepted==false);
-            if(ArtistRequest!=null)
-                return BadRequest();
-            return Unauthorized();
-        }
-        var updatedArtist = model.ToModel(existingArtist.ArtistPageSettings);
-        updatedArtist = _dbContext.ArtistPageSettings.Update(updatedArtist).Entity;
-        await _dbContext.SaveChangesAsync();
-        var result = updatedArtist.ToModel();
-        return Ok(result);
-    }
     
     [HttpPost]
     [Authorize("write:artist")]
@@ -261,149 +148,5 @@ public class ArtistController : Controller
         await _dbContext.SaveChangesAsync();
         return Ok();
     }   
-    
-    [HttpGet]
-    [Authorize("read:artist")]
-    [Route("{sellerServiceId:int}/Portfolio/{portfolioId:int}")]
-    public async Task<IActionResult> GetPortfolio(int sellerServiceId, int portfolioId)
-    {
-        var userId = User.GetUserId();
-        var existingArtist = await _dbContext.UserArtists.FirstOrDefaultAsync(Artist=>Artist.UserId==userId);
-        if (existingArtist == null)
-        {
-            var ArtistRequest = await _dbContext.ArtistRequests.FirstOrDefaultAsync(request=>request.UserId==userId && request.Accepted==false);
-            if(ArtistRequest!=null)
-                return BadRequest();
-            return Unauthorized();
-        }
-        if(existingArtist.Suspended)
-            return BadRequest();
-
-        var portfolio = await _dbContext.ArtistPortfolioPieces
-            .FirstAsync(x => x.ArtistId == existingArtist.Id && x.Id==portfolioId);
-        var content = await _storageService.DownloadImageAsync(portfolio.FileReference);
-        return new FileStreamResult(content, "application/octet-stream");
-    }
-
-    [HttpGet]
-    [Route("Portfolio")]
-    [Authorize("read:artist")]
-    public async Task<IActionResult> GetPortfolio()
-    {
-        var userId = User.GetUserId();
-        var existingArtist = await _dbContext.UserArtists.FirstOrDefaultAsync(Artist=>Artist.UserId==userId);
-        if (existingArtist == null)
-        {
-            var ArtistRequest = await _dbContext.ArtistRequests.FirstOrDefaultAsync(request=>request.UserId==userId && request.Accepted==false);
-            if(ArtistRequest!=null)
-                return BadRequest();
-            return Unauthorized();
-        }
-        if(existingArtist.Suspended)
-            return BadRequest();
-        var portfolio = await _dbContext.ArtistPortfolioPieces.Where(x=>x.ArtistId==existingArtist.Id).ToListAsync();
-        var result = portfolio.Select(x=>x.ToModel()).ToList();
-        return Ok(result);
-    }
-    
-    [HttpPost]
-    [Route("Portfolio")]
-    [Authorize("write:artist")]
-    public async Task<IActionResult> AddPortfolio()
-    {
-        var userId = User.GetUserId();
-        var existingArtist = await _dbContext.UserArtists.FirstOrDefaultAsync(Artist=>Artist.UserId==userId);
-        if (existingArtist == null)
-        {
-            return BadRequest();
-        }
-
-        if(existingArtist.Suspended)
-            return BadRequest();
-        var url = await _storageService.UploadImageAsync(HttpContext.Request.Body, Guid.NewGuid().ToString());
-        var portfolio = new ArtistPortfolioPiece()
-        {
-            ArtistId = existingArtist.Id,
-            FileReference = url
-        };
-        portfolio.ArtistId = existingArtist.Id;
-        _dbContext.ArtistPortfolioPieces.Add(portfolio);
-        await _dbContext.SaveChangesAsync();
-        var result = portfolio.ToModel();
-        return Ok(result);
-    }
-    
-    [HttpDelete]
-    [Authorize("write:artist")]
-    [Route("Portfolio/{portfolioId:int}")]
-    public async Task<IActionResult> DeletePortfolio(int portfolioId)
-    {
-        var userId = User.GetUserId();
-        var existingArtist = await _dbContext.UserArtists.FirstOrDefaultAsync(Artist=>Artist.UserId==userId);
-        if (existingArtist == null)
-        {
-            var ArtistRequest = await _dbContext.ArtistRequests.FirstOrDefaultAsync(request=>request.UserId==userId && request.Accepted==false);
-            if(ArtistRequest!=null)
-                return BadRequest();
-            return Unauthorized();
-        }
-        if(existingArtist.Suspended)
-            return BadRequest();
-        var portfolio = await _dbContext.ArtistPortfolioPieces.FirstOrDefaultAsync(x=>x.Id==portfolioId);
-        if(portfolio==null)
-            return NotFound();
-        if(portfolio.ArtistId!=existingArtist.Id)
-            return BadRequest();
-        _dbContext.ArtistPortfolioPieces.Remove(portfolio);
-        await _dbContext.SaveChangesAsync();
-        return Ok();
-    }
-    
-    [HttpGet]
-    [Authorize("write:artist")]
-    [Route("Onboard")]
-    public async Task<IActionResult> PaymentAccountStatus()
-    {
-        var userId = User.GetUserId();
-        var existingArtist = await _dbContext.UserArtists.FirstOrDefaultAsync(Artist=>Artist.UserId==userId);
-        if (existingArtist == null)
-        {
-            var ArtistRequest = await _dbContext.ArtistRequests.FirstOrDefaultAsync(request=>request.UserId==userId && request.Accepted==false);
-            if(ArtistRequest!=null)
-                return BadRequest();
-            return BadRequest();
-        }
-        
-        if(existingArtist.Suspended)
-            return BadRequest();
-        var result = _paymentService.ArtistAccountIsOnboarded(existingArtist.StripeAccountId);
-        return Ok(new ArtistOnboardStatusModel(){ Onboarded= result });
-    }
-    
-    [HttpGet]
-    [Authorize("write:artist")]
-    [Route("Onboard/Url")]
-    public async Task<IActionResult> GetPaymentAccount()
-    {
-        var userId = User.GetUserId();
-        var existingArtist = await _dbContext.UserArtists.FirstOrDefaultAsync(Artist=>Artist.UserId==userId);
-        if (existingArtist == null)
-        {
-            var ArtistRequest = await _dbContext.ArtistRequests.FirstOrDefaultAsync(request=>request.UserId==userId && request.Accepted==false);
-            if(ArtistRequest!=null)
-                return BadRequest();
-            return Unauthorized();
-        }
-        if(existingArtist.Suspended)
-            return BadRequest();
-        if(existingArtist.StripeAccountId==null)
-            return BadRequest();
-
-        var result = _paymentService.CreateArtistAccountOnboardingUrl(existingArtist.StripeAccountId);
-        return Ok(new ArtistOnboardUrlModel()
-        {
-            OnboardUrl = result
-        });
-    }
     
 }
