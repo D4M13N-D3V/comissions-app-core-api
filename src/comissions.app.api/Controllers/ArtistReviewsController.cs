@@ -51,7 +51,7 @@ public class ArtistReviewsController: Controller
         
         return Ok(result);
     }
-    
+        
     [HttpGet]
     [Authorize("read:artist")]
     [Route("Reviews/Count")]
