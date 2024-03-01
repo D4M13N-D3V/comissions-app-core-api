@@ -1096,18 +1096,6 @@ public class RequestsController : Controller
             Payload = { }
         };
         
-        var references = new List<RequestReference>();
-        foreach (var file in model.Files)
-        {
-            var reference = new RequestReference()
-            {
-                RequestId = dbRequest.Id,
-                FileReference = await _storageService.UploadImageAsync(file.OpenReadStream(), Guid.NewGuid().ToString())
-            };
-            references.Add(reference);
-        }
-        _dbContext.RequestReferences.AddRange(references);
-        await _dbContext.SaveChangesAsync();
         
         await _client.Event.Trigger(newArtistTriggerModel);
         var newTriggerModel = new EventCreateData()
