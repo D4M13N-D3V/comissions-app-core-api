@@ -16,8 +16,8 @@ using Stripe.Checkout;
 namespace comissions.app.api.Controllers;
 
 [ApiController]
-[Route("api/[controller]")]
-public class RequestsController : Controller
+[Route("api/Requests")]
+public class CustomerRequestsController : Controller
 {
     private readonly ApplicationDbContext _dbContext;
     private readonly IStorageService _storageService;
@@ -25,7 +25,7 @@ public class RequestsController : Controller
     private readonly NovuClient _client;
     private readonly string _webHookSecret;
 
-    public RequestsController(ApplicationDbContext dbContext, NovuClient client, IPaymentService paymentService, IStorageService storageService, IConfiguration configuration)
+    public CustomerRequestsController(ApplicationDbContext dbContext, NovuClient client, IPaymentService paymentService, IStorageService storageService, IConfiguration configuration)
     {
         _client = client;
         _webHookSecret = configuration.GetValue<string>("Stripe:WebHookSecret");
@@ -662,7 +662,9 @@ public class RequestsController : Controller
                 }
         return Ok();
     }
-        
+    
+    
+    #region Customer
     [Authorize("read:request")]
     [HttpGet]
     [Route("Customer")]
@@ -766,35 +768,10 @@ public class RequestsController : Controller
         return Ok(result);
     }
     
-    [Authorize("write:request")]
-    [HttpPost]
-    [Route("Artist/{requestId:int}/Asset")]
-    public async Task<IActionResult> AddAsset(int requestId, List<IFormFile> assetImages)
-    {
-        var userId = User.GetUserId();
-        var request = await _dbContext.Requests
-            .Where(x=>x.UserId==userId)
-            .FirstOrDefaultAsync(x=>x.Id==requestId);
-        if(request==null)
-            return NotFound();
-        
-        var references = new List<RequestAsset>();
-        foreach (var file in assetImages)
-        {
-            var reference = new RequestAsset()
-            {
-                RequestId = requestId,
-                FileReference = await _storageService.UploadImageAsync(file.OpenReadStream(), Guid.NewGuid().ToString())
-            };
-            references.Add(reference);
-        }
-        _dbContext.RequestAssets.AddRange(references);
-        await _dbContext.SaveChangesAsync();
-        return Ok();
-    }
     
     [HttpGet]
-    [Route("Customer/{requestId:int}/Reference")]
+    [Route("Customer/{requestId:int}/References")]
+    [Authorize("read:request")]
     public async Task<IActionResult> GetReferences(int requestId)
     {
         var userId = User.GetUserId();
@@ -811,7 +788,79 @@ public class RequestsController : Controller
     }
     
     [HttpGet]
-    [Route("Customer/{requestId:int}/Asset")]
+    [Route("Customer/{requestId:int}/References/Count")]
+    [Authorize("read:request")]
+    public async Task<IActionResult> GetReferencesCount(int requestId)
+    {
+        var userId = User.GetUserId();
+        var request = await _dbContext.Requests
+            .Where(x=>x.UserId==userId)
+            .FirstOrDefaultAsync(x=>x.Id==requestId);
+        if(request==null)
+            return NotFound();
+        var references = await _dbContext.RequestReferences
+            .Where(x=>x.RequestId==requestId)
+            .ToListAsync();
+        var result = references.Select(x=>x.ToModel()).Count();
+        return Ok(result);
+    }
+    
+    [HttpGet]
+    [Route("Customer/{requestId:int}/References/{referenceId:int}")]
+    [Authorize("read:request")]
+    public async Task<IActionResult> GetReferenceImage(int requestId, int referenceId)
+    {
+        var userId = User.GetUserId();
+        var request = await _dbContext.Requests
+            .Where(x=>x.UserId==userId)
+            .FirstOrDefaultAsync(x=>x.Id==requestId);
+        if(request==null)
+            return NotFound();
+        var reference = await _dbContext.RequestReferences
+            .Where(x=>x.RequestId==requestId)
+            .FirstOrDefaultAsync(x=>x.Id==referenceId);
+        if(reference==null)
+            return NotFound();
+        var content = await _storageService.DownloadImageAsync(reference.FileReference);
+        return new FileStreamResult(content, "application/octet-stream");
+    }
+    
+    [HttpPost]
+    [Route("Customer/{requestId:int}/References")]
+    [Authorize("write:request")]
+    public async Task<IActionResult> AddReference(int requestId)
+    {
+        var userId = User.GetUserId();
+        var request = await _dbContext.Requests
+            .Where(x=>x.UserId==userId)
+            .FirstOrDefaultAsync(x=>x.Id==requestId);
+        if(request==null)
+            return NotFound();
+
+        if (request.Accepted || request.Declined)
+            return BadRequest("Request has already been accepted or declined.");
+        
+        var references = await _dbContext.RequestReferences
+            .Where(x=>x.RequestId==requestId)
+            .ToListAsync();
+        if(references.Count>=10)
+            return BadRequest("You can only add 10 references to a request.");
+        
+        var url = await _storageService.UploadImageAsync(HttpContext.Request.Body, Guid.NewGuid().ToString());
+        var requestReference = new RequestReference()
+        {
+            RequestId = request.Id,
+            FileReference = url
+        };
+        _dbContext.RequestReferences.Add(requestReference);
+        await _dbContext.SaveChangesAsync();
+        var result = requestReference.ToModel();
+        return Ok(result);
+    }
+    
+    [HttpGet]
+    [Route("Customer/{requestId:int}/Assets")]
+    [Authorize("read:request")]
     public async Task<IActionResult> GetAssets(int requestId)
     {
         var userId = User.GetUserId();
@@ -828,25 +877,9 @@ public class RequestsController : Controller
     }
     
     [HttpGet]
-    [Route("Artist/{requestId:int}/Reference")]
-    public async Task<IActionResult> GetArtistReferences(int requestId)
-    {
-        var userId = User.GetUserId();
-        var request = await _dbContext.Requests
-            .Where(x=>x.UserId==userId)
-            .FirstOrDefaultAsync(x=>x.Id==requestId);
-        if(request==null)
-            return NotFound();
-        var references = await _dbContext.RequestReferences
-            .Where(x=>x.RequestId==requestId)
-            .ToListAsync();
-        var result = references.Select(x=>x.ToModel()).ToList();
-        return Ok(result);
-    }
-    
-    [HttpGet]
-    [Route("Artist/{requestId:int}/Asset")]
-    public async Task<IActionResult> GetArtistAssets(int requestId)
+    [Route("Customer/{requestId:int}/Assets/Count")]
+    [Authorize("read:request")]
+    public async Task<IActionResult> GetAssetsCount(int requestId)
     {
         var userId = User.GetUserId();
         var request = await _dbContext.Requests
@@ -857,202 +890,33 @@ public class RequestsController : Controller
         var references = await _dbContext.RequestAssets
             .Where(x=>x.RequestId==requestId)
             .ToListAsync();
-        var result = references.Select(x=>x.ToModel()).ToList();
+        var result = references.Select(x=>x.ToModel()).Count();
         return Ok(result);
     }
-
-    [Authorize("read:request")]
+    
     [HttpGet]
-    [Route("Artist")]
-    public async Task<IActionResult> GetArtistRequests(string search="",int offset = 0, int pageSize = 10)
-    {
-        var userId = User.GetUserId();
-        var query = _dbContext.Requests.Include(x=>x.Artist)
-            .Where(x => x.Artist.UserId == userId);
-
-
-        if (!string.IsNullOrWhiteSpace(search))
-        {
-            query = query.Where(x => x.Artist.Name.Contains(search) || x.Message.Contains(search));
-        }
-
-        var requests = await query
-            .Include(x => x.Artist)
-            .Skip(offset)
-            .Take(pageSize)
-            .ToListAsync();
-
-        var result = requests.Select(x => x.ToModel()).ToList();
-        return Ok(result);
-    }
-    
+    [Route("Customer/{requestId:int}/Assets/{referenceId:int}")]
     [Authorize("read:request")]
-    [HttpGet]
-    [Route("Artist/Count")]
-    public async Task<IActionResult> GetArtistRequestCount(string search="")
-    {
-        var userId = User.GetUserId();
-        var query = _dbContext.Requests.Include(x=>x.Artist)
-            .Where(x => x.Artist.UserId == userId);
-        
-        if (!string.IsNullOrWhiteSpace(search))
-        {
-            query = query.Where(x => x.Artist.Name.Contains(search) || x.Message.Contains(search));
-        }
-
-        var result = query.Count();
-        return Ok(result);
-    }
-    
-    [Authorize("read:request")]
-    [HttpGet]
-    [Route("Artist/{requestId:int}")]
-    public async Task<IActionResult> GetArtistRequest(int requestId)
+    public async Task<IActionResult> GetAssetImage(int requestId, int referenceId)
     {
         var userId = User.GetUserId();
         var request = await _dbContext.Requests
-            .Include(x=>x.Artist)
-            .Where(x=>x.Artist.UserId==userId)
+            .Where(x=>x.UserId==userId)
             .FirstOrDefaultAsync(x=>x.Id==requestId);
         if(request==null)
             return NotFound();
-        var result = request.ToModel();
-        return Ok(result);
+        var reference = await _dbContext.RequestAssets
+            .Where(x=>x.RequestId==requestId)
+            .FirstOrDefaultAsync(x=>x.Id==referenceId);
+        if(reference==null)
+            return NotFound();
+        var content = await _storageService.DownloadImageAsync(reference.FileReference);
+        return new FileStreamResult(content, "application/octet-stream");
     }
+    #endregion
     
-    [Authorize("write:request")]
-    [HttpPut]
-    [Route("Artist/{requestId:int}/Complete")]
-    public async Task<IActionResult> CompleteRequest(int requestId)
-    {
-        var userId = User.GetUserId();
-        var request = await _dbContext.Requests
-            .Include(x=>x.Artist)
-            .Where(x=>x.Artist.UserId==userId)
-            .FirstOrDefaultAsync(x=>x.Id==requestId);
-        
-        if(request.Accepted==false)
-            return BadRequest("Request has not been accepted.");
-
-        if (request.Declined)
-            return BadRequest("Request has already been declined.");
-        
-        if(request==null)
-            return NotFound();
-        
-        request.Completed = true;
-        request.CompletedDate = DateTime.UtcNow;
-        _dbContext.Entry(request).State = EntityState.Modified;
-        await _dbContext.SaveChangesAsync();
-        
-        var result = request.ToModel();
-        var newTriggerModel = new EventCreateData()
-        {
-            EventName = "requestcompleted",
-            To =
-            {
-                SubscriberId = request.UserId
-            },
-            Payload = { }
-        };
-        await _client.Event.Trigger(newTriggerModel);
-        return Ok(result);
-    }
-
     
-    [Authorize("write:request")]
-    [HttpPut]
-    [Route("Artist/{requestId:int}/Accept")]
-    public async Task<IActionResult> AcceptRequest(int requestId)
-    {
-        var userId = User.GetUserId();
-        var request = await _dbContext.Requests
-            .Include(x=>x.Artist)
-            .Where(x=>x.Artist.UserId==userId)
-            .FirstOrDefaultAsync(x=>x.Id==requestId);
-        
-        if(request.Completed)
-            return BadRequest("Request has already been completed.");
-        
-        if(request.Accepted)
-            return BadRequest("Request has already been accepted.");
-
-        if (request.Declined)
-            return BadRequest("Request has already been declined.");
-        
-        if(request==null)
-            return NotFound();
-        var paymentUrl = _paymentService.Charge(request.Id,request.Artist.StripeAccountId,Convert.ToDouble(request.Amount));
-        request.Accepted = true;
-        request.AcceptedDate = DateTime.UtcNow;
-        request.Paid = false;
-        request.PaymentUrl = paymentUrl;
-        _dbContext.Entry(request).State = EntityState.Modified;
-        await _dbContext.SaveChangesAsync();
-        var newTriggerModel = new EventCreateData()
-        {
-            EventName = "requestacceptedbuyer",
-            To =
-            {
-                SubscriberId = request.UserId
-            },
-            Payload = { }
-        };
-        await _client.Event.Trigger(newTriggerModel);
-        var newTriggerArtistModel = new EventCreateData()
-        {
-            EventName = "requestacceptedartist",
-            To =
-            {
-                SubscriberId = request.Artist.UserId
-            },
-            Payload = { }
-        };
-        await _client.Event.Trigger(newTriggerModel);
-        
-        var result = request.ToModel();
-        return Ok(result);
-    }
-
     
-    [Authorize("write:request")]
-    [HttpPut]
-    [Route("Artist/{requestId:int}/Deny")]
-    public async Task<IActionResult> DenyRequest(int requestId)
-    {
-        var userId = User.GetUserId();
-        var request = await _dbContext.Requests
-            .Include(x=>x.Artist)
-            .Where(x=>x.Artist.UserId==userId)
-            .FirstOrDefaultAsync(x=>x.Id==requestId);
-        if(request==null)
-            return NotFound();
-        
-        if(request.Completed)
-            return BadRequest("Request has already been completed.");
-        
-        if(request.Accepted)
-            return BadRequest("Request has already been accepted.");
-
-        if (request.Declined)
-            return BadRequest("Request has already been declined.");
-        request.Declined = true;
-        request.DeclinedDate = DateTime.UtcNow;
-        _dbContext.Entry(request).State = EntityState.Modified;
-        await _dbContext.SaveChangesAsync();
-        var result = request.ToModel();
-        var newTriggerModel = new EventCreateData()
-        {
-            EventName = "requestdenied",
-            To =
-            {
-                SubscriberId = request.UserId
-            },
-            Payload = { }
-        };
-        await _client.Event.Trigger(newTriggerModel);
-        return Ok(result);
-    }
 
     [Authorize("write:request")]
     [HttpPost]
