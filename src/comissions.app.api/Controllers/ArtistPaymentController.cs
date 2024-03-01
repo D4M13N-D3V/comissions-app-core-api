@@ -12,6 +12,7 @@ using Novu;
 
 namespace comissions.app.api.Controllers;
 
+[Route("api/Artist")]
 public class ArtistPaymentController:Controller
 {
     
