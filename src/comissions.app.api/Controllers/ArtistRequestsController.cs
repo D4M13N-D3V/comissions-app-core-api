@@ -86,7 +86,7 @@ public class ArtistRequestsController: Controller
         if(reference==null)
             return NotFound();
         var content = await _storageService.DownloadImageAsync(reference.FileReference);
-        return new FileStreamResult(content, "image/*");
+        return new FileStreamResult(content, "application/octet-stream");
     }
     
     [HttpGet]
