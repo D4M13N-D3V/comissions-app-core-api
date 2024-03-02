@@ -86,7 +86,8 @@ public class ArtistRequestsController: Controller
         if(reference==null)
             return NotFound();
         var content = await _storageService.DownloadImageAsync(reference.FileReference);
-        return new FileStreamResult(content, "application/octet-stream");
+        var mimeType = _storageService.GetMimeType(reference.FileReference);
+        return new FileStreamResult(content, mimeType);
     }
     
     [HttpGet]
@@ -142,7 +143,8 @@ public class ArtistRequestsController: Controller
         if(reference==null)
             return NotFound();
         var content = await _storageService.DownloadImageAsync(reference.FileReference);
-        return new FileStreamResult(content, "application/octet-stream");
+        var mimeType = _storageService.GetMimeType(reference.FileReference);
+        return new FileStreamResult(content, mimeType);
     }
     
     

@@ -34,7 +34,23 @@ namespace comissions.app.api.Services.Storage
 
             return fileReference;
         }
+        public string GetMimeType(string fileReference)
+        {
+            var extension = Path.GetExtension(fileReference).ToLowerInvariant();
 
+            switch (extension)
+            {
+                case ".jpg":
+                case ".jpeg":
+                    return "image/jpeg";
+                case ".png":
+                    return "image/png";
+                case ".gif":
+                    return "image/gif";
+                default:
+                    throw new NotSupportedException($"File extension {extension} is not supported.");
+            }
+        }
         public async Task<Stream> DownloadImageAsync(string fileReference)
         {
             // Get the file path based on the provided file reference

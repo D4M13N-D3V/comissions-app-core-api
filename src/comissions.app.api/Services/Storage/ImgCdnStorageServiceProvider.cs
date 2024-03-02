@@ -51,5 +51,10 @@ namespace comissions.app.api.Services.Storage
             var stream = await response.Content.ReadAsStreamAsync();
             return stream;
         }
+
+        public string GetMimeType(string fileReference)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
