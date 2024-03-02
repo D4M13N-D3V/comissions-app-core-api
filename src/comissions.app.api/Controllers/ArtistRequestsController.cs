@@ -265,7 +265,10 @@ public class ArtistRequestsController: Controller
             .Where(x=>x.Artist.UserId==userId)
             .FirstOrDefaultAsync(x=>x.Id==requestId);
         
-        if(request.RequestAssets.Count()==0)
+        if(request==null)
+            return NotFound();
+        
+        if(!request.RequestAssets.Any())
             return BadRequest("You must add at least one asset to complete the request.");
         
         if(request.Accepted==false)
@@ -274,8 +277,6 @@ public class ArtistRequestsController: Controller
         if (request.Declined)
             return BadRequest("Request has already been declined.");
         
-        if(request==null)
-            return NotFound();
         
         request.Completed = true;
         request.CompletedDate = DateTime.UtcNow;
