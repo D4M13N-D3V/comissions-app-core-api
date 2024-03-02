@@ -829,7 +829,7 @@ public class CustomerRequestsController : Controller
     [HttpPost]
     [Route("Customer/{requestId:int}/References")]
     [Authorize("write:request")]
-    public async Task<IActionResult> AddReference(int requestId)
+    public async Task<IActionResult> AddReference(int requestId, [FromForm]IFormFile newImage)
     {
         var userId = User.GetUserId();
         var request = await _dbContext.Requests
@@ -847,17 +847,16 @@ public class CustomerRequestsController : Controller
         if(references.Count>=10)
             return BadRequest("You can only add 10 references to a request.");
         
-        var uploadedFile = Request.Form.Files[0];
-        if (uploadedFile == null || uploadedFile.Length == 0)
+        if (newImage == null || newImage.Length == 0)
         {
             return BadRequest("No file uploaded.");
         }
 
         // Get the file name
-        var fileName = Path.GetFileName(uploadedFile.FileName);
+        var fileName = Path.GetFileName(newImage.FileName);
         using (var memorystream = new MemoryStream())
         {
-            await uploadedFile.CopyToAsync(memorystream);
+            await newImage.CopyToAsync(memorystream);
             memorystream.Position = 0;
             var url = await _storageService.UploadImageAsync(memorystream, Guid.NewGuid().ToString()+"-"+fileName);
             var requestReference = new RequestReference()
