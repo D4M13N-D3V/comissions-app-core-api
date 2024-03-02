@@ -282,18 +282,17 @@ public class ArtistRequestsController: Controller
         request.CompletedDate = DateTime.UtcNow;
         _dbContext.Entry(request).State = EntityState.Modified;
         await _dbContext.SaveChangesAsync();
-        
         var result = request.ToModel();
-        var newTriggerModel = new EventCreateData()
-        {
-            EventName = "requestcompleted",
-            To =
-            {
-                SubscriberId = request.UserId
-            },
-            Payload = { }
-        };
-        await _client.Event.Trigger(newTriggerModel);
+        // var newTriggerModel = new EventCreateData()
+        // {
+        //     EventName = "requestcompleted",
+        //     To =
+        //     {
+        //         SubscriberId = request.UserId
+        //     },
+        //     Payload = { }
+        // };
+        // await _client.Event.Trigger(newTriggerModel);
         return Ok(result);
     }
 
