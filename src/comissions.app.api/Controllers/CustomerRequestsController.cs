@@ -847,7 +847,16 @@ public class CustomerRequestsController : Controller
         if(references.Count>=10)
             return BadRequest("You can only add 10 references to a request.");
         
-        var url = await _storageService.UploadImageAsync(HttpContext.Request.Body, Guid.NewGuid().ToString());
+        var uploadedFile = Request.Form.Files[0];
+        if (uploadedFile == null || uploadedFile.Length == 0)
+        {
+            return BadRequest("No file uploaded.");
+        }
+
+        // Get the file name
+        var fileName = Path.GetFileName(uploadedFile.FileName);
+        
+        var url = await _storageService.UploadImageAsync(HttpContext.Request.Body, Guid.NewGuid().ToString()+"-"+uploadedFile.FileName);
         var requestReference = new RequestReference()
         {
             RequestId = request.Id,
