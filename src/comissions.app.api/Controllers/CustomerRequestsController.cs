@@ -855,17 +855,21 @@ public class CustomerRequestsController : Controller
 
         // Get the file name
         var fileName = Path.GetFileName(uploadedFile.FileName);
-        
-        var url = await _storageService.UploadImageAsync(HttpContext.Request.Body, Guid.NewGuid().ToString()+"-"+uploadedFile.FileName);
-        var requestReference = new RequestReference()
+        using (var memorystream = new MemoryStream())
         {
-            RequestId = request.Id,
-            FileReference = url
-        };
-        _dbContext.RequestReferences.Add(requestReference);
-        await _dbContext.SaveChangesAsync();
-        var result = requestReference.ToModel();
-        return Ok(result);
+            await uploadedFile.CopyToAsync(memorystream);
+            memorystream.Position = 0;
+            var url = await _storageService.UploadImageAsync(memorystream, Guid.NewGuid().ToString()+"-"+fileName);
+            var requestReference = new RequestReference()
+            {
+                RequestId = request.Id,
+                FileReference = url
+            };
+            _dbContext.RequestReferences.Add(requestReference);
+            await _dbContext.SaveChangesAsync();
+            var result = requestReference.ToModel();
+            return Ok(result);
+        }
     }
     
     [HttpGet]
