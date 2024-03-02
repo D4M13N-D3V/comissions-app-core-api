@@ -177,8 +177,16 @@ public class ArtistRequestsController: Controller
             return BadRequest("You can only add 10 assets to a request.");
         
         
+        var uploadedFile = Request.Form.Files[0];
+        if (uploadedFile == null || uploadedFile.Length == 0)
+        {
+            return BadRequest("No file uploaded.");
+        }
+
+        // Get the file name
+        var fileName = Path.GetFileName(uploadedFile.FileName);
         
-        var url = await _storageService.UploadImageAsync(HttpContext.Request.Body, Guid.NewGuid().ToString());
+        var url = await _storageService.UploadImageAsync(HttpContext.Request.Body, Guid.NewGuid().ToString()+"-"+uploadedFile.FileName);
         var requestReference = new RequestAsset()
         {
             RequestId = request.Id,
