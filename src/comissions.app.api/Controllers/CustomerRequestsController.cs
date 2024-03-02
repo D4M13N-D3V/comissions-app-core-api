@@ -822,7 +822,6 @@ public class CustomerRequestsController : Controller
         if(reference==null)
             return NotFound();
         var content = await _storageService.DownloadImageAsync(reference.FileReference);
-        var mimeType = _storageService.GetMimeType(reference.FileReference);
         return new FileStreamResult(content, "application/octet-stream");
     }
     
@@ -912,7 +911,6 @@ public class CustomerRequestsController : Controller
         if(reference==null)
             return NotFound();
         var content = await _storageService.DownloadImageAsync(reference.FileReference);
-        var mimeType = _storageService.GetMimeType(reference.FileReference);
         return new FileStreamResult(content, "application/octet-stream");
     }
     #endregion
