@@ -829,7 +829,7 @@ public class CustomerRequestsController : Controller
     [HttpPost]
     [Route("Customer/{requestId:int}/References")]
     [Authorize("write:request")]
-    public async Task<IActionResult> AddReference(int requestId, [FromForm]IFormFile newImage)
+    public async Task<IActionResult> AddReference(int requestId, IFormFile newImage)
     {
         var userId = User.GetUserId();
         var request = await _dbContext.Requests
