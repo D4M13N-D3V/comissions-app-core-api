@@ -829,7 +829,7 @@ public class CustomerRequestsController : Controller
     [HttpPost]
     [Route("Customer/{requestId:int}/References")]
     [Authorize("write:request")]
-    public async Task<IActionResult> AddReference(int requestId, IFormFile newImage)
+    public async Task<IActionResult> AddReference(int requestId)
     {
         var userId = User.GetUserId();
         var request = await _dbContext.Requests
@@ -847,28 +847,16 @@ public class CustomerRequestsController : Controller
         if(references.Count>=10)
             return BadRequest("You can only add 10 references to a request.");
         
-        if (newImage == null || newImage.Length == 0)
+        var url = await _storageService.UploadImageAsync(HttpContext.Request.Body, Guid.NewGuid().ToString());
+        var requestReference = new RequestReference()
         {
-            return BadRequest("No file uploaded.");
-        }
-
-        // Get the file name
-        var fileName = Path.GetFileName(newImage.FileName);
-        using (var memorystream = new MemoryStream())
-        {
-            await newImage.CopyToAsync(memorystream);
-            memorystream.Position = 0;
-            var url = await _storageService.UploadImageAsync(memorystream, Guid.NewGuid().ToString()+"-"+fileName);
-            var requestReference = new RequestReference()
-            {
-                RequestId = request.Id,
-                FileReference = url
-            };
-            _dbContext.RequestReferences.Add(requestReference);
-            await _dbContext.SaveChangesAsync();
-            var result = requestReference.ToModel();
-            return Ok(result);
-        }
+            RequestId = request.Id,
+            FileReference = url
+        };
+        _dbContext.RequestReferences.Add(requestReference);
+        await _dbContext.SaveChangesAsync();
+        var result = requestReference.ToModel();
+        return Ok(result);
     }
     
     [HttpGet]
