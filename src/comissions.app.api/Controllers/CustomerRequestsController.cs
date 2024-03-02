@@ -823,7 +823,7 @@ public class CustomerRequestsController : Controller
             return NotFound();
         var content = await _storageService.DownloadImageAsync(reference.FileReference);
         var mimeType = _storageService.GetMimeType(reference.FileReference);
-        return new FileStreamResult(content, mimeType);
+        return new FileStreamResult(content, "application/octet-stream");
     }
     
     [HttpPost]
@@ -913,7 +913,7 @@ public class CustomerRequestsController : Controller
             return NotFound();
         var content = await _storageService.DownloadImageAsync(reference.FileReference);
         var mimeType = _storageService.GetMimeType(reference.FileReference);
-        return new FileStreamResult(content, mimeType);
+        return new FileStreamResult(content, "application/octet-stream");
     }
     #endregion
     
