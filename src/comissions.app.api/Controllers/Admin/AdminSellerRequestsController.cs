@@ -34,7 +34,7 @@ public class AdminArtistRequestsController : Controller
     [HttpGet]
     public async Task<IActionResult> GetArtistRequests(int offset = 0, int pageSize = 10)
     {
-        var requests = _dbContext.ArtistRequests.Where(x=>x.Accepted==false) .Skip(offset).Take(pageSize).ToList();
+        var requests = _dbContext.ArtistRequests.OrderByDescending(x=>x.Id).Skip(offset).Take(pageSize).ToList();
         var result = requests.Select(x=>x.ToModel()).ToList();
         return Ok(result);
     }
