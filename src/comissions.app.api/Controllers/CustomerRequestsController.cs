@@ -680,6 +680,7 @@ public class CustomerRequestsController : Controller
         }
 
         var requests = await query
+            .OrderByDescending(x => x.Id) // Sort by Id in descending order
             .Include(x => x.Artist)
             .Skip(offset)
             .Take(pageSize)
@@ -688,6 +689,7 @@ public class CustomerRequestsController : Controller
         var result = requests.Select(x => x.ToModel()).ToList();
         return Ok(result);
     }
+
     
     [HttpGet]
     [Route("Customer/Count")]

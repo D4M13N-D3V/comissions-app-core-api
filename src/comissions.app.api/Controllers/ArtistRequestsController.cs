@@ -196,12 +196,11 @@ public class ArtistRequestsController: Controller
     [Authorize("read:request")]
     [HttpGet]
     [Route("Artist")]
-    public async Task<IActionResult> GetArtistRequests(string search="",int offset = 0, int pageSize = 10)
+    public async Task<IActionResult> GetArtistRequests(string search="", int offset = 0, int pageSize = 10)
     {
         var userId = User.GetUserId();
-        var query = _dbContext.Requests.Include(x=>x.Artist)
+        var query = _dbContext.Requests.Include(x => x.Artist)
             .Where(x => x.Artist.UserId == userId);
-
 
         if (!string.IsNullOrWhiteSpace(search))
         {
@@ -209,6 +208,7 @@ public class ArtistRequestsController: Controller
         }
 
         var requests = await query
+            .OrderByDescending(x => x.Id) // Sort by Id in descending order
             .Include(x => x.Artist)
             .Skip(offset)
             .Take(pageSize)
@@ -217,6 +217,7 @@ public class ArtistRequestsController: Controller
         var result = requests.Select(x => x.ToModel()).ToList();
         return Ok(result);
     }
+
     
     [Authorize("read:request")]
     [HttpGet]
