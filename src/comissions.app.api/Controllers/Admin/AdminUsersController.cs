@@ -19,7 +19,7 @@ public class AdminUsersController:ControllerBase
     }
     
     [HttpGet]
-    public async Task<IActionResult> GetUsers(string search="", int offset = 0, int pageSize = 10)
+    public async Task<IActionResult> GetUsers([FromQuery]string search="", [FromQuery]int offset = 0, [FromQuery]int pageSize = 10)
     {
         var users = await _dbContext.Users
             .Where(x=>x.DisplayName.Contains(search) || x.Email.Contains(search))
@@ -28,7 +28,7 @@ public class AdminUsersController:ControllerBase
     }
     
     [HttpGet("Count")]
-    public async Task<IActionResult> GetUsersCount(string search="")
+    public async Task<IActionResult> GetUsersCount([FromQuery]string search="")
     {
         var result = await _dbContext.Users
             .Where(x=>x.DisplayName.Contains(search) || x.Email.Contains(search))
