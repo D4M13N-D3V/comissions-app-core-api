@@ -20,7 +20,7 @@ public class AdminArtistsController:ControllerBase
     }
     
     [HttpGet]
-    public async Task<IActionResult> GetArtists(string search="", int offset = 0, int pageSize = 10)
+    public async Task<IActionResult> GetArtists([FromQuery]string search="", [FromQuery]int offset = 0, [FromQuery]int pageSize = 10)
     {
         var sellers = await _dbContext.UserArtists.Include(x=>x.User)
             .Where(x=>x.User.DisplayName.Contains(search) || x.User.Email.Contains(search))
@@ -29,7 +29,7 @@ public class AdminArtistsController:ControllerBase
     }
     
     [HttpGet("Count")]
-    public async Task<IActionResult> GetArtistsCount(string search="")
+    public async Task<IActionResult> GetArtistsCount([FromQuery]string search="")
     {
         var result = await _dbContext.UserArtists.Include(x=>x.User)
             .Where(x=>x.User.DisplayName.Contains(search) || x.User.Email.Contains(search))
