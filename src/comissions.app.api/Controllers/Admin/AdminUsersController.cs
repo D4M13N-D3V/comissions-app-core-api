@@ -1,5 +1,6 @@
 using comissions.app.api.Extensions;
 using comissions.app.database;
+using comissions.app.database.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -56,12 +57,16 @@ public class AdminUsersController:ControllerBase
         if (user == null)
             return NotFound();
         
-        user.Suspended = true;
-        user.SuspendedDate = DateTime.UtcNow;
-        user.SuspendedReason = reason;
-        user.SuspendAdminId = User.GetUserId();
-        user.UnsuspendDate = DateTime.UtcNow.AddDays(days);
-        _dbContext.Users.Update(user);
+        var newSuspension = new Suspension()
+        {
+            UserId = userId,
+            Reason = reason,
+            AdminId = User.GetUserId(),
+            SuspensionDate = DateTime.UtcNow,
+            UnsuspensionDate = DateTime.UtcNow.AddDays(days),
+            Voided = false
+        };
+        _dbContext.Suspensions.Add(newSuspension);
         await _dbContext.SaveChangesAsync();
         return Ok();
     }
@@ -73,13 +78,13 @@ public class AdminUsersController:ControllerBase
         
         if (user == null)
             return NotFound();
+        var suspension = await _dbContext.Suspensions.FirstOrDefaultAsync(x=>x.UserId==userId && x.UnsuspensionDate>DateTime.UtcNow);
+
+        if (suspension == null)
+            return BadRequest();
         
-        user.Suspended = false;
-        user.SuspendedDate = null;
-        user.SuspendedReason = null;
-        user.SuspendAdminId = null;
-        user.UnsuspendDate = null;
-        _dbContext.Users.Update(user);
+        suspension.Voided = true;
+        _dbContext.Suspensions.Update(suspension);
         await _dbContext.SaveChangesAsync();
         return Ok();
     }
@@ -92,12 +97,16 @@ public class AdminUsersController:ControllerBase
         if (user == null)
             return NotFound();
         
-        user.Banned = true;
-        user.BannedDate = DateTime.UtcNow;
-        user.BannedReason = reason;
-        user.BanAdminId = User.GetUserId();
-        user.UnbanDate = DateTime.UtcNow.AddDays(days);
-        _dbContext.Users.Update(user);
+        var ban = new Ban()
+        {
+            UserId = userId,
+            Reason = reason,
+            AdminId = User.GetUserId(),
+            BanDate = DateTime.UtcNow,
+            UnbanDate = DateTime.UtcNow.AddDays(days),
+            Voided = false
+        };
+        _dbContext.Bans.Add(ban);
         await _dbContext.SaveChangesAsync();
         return Ok();
     }
@@ -110,11 +119,13 @@ public class AdminUsersController:ControllerBase
         if (user == null)
             return NotFound();
         
-        user.Banned = false;
-        user.BannedDate = null;
-        user.BannedReason = null;
-        user.BanAdminId = null;
-        user.UnbanDate = null;
+        var ban = await _dbContext.Bans.FirstOrDefaultAsync(x=>x.UserId==userId && x.UnbanDate>DateTime.UtcNow);
+
+        if (ban == null)
+            return BadRequest();
+        
+        ban.Voided = true;
+        _dbContext.Bans.Update(ban);
         _dbContext.Users.Update(user);
         await _dbContext.SaveChangesAsync();
         return Ok();

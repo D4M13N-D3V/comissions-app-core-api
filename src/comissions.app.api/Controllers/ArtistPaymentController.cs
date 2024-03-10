@@ -73,8 +73,6 @@ public class ArtistPaymentController:Controller
             return BadRequest();
         }
         
-        if(existingArtist.Suspended)
-            return BadRequest();
         var result = _paymentService.ArtistAccountIsOnboarded(existingArtist.StripeAccountId);
         return Ok(new ArtistOnboardStatusModel(){ Onboarded= result });
     }
@@ -93,8 +91,7 @@ public class ArtistPaymentController:Controller
                 return BadRequest();
             return Unauthorized();
         }
-        if(existingArtist.Suspended)
-            return BadRequest();
+        
         if(existingArtist.StripeAccountId==null)
             return BadRequest();
 

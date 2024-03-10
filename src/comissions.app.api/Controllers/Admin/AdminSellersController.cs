@@ -50,50 +50,6 @@ public class AdminArtistsController:ControllerBase
     }
     
     
-    [HttpPut("{sellerId:int}/Suspend")]
-    public async Task<IActionResult> SuspendArtist(int sellerId, [FromQuery]string reason, [FromQuery]int days)
-    {
-        var seller = _dbContext.UserArtists.FirstOrDefault(x=>x.Id==sellerId);
-        
-        if (seller == null)
-            return NotFound();
-
-        if (seller.Suspended)
-            return BadRequest();
-        
-        seller.Suspended = true;
-        seller.SuspendedDate = DateTime.UtcNow;
-        seller.UnsuspendDate = DateTime.UtcNow.AddDays(days);
-        seller.SuspendedReason = reason;
-        seller.SuspendAdminId = User.GetUserId();
-        _dbContext.UserArtists.Update(seller);
-        
-        await _dbContext.SaveChangesAsync();
-        return Ok();
-    }
-    
-    [HttpPut("{sellerId:int}/Unsuspend")]
-    public async Task<IActionResult> UnsuspendArtist(int sellerId)
-    {
-        var seller = _dbContext.UserArtists.FirstOrDefault(x=>x.Id==sellerId);
-        
-        if (seller == null)
-            return NotFound();
-
-        if (!seller.Suspended)
-            return BadRequest();
-        
-        seller.Suspended = false;
-        seller.SuspendedDate = null;
-        seller.UnsuspendDate = null;
-        seller.SuspendedReason = null;
-        seller.SuspendAdminId = null;
-        _dbContext.UserArtists.Update(seller);
-        
-        await _dbContext.SaveChangesAsync();
-        return Ok();
-    }
-    
     [HttpPut("{sellerId:int}/Terminate")]
     public async Task<IActionResult> TerminateArtist(int sellerId)
     {
@@ -101,9 +57,6 @@ public class AdminArtistsController:ControllerBase
         
         if (seller == null)
             return NotFound();
-
-        if (!seller.Suspended)
-            return BadRequest();
 
         _dbContext.UserArtists.Remove(seller);
         await _dbContext.SaveChangesAsync();
@@ -117,9 +70,6 @@ public class AdminArtistsController:ControllerBase
         
         if (seller == null)
             return NotFound();
-
-        if (!seller.Suspended)
-            return BadRequest();
 
         seller.Description = biography;
         _dbContext.UserArtists.Update(seller);

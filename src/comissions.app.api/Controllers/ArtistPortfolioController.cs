@@ -43,8 +43,6 @@ public class ArtistPortfolioController: Controller
                 return BadRequest();
             return Unauthorized();
         }
-        if(existingArtist.Suspended)
-            return BadRequest();
 
         var portfolio = await _dbContext.ArtistPortfolioPieces
             .FirstAsync(x => x.ArtistId == existingArtist.Id && x.Id==portfolioId);
@@ -66,8 +64,7 @@ public class ArtistPortfolioController: Controller
                 return BadRequest();
             return Unauthorized();
         }
-        if(existingArtist.Suspended)
-            return BadRequest();
+        
         var portfolio = await _dbContext.ArtistPortfolioPieces.Where(x=>x.ArtistId==existingArtist.Id).ToListAsync();
         var result = portfolio.Select(x=>x.ToModel()).ToList();
         return Ok(result);
@@ -85,8 +82,6 @@ public class ArtistPortfolioController: Controller
             return BadRequest();
         }
 
-        if(existingArtist.Suspended)
-            return BadRequest();
         var url = await _storageService.UploadImageAsync(HttpContext.Request.Body, Guid.NewGuid().ToString());
         var portfolio = new ArtistPortfolioPiece()
         {
@@ -114,8 +109,7 @@ public class ArtistPortfolioController: Controller
                 return BadRequest();
             return Unauthorized();
         }
-        if(existingArtist.Suspended)
-            return BadRequest();
+        
         var portfolio = await _dbContext.ArtistPortfolioPieces.FirstOrDefaultAsync(x=>x.Id==portfolioId);
         if(portfolio==null)
             return NotFound();
