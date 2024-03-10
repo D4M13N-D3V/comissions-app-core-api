@@ -6,7 +6,6 @@ public class PenaltyModel
 {
     public DateTime Date { get; set; }
     public string Reason { get; set; }
-    public string Admin { get; set; }
 }
 
 public static class PenaltyModelExtensions
@@ -17,7 +16,6 @@ public static class PenaltyModelExtensions
         {
             Date = ban.BanDate,
             Reason = ban.Reason,
-            Admin = ban.Admin.DisplayName
         };
     }
     
@@ -27,7 +25,6 @@ public static class PenaltyModelExtensions
         {
             Date = suspension.SuspensionDate,
             Reason = suspension.Reason,
-            Admin = suspension.Admin.DisplayName
         };
     }
 }
