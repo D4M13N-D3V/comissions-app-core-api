@@ -3,6 +3,7 @@ using comissions.app.api.Models.PortfolioModel;
 using comissions.app.api.Services.Storage;
 using comissions.app.database;
 using comissions.app.database.Entities;
+using comissions.app.database.Models;
 using comissions.app.database.Models.Request;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -44,6 +45,34 @@ public class DiscoveryController : Controller
         if(seller==null)
             return NotFound();
         var result = seller.ToDiscoveryModel();
+        return Ok(result);
+    }
+    
+    [HttpGet]
+    [Route("Artists/{sellerId:int}/Bans")]
+    public async Task<IActionResult> GetArtistBans(int sellerId)
+    {
+        var seller = await _dbContext.UserArtists
+            .Include(x=>x.User).ThenInclude(x=>x.Requests)
+            .Include(x=>x.User).ThenInclude(x=>x.Bans)
+            .FirstOrDefaultAsync(x=>x.Id==sellerId);
+        if(seller==null)
+            return NotFound();
+        var result = seller.User.Bans.Select(x=>x.ToModel()).ToList();
+        return Ok(result);
+    }
+    
+    [HttpGet]
+    [Route("Artists/{sellerId:int}/Suspensions")]
+    public async Task<IActionResult> GetArtistSuspensions(int sellerId)
+    {
+        var seller = await _dbContext.UserArtists
+            .Include(x=>x.User).ThenInclude(x=>x.Suspensions)
+            .Include(x=>x.User).ThenInclude(x=>x.Bans)
+            .FirstOrDefaultAsync(x=>x.Id==sellerId);
+        if(seller==null)
+            return NotFound();
+        var result = seller.User.Suspensions.Select(x=>x.ToModel()).ToList();
         return Ok(result);
     }
     
