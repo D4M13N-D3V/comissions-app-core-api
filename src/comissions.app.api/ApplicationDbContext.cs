@@ -49,5 +49,7 @@ public class ApplicationDbContext:DbContext
     public DbSet<RequestReference> RequestReferences { get; set; }= null!;
     public DbSet<RequestAsset> RequestAssets { get; set; }= null!;
     public DbSet<ArtistRequestMessage> ArtistRequestMessages { get; set; }= null!;
+    public DbSet<Ban> Bans { get; set; }= null!;
+    public DbSet<Suspension> Suspensions { get; set; }= null!;
     #endregion
 }

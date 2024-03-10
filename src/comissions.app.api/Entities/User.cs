@@ -10,19 +10,10 @@ public record User
     public string DisplayName { get; set; } = null!;
     public string Biography { get; set; } = null!;
     public string Email { get; set; } = null!;
+    
     public int? UserArtistId { get; set; }
-    
-    public bool Banned { get; set; } = false;
-    public DateTime? BannedDate { get; set; }
-    public DateTime? UnbanDate { get; set; }
-    public string? BannedReason { get; set; }
-    public string? BanAdminId { get; set; }
-    
-    public bool Suspended { get; set; } = false;
-    public DateTime? SuspendedDate { get; set; }
-    public DateTime? UnsuspendDate { get; set; }
-    public string? SuspendedReason { get; set; }
-    public string? SuspendAdminId { get; set; }
-    
     [JsonIgnore] public virtual UserArtist? UserArtist { get; set; }
+    [JsonIgnore] public virtual ICollection<Request> Requests { get; set; } = new List<Request>();
+    [JsonIgnore] public virtual ICollection<Suspension> Suspensions { get; set; } = new List<Suspension>();
+    [JsonIgnore] public virtual ICollection<Ban> Bans { get; set; } = new List<Ban>();
 }
