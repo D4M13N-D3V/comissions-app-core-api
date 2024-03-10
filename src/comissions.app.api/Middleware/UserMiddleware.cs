@@ -28,8 +28,8 @@ public class UserMiddleware
             var userId = context.User.Claims.First(c => c.Type == ClaimTypes.NameIdentifier).Value;
 
             var user = await dbContext.Users.Include(x=>x.UserArtist)
-                .Include(x=>x.Bans).ThenInclude(x=>x.Admin)
-                .Include(x=>x.Suspensions).ThenInclude(x=>x.Admin)
+                .Include(x=>x.Bans)
+                .Include(x=>x.Suspensions)
                 .FirstOrDefaultAsync(x=>x.Id==userId);
 
             if (user == null)
@@ -67,7 +67,7 @@ public class UserMiddleware
             {
                 var suspendDate = suspension.SuspensionDate.ToString("MM/dd/yyyy");
                 var unsuspendDate = suspension.UnsuspensionDate.ToString("MM/dd/yyyy");
-                await context.Response.WriteAsync($"Suspended on {suspendDate} until {unsuspendDate} for {suspension.Reason} by {suspension.Admin.DisplayName}.");
+                await context.Response.WriteAsync($"Suspended on {suspendDate} until {unsuspendDate} for {suspension.Reason}.");
                 context.Response.StatusCode = StatusCodes.Status403Forbidden;
                 return;
             }
@@ -77,7 +77,7 @@ public class UserMiddleware
             {
                 var suspendDate = ban.BanDate.ToString("MM/dd/yyyy");
                 var unsuspendDate = ban.UnbanDate.ToString("MM/dd/yyyy");
-                await context.Response.WriteAsync($"Banned on {suspendDate} until {unsuspendDate} for {ban.Reason} by {ban.Admin.DisplayName}.");
+                await context.Response.WriteAsync($"Banned on {suspendDate} until {unsuspendDate} for {ban.Reason}.");
                 context.Response.StatusCode = StatusCodes.Status403Forbidden;
                 return;
             }

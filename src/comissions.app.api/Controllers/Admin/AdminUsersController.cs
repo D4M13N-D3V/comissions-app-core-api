@@ -61,7 +61,6 @@ public class AdminUsersController:ControllerBase
         {
             UserId = userId,
             Reason = reason,
-            AdminId = User.GetUserId(),
             SuspensionDate = DateTime.UtcNow,
             UnsuspensionDate = DateTime.UtcNow.AddDays(days),
             Voided = false
@@ -101,7 +100,6 @@ public class AdminUsersController:ControllerBase
         {
             UserId = userId,
             Reason = reason,
-            AdminId = User.GetUserId(),
             BanDate = DateTime.UtcNow,
             UnbanDate = DateTime.UtcNow.AddDays(days),
             Voided = false
