@@ -117,36 +117,5 @@ public class ArtistController : Controller
             return NotFound();
         var result = ArtistRequest.ToModel();
         return Ok(result);
-    }   
-    
-    
-    [HttpPost]
-    [Authorize("write:artist")]
-    public async Task<IActionResult> RequestArtist([FromBody] string message)
-    {
-        var userId = User.GetUserId();
-        
-        var existingArtist = await _dbContext.UserArtists.FirstOrDefaultAsync(Artist=>Artist.UserId==userId);
-        if (existingArtist != null)
-        {
-            return Unauthorized();
-        }
-        
-        var ArtistRequest = await _dbContext.ArtistRequests.FirstOrDefaultAsync(request=>request.UserId==userId);
-        if (ArtistRequest != null)
-            return Ok(ArtistRequest.ToModel());
-        
-        ArtistRequest = new ArtistRequest()
-        {
-            Accepted = false,
-            Message = message,
-            RequestDate = DateTime.UtcNow,
-            UserId = userId
-        };
-                
-        _dbContext.ArtistRequests.Add(ArtistRequest);
-        await _dbContext.SaveChangesAsync();
-        return Ok();
-    }   
-    
+    }
 }
