@@ -1,7 +1,9 @@
+using comissions.app.api.Extensions;
 using comissions.app.api.Models.ArtistRequest;
 using comissions.app.api.Services.Payment;
 using comissions.app.database;
 using comissions.app.database.Entities;
+using comissions.app.database.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -167,5 +169,29 @@ public class AdminArtistRequestsController : Controller
         };
         await _client.Event.Trigger(newTriggerModel);
         return Ok();
+    }
+    
+    [HttpGet]
+    [Route("Messages")]
+    public async Task<IActionResult> GetMessages()
+    {
+        var messages = await _dbContext.ArtistRequestMessages.ToListAsync();
+        var result = messages.Select(x=>x.ToModel()).ToList();
+        return Ok(result);
+    }
+    
+    [HttpPost]
+    [Route("Messages")]
+    public async Task<IActionResult> AddMessage([FromBody] string message)
+    {
+        var newMessage = new ArtistRequestMessage()
+        {
+            UserId = User.GetUserId(),
+            Message = message,
+            SentDate = DateTime.UtcNow
+        };
+        _dbContext.ArtistRequestMessages.Add(newMessage);
+        await _dbContext.SaveChangesAsync();
+        return Ok(newMessage.ToModel());
     }
 }
