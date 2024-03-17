@@ -20,6 +20,7 @@ public class AdminArtistModel
     public decimal FeesCollected { get; set; }
     public int NumberOfAssets { get; set; }
     public int NumberOfPortfolio { get; set; }
+    public int NumberOfCompleted { get; set; }
     public double? AverageRating  { get; set; }
     public User User { get; set; }
 }
@@ -47,6 +48,7 @@ public static class AdminArtistModelExtensions
             FeesCollected = artist.Requests.Where(x=>x.Paid).Sum(r => r.Amount)*(decimal)0.015,
             NumberOfAssets = artist.Requests.SelectMany(x=>x.RequestAssets).Count(),
             NumberOfPortfolio = artist.PortfolioPieces.Count,
+            NumberOfCompleted = artist.Requests.Count(x=>x.Completed),  
             AverageRating = artist.Requests.Count(x=>x.Reviewed) == 0 ? 0 : artist.Requests.Where(x=>x.Reviewed).Average(x=>x.Rating)
         };
     }
