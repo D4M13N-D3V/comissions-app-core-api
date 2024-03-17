@@ -28,7 +28,7 @@ public static class AdminUserModelExtensions
             NumberOfRequests = user.Requests.Count,
             NumberOfSuspensions = user.Suspensions.Count,
             NumberOfBans = user.Bans.Count,
-            NumberOfReviews = user.Requests.Count,
+            NumberOfReviews = user.Requests.Count(x => x.Reviewed),
             AmountSpent = user.Requests.Sum(r => r.Amount)
         };
     }
