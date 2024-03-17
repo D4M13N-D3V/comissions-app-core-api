@@ -45,7 +45,7 @@ public class AdminArtistRequestsController : Controller
     [Route("{requestId:int}")]
     public async Task<IActionResult> GetArtistRequest(int requestId)
     {
-        var request = await _dbContext.ArtistRequests.FirstOrDefaultAsync(x=>x.Id==requestId);
+        var request = await _dbContext.ArtistRequests.Include(x=>x.User).FirstOrDefaultAsync(x=>x.Id==requestId);
         if(request==null)
             return NotFound();
         var result = request.ToModel();
