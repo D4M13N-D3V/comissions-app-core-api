@@ -1,6 +1,7 @@
 using comissions.app.api.Extensions;
 using comissions.app.database;
 using comissions.app.database.Models.Admin;
+using comissions.app.database.Models.Request;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
@@ -54,6 +55,38 @@ public class AdminArtistsController:ControllerBase
         if (seller == null)
             return NotFound();
         var result = seller.ToAdminArtistModel();
+        return Ok(result);
+    }
+    
+    [HttpGet("{sellerId:int}/Requests")]
+    public async Task<IActionResult> GetArtistRequests(int sellerId, [FromQuery]int offset = 0, [FromQuery]int pageSize = 10)
+    {
+        var requests = await _dbContext.Requests
+            .Include(x=>x.Artist)
+            .Where(x=>x.ArtistId==sellerId)
+            .Skip(offset).Take(pageSize).ToListAsync();
+        var result = requests.Select(x=>x.ToModel());
+        return Ok(result);
+    }
+    
+    [HttpGet("{sellerId:int}/Requests/{requestId:int")]
+    public async Task<IActionResult> GetArtistRequest(int sellerId, int requestId)
+    {
+        var request = await _dbContext.Requests
+            .Include(x=>x.Artist)
+            .FirstOrDefaultAsync(x=>x.Id==requestId);
+        if(request==null)
+            return NotFound();
+        var result = request.ToModel();
+        return Ok(result);
+    }
+    
+    [HttpGet("{sellerId:int}/Requests/Count")]
+    public async Task<IActionResult> GetArtistRequestsCount(int sellerId)
+    {
+        var result = await _dbContext.Requests
+            .Where(x=>x.ArtistId==sellerId)
+            .CountAsync();
         return Ok(result);
     }
     

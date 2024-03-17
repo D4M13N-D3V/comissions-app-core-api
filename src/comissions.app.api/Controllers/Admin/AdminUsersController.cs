@@ -2,6 +2,7 @@ using comissions.app.api.Extensions;
 using comissions.app.database;
 using comissions.app.database.Entities;
 using comissions.app.database.Models.Admin;
+using comissions.app.database.Models.Request;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -33,6 +34,39 @@ public class AdminUsersController:ControllerBase
         var result = users.Select(x => x.ToAdminUserModel());
         return Ok(result);
     }
+    
+    [HttpGet("{userId}/Requests")]
+    public async Task<IActionResult> GetUserRequests(string artistId, [FromQuery]int offset = 0, [FromQuery]int pageSize = 10)
+    {
+        var requests = await _dbContext.Requests
+            .Include(x=>x.Artist)
+            .Where(x=>x.UserId==artistId)
+            .Skip(offset).Take(pageSize).ToListAsync();
+        var result = requests.Select(x=>x.ToModel());
+        return Ok(result);
+    }
+    
+    [HttpGet("{userId}/Requests/{requestId:int")]
+    public async Task<IActionResult> GetUserRequest(string artistId, int requestId)
+    {
+        var request = await _dbContext.Requests
+            .Include(x=>x.Artist)
+            .FirstOrDefaultAsync(x=>x.Id==requestId);
+        if(request==null)
+            return NotFound();
+        var result = request.ToModel();
+        return Ok(result);
+    }
+    
+    [HttpGet("{userId}/Requests/Count")]
+    public async Task<IActionResult> GetUserRequestsCount(string artistId)
+    {
+        var result = await _dbContext.Requests
+            .Where(x=>x.UserId==artistId)
+            .CountAsync();
+        return Ok(result);
+    }
+
     
     [HttpGet("Count")]
     public async Task<IActionResult> GetUsersCount([FromQuery]string search="")
