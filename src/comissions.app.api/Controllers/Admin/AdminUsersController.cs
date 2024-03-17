@@ -46,7 +46,7 @@ public class AdminUsersController:ControllerBase
         return Ok(result);
     }
     
-    [HttpGet("{userId}/Requests/{requestId:int")]
+    [HttpGet("{userId}/Requests/{requestId:int}")]
     public async Task<IActionResult> GetUserRequest(string artistId, int requestId)
     {
         var request = await _dbContext.Requests

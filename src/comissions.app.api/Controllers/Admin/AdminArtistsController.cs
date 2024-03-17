@@ -69,7 +69,7 @@ public class AdminArtistsController:ControllerBase
         return Ok(result);
     }
     
-    [HttpGet("{sellerId:int}/Requests/{requestId:int")]
+    [HttpGet("{sellerId:int}/Requests/{requestId:int}")]
     public async Task<IActionResult> GetArtistRequest(int sellerId, int requestId)
     {
         var request = await _dbContext.Requests
