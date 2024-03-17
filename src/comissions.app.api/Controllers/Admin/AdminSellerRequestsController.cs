@@ -70,10 +70,10 @@ public class AdminArtistRequestsController : Controller
     /// <param name="userId">The ID of the user to accept the request for.</param>
     /// <returns>The new seller profile.</returns>
     [HttpPut]
-    [Route("{userId}")]
-    public async Task<IActionResult> AcceptArtistRequest(string userId)
+    [Route("{requestId:int}")]
+    public async Task<IActionResult> AcceptArtistRequest(int requestId)
     {
-        var request = await _dbContext.ArtistRequests.FirstOrDefaultAsync(request=>request.UserId==userId);
+        var request = await _dbContext.ArtistRequests.FirstOrDefaultAsync(request=>request.Id==requestId);
         
         if(request==null)
             return NotFound("No request for that user exists.");
@@ -86,7 +86,7 @@ public class AdminArtistRequestsController : Controller
         var accountId = _paymentService.CreateArtistAccount();
         var newArtist = new UserArtist()
         {
-            UserId = userId,
+            UserId = request.UserId,
             AgeRestricted = false,
             Description = string.Empty,
             StripeAccountId = accountId,
@@ -147,7 +147,7 @@ public class AdminArtistRequestsController : Controller
             EventName = "artistrequestaccepted",
             To =
             {
-                SubscriberId = userId,
+                SubscriberId = request.UserId,
             },
             Payload = { }
         };
@@ -156,10 +156,10 @@ public class AdminArtistRequestsController : Controller
     }
     
     [HttpDelete]
-    [Route("{userId}")]
-    public async Task<IActionResult> DenyArtistRequest(string userId)
+    [Route("{requestId:int}")]
+    public async Task<IActionResult> DenyArtistRequest(int requestId)
     {
-        var request = await _dbContext.ArtistRequests.FirstOrDefaultAsync(request=>request.UserId==userId);
+        var request = await _dbContext.ArtistRequests.FirstOrDefaultAsync(request=>request.Id==requestId);
         
         if(request==null)
             return NotFound("No request for that user exists.");
@@ -174,7 +174,7 @@ public class AdminArtistRequestsController : Controller
             EventName = "artistrequestdenied",
             To =
             {
-                SubscriberId = userId,
+                SubscriberId = request.UserId,
             },
             Payload = { }
         };
