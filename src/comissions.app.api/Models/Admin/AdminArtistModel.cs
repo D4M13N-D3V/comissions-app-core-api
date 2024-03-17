@@ -44,7 +44,7 @@ public static class AdminArtistModelExtensions
             NumberOfReviews = artist.Requests.Count(x => x.Reviewed),
             NumberOfPaid = artist.Requests.Count(x => x.Paid),
             AmountMade = artist.Requests.Sum(r => r.Amount),
-            FeesCollected = artist.Requests.Sum(r => r.Amount)*(decimal)0.15,
+            FeesCollected = artist.Requests.Where(x=>x.Paid).Sum(r => r.Amount)*(decimal)0.015,
             NumberOfAssets = artist.Requests.SelectMany(x=>x.RequestAssets).Count(),
             NumberOfPortfolio = artist.PortfolioPieces.Count,
             AverageRating = artist.Requests.Count(x=>x.Reviewed) == 0 ? 0 : artist.Requests.Where(x=>x.Reviewed).Average(x=>x.Rating)
