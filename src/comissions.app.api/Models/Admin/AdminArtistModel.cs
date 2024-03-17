@@ -21,6 +21,7 @@ public class AdminArtistModel
     public int NumberOfAssets { get; set; }
     public int NumberOfPortfolio { get; set; }
     public double? AverageRating  { get; set; }
+    public User User { get; set; }
 }
 
 public static class AdminArtistModelExtensions
@@ -38,6 +39,7 @@ public static class AdminArtistModelExtensions
             SocialMediaLink4 = artist.SocialMediaLink4,
             RequestGuidelines = artist.RequestGuidelines,
             Name = artist.Name,
+            User = artist.User,
             NumberOfRequests = artist.Requests.Count,
             NumberOfReviews = artist.Requests.Count(x => x.Reviewed),
             NumberOfPaid = artist.Requests.Count(x => x.Paid),
