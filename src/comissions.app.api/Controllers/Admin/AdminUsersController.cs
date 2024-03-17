@@ -1,6 +1,7 @@
 using comissions.app.api.Extensions;
 using comissions.app.database;
 using comissions.app.database.Entities;
+using comissions.app.database.Models.Admin;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -25,7 +26,8 @@ public class AdminUsersController:ControllerBase
         var users = await _dbContext.Users
             .Where(x=>x.DisplayName.Contains(search) || x.Email.Contains(search))
             .Skip(offset).Take(pageSize).ToListAsync();
-        return Ok(users);
+        var result = users.Select(x => x.ToAdminUserModel());
+        return Ok(result);
     }
     
     [HttpGet("Count")]
@@ -44,8 +46,8 @@ public class AdminUsersController:ControllerBase
 
         if (user == null)
             return NotFound();
-        
-        return Ok(user);
+        var result = user.ToAdminUserModel();        
+        return Ok(result);
     }
     
     
