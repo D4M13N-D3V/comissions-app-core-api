@@ -1,5 +1,6 @@
 using comissions.app.api.Extensions;
 using comissions.app.database;
+using comissions.app.database.Models.Admin;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
@@ -23,9 +24,13 @@ public class AdminArtistsController:ControllerBase
     public async Task<IActionResult> GetArtists([FromQuery]string search="", [FromQuery]int offset = 0, [FromQuery]int pageSize = 10)
     {
         var sellers = await _dbContext.UserArtists.Include(x=>x.User)
+            .Include(x=>x.Requests)
+            .Include(x=>x.Requests).ThenInclude(x=>x.RequestAssets)
+            .Include(x=>x.PortfolioPieces)
             .Where(x=>x.User.DisplayName.Contains(search) || x.User.Email.Contains(search))
             .Skip(offset).Take(pageSize).ToListAsync();
-        return Ok(sellers);
+        var result = sellers.Select(x => x.ToAdminArtistModel());
+        return Ok(result);
     }
     
     [HttpGet("Count")]
@@ -41,12 +46,15 @@ public class AdminArtistsController:ControllerBase
     public async Task<IActionResult> GetArtist(int sellerId)
     {
         var seller = await _dbContext.UserArtists.Include(x=>x.User)
+            .Include(x=>x.Requests)
+            .Include(x=>x.Requests).ThenInclude(x=>x.RequestAssets)
+            .Include(x=>x.PortfolioPieces)
             .FirstOrDefaultAsync(x=>x.Id==sellerId);
 
         if (seller == null)
             return NotFound();
-        
-        return Ok(seller);
+        var result = seller.ToAdminArtistModel();
+        return Ok(result);
     }
     
     
