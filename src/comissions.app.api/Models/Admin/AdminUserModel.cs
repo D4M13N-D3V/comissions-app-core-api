@@ -13,6 +13,7 @@ public class AdminUserModel
     public int NumberOfBans { get; set; } = 0;
     public int NumberOfReviews { get; set; } = 0;
     public decimal AmountSpent { get; set; } = 0;
+    public int NumberOfPaid { get; set; }
 }
 
 public static class AdminUserModelExtensions
@@ -29,6 +30,7 @@ public static class AdminUserModelExtensions
             NumberOfSuspensions = user.Suspensions.Count,
             NumberOfBans = user.Bans.Count,
             NumberOfReviews = user.Requests.Count(x => x.Reviewed),
+            NumberOfPaid = user.Requests.Count(x => x.Paid),
             AmountSpent = user.Requests.Sum(r => r.Amount)
         };
     }
