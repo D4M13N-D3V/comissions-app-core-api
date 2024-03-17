@@ -24,6 +24,10 @@ public class AdminUsersController:ControllerBase
     public async Task<IActionResult> GetUsers([FromQuery]string search="", [FromQuery]int offset = 0, [FromQuery]int pageSize = 10)
     {
         var users = await _dbContext.Users
+            .Include(x=>x.Requests)
+            .Include(x=>x.Suspensions)
+            .Include(x=>x.Bans)
+            .Include(x=>x.Requests).ThenInclude(x=>x.Artist)
             .Where(x=>x.DisplayName.Contains(search) || x.Email.Contains(search))
             .Skip(offset).Take(pageSize).ToListAsync();
         var result = users.Select(x => x.ToAdminUserModel());
@@ -42,7 +46,12 @@ public class AdminUsersController:ControllerBase
     [HttpGet("{userId}")]
     public async Task<IActionResult> GetUser(string userId)
     {
-        var user = await _dbContext.Users.FirstOrDefaultAsync(x=>x.Id==userId);
+        var user = await _dbContext.Users
+            .Include(x=>x.Requests)
+            .Include(x=>x.Suspensions)
+            .Include(x=>x.Bans)
+            .Include(x=>x.Requests).ThenInclude(x=>x.Artist)
+            .FirstOrDefaultAsync(x=>x.Id==userId);
 
         if (user == null)
             return NotFound();
