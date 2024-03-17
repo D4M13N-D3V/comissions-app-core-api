@@ -41,6 +41,17 @@ public class AdminArtistRequestsController : Controller
         return Ok(result);
     }
     
+    [HttpGet]
+    [Route("{requestId:int}")]
+    public async Task<IActionResult> GetArtistRequest(int requestId)
+    {
+        var request = await _dbContext.ArtistRequests.FirstOrDefaultAsync(x=>x.Id==requestId);
+        if(request==null)
+            return NotFound();
+        var result = request.ToModel();
+        return Ok(result);
+    }
+    
     /// <summary>
     /// Gets the amount of requests there are from users to become a seller.
     /// </summary>
