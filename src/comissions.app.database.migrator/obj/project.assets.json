@@ -8,19 +8,19 @@
     "net8.0": []
   },
   "packageFolders": {
-    "/home/damienostler/.nuget/packages/": {}
+    "/Users/damienostler/.nuget/packages/": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/home/damienostler/Documents/Github Repositories/comissions.app/core-api/src/comissions.app.database.migrator/comissions.app.database.migrator.csproj",
+      "projectUniqueName": "/Users/damienostler/Documents/Development/Personal/core-api/src/comissions.app.database.migrator/comissions.app.database.migrator.csproj",
       "projectName": "comissions.app.database.migrator",
-      "projectPath": "/home/damienostler/Documents/Github Repositories/comissions.app/core-api/src/comissions.app.database.migrator/comissions.app.database.migrator.csproj",
-      "packagesPath": "/home/damienostler/.nuget/packages/",
-      "outputPath": "/home/damienostler/Documents/Github Repositories/comissions.app/core-api/src/comissions.app.database.migrator/obj/",
+      "projectPath": "/Users/damienostler/Documents/Development/Personal/core-api/src/comissions.app.database.migrator/comissions.app.database.migrator.csproj",
+      "packagesPath": "/Users/damienostler/.nuget/packages/",
+      "outputPath": "/Users/damienostler/Documents/Development/Personal/core-api/src/comissions.app.database.migrator/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "/home/damienostler/.nuget/NuGet/NuGet.Config"
+        "/Users/damienostler/.nuget/NuGet/NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net8.0"
@@ -59,7 +59,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "/usr/share/dotnet/sdk/8.0.101/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/8.0.204/PortableRuntimeIdentifierGraph.json"
       }
     }
   }

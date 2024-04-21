@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "p6/TmQt8oPLBfkrUB0/+oeF4I+uCaGsmlKWtxmA4Oq0iVRVhQZsGo99kQPglNxokTW1dwmB3FoYOmbyKdtutrg==",
+  "dgSpecHash": "8FbkztmnlsInCtgIxUaqACvD72GyqCwHeEUrfaBt/0to2N+uGQ18blqmDMr3GFlYztOpUURm3k3UQnidHb/m2Q==",
   "success": true,
-  "projectFilePath": "/home/damienostler/Documents/Github Repositories/comissions.app/core-api/src/comissions.app.database.migrator/comissions.app.database.migrator.csproj",
+  "projectFilePath": "/Users/damienostler/Documents/Development/Personal/core-api/src/comissions.app.database.migrator/comissions.app.database.migrator.csproj",
   "expectedPackageFiles": [],
   "logs": []
 }

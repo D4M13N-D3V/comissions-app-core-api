@@ -8,6 +8,6 @@ build_property.PlatformNeutralAssembly =
 build_property.EnforceExtendedAnalyzerRules = 
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = comissions.app.database.migrator
-build_property.ProjectDir = /home/damienostler/Documents/Github Repositories/comissions.app/core-api/src/comissions.app.database.migrator/
+build_property.ProjectDir = /Users/damienostler/Documents/Development/Personal/core-api/src/comissions.app.database.migrator/
 build_property.EnableComHosting = 
 build_property.EnableGeneratedComInterfaceComImportInterop = 
