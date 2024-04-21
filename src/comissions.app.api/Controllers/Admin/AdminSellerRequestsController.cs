@@ -36,7 +36,7 @@ public class AdminArtistRequestsController : Controller
     [HttpGet]
     public async Task<IActionResult> GetArtistRequests(int offset = 0, int pageSize = 10)
     {
-        var requests = _dbContext.ArtistRequests.OrderByDescending(x=>x.Id).Skip(offset).Take(pageSize).ToList();
+        var requests = _dbContext.ArtistRequests.Include(x=>x.User).OrderByDescending(x=>x.Id).Skip(offset).Take(pageSize).ToList();
         var result = requests.Select(x=>x.ToModel()).ToList();
         return Ok(result);
     }
@@ -73,7 +73,7 @@ public class AdminArtistRequestsController : Controller
     [Route("{requestId:int}")]
     public async Task<IActionResult> AcceptArtistRequest(int requestId)
     {
-        var request = await _dbContext.ArtistRequests.FirstOrDefaultAsync(request=>request.Id==requestId);
+        var request = await _dbContext.ArtistRequests.Include(x=>x.User).FirstOrDefaultAsync(request=>request.Id==requestId);
         
         if(request==null)
             return NotFound("No request for that user exists.");
