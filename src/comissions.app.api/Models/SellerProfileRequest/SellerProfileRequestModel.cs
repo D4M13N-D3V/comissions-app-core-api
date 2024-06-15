@@ -1,6 +1,6 @@
 using comissions.app.api.Models.User;
 
-namespace comissions.app.api.Models.ArtistRequest;
+namespace comissions.app.api.Models.SellerProfileRequest;
 
 public class ArtistRequestModel
 {

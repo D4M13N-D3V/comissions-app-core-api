@@ -1,4 +1,4 @@
-namespace comissions.app.api.Models.Artist;
+namespace comissions.app.api.Models.SellerProfile;
 
 public class ArtistOnboardUrlModel
 {

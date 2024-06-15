@@ -1,7 +1,6 @@
 using System.Security.Claims;
+using comissions.app.api.Entities;
 using comissions.app.api.Services.Payment;
-using comissions.app.database;
-using comissions.app.database.Entities;
 using Microsoft.EntityFrameworkCore;
 using Novu;
 using Novu.Interfaces;

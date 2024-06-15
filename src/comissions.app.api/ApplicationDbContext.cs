@@ -1,8 +1,8 @@
-﻿using comissions.app.database.Entities;
+﻿using comissions.app.api.Entities;
 using Microsoft.EntityFrameworkCore;
 using Npgsql;
 
-namespace comissions.app.database;
+namespace comissions.app.api;
 
 public class ApplicationDbContext:DbContext
 {

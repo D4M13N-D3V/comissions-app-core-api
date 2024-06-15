@@ -1,4 +1,4 @@
-namespace comissions.app.database.Models.Request;
+namespace comissions.app.api.Models.Request;
 
 public class RequestModel
 {

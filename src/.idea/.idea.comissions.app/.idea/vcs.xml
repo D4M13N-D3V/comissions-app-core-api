@@ -3,13 +3,21 @@
   <component name="VcsDirectoryMappings">
     <mapping directory="$PROJECT_DIR$/../../../Data443/File-Transformation-Api" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/../../../Data443/aws-argocd-dim" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../../../Data443/dim-ingest" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/../../../Data443/dim_api" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/../../../Data443/dim_connectors" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/../../../Data443/dim_document_api" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/../../../Data443/dim_etl" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../../../Data443/dim_export" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../../../Data443/dim_provision" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/../../../Data443/dim_search" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../../../Data443/keycloak_box" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../../../Data443/keycloak_box_provider" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../../../Data443/neroshitron" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/.." vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../../neroshitron" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/../../project_brazier" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../../supabase" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/../../ui" vcs="Git" />
   </component>
 </project>
