@@ -258,6 +258,8 @@ jobs:
           dockerfile: ./src/comissions.app.api/Dockerfile
           docker_image_name: ghcr.io/d4m13n-d3v/comissions-api-${{ matrix.platform }}
         run: |
+          ls
+          ls src
           docker build --platform linux/${{ matrix.platform }} -t ${{ env.docker_image_name }}:${{ needs.gitversion.outputs.semantic_version }} -f ${{ env.dockerfile }} --force-rm .
           docker tag ${{ env.docker_image_name }}:${{ needs.gitversion.outputs.semantic_version }} ${{ env.docker_image_name }}:latest
           docker push --all-tags ${{ env.docker_image_name }}
