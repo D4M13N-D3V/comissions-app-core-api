@@ -1,4 +1,4 @@
-namespace comissions.app.database.Enums;
+namespace comissions.app.api.Enums;
 
 public enum EnumOrderStatus
 {

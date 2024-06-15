@@ -44,4 +44,7 @@
       </Content>
     </ItemGroup>
 
+    <Target Name="CreateSwaggerJson" AfterTargets="Build">
+        <Exec Command="dotnet swagger tofile --output ../commissions.app.sdk/swagger.json $(OutputPath)$(AssemblyName).dll v1" WorkingDirectory="$(ProjectDir)" ContinueOnError="true" />
+    </Target>
 </Project>

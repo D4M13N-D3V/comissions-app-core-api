@@ -1,4 +1,4 @@
-namespace comissions.app.database.Models;
+namespace comissions.app.api.Models;
 
 public class PayoutModel
 {

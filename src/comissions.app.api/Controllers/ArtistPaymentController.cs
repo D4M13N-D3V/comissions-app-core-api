@@ -1,10 +1,8 @@
 using comissions.app.api.Extensions;
-using comissions.app.api.Models.Artist;
+using comissions.app.api.Models;
+using comissions.app.api.Models.SellerProfile;
 using comissions.app.api.Services.Payment;
 using comissions.app.api.Services.Storage;
-using comissions.app.database;
-using comissions.app.database.Entities;
-using comissions.app.database.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
