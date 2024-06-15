@@ -1,7 +1,7 @@
+using comissions.app.api.Entities;
 using comissions.app.api.Models.Discovery;
-using comissions.app.database.Entities;
 
-namespace comissions.app.api.Models.Artist;
+namespace comissions.app.api.Models.SellerProfile;
 
 public static class ArtistModelExtensions
 {

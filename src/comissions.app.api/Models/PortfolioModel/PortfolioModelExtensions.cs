@@ -1,4 +1,4 @@
-using comissions.app.database.Entities;
+using comissions.app.api.Entities;
 
 namespace comissions.app.api.Models.PortfolioModel;
 

@@ -1,6 +1,4 @@
-using comissions.app.database.Entities;
-
-namespace comissions.app.database.Models.Admin;
+namespace comissions.app.api.Models.Admin;
 
 public class AdminUserModel
 {
@@ -18,7 +16,7 @@ public class AdminUserModel
 
 public static class AdminUserModelExtensions
 {
-    public static AdminUserModel ToAdminUserModel(this User user)
+    public static AdminUserModel ToAdminUserModel(this Entities.User user)
     {
         return new AdminUserModel
         {

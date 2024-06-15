@@ -1,6 +1,6 @@
-using comissions.app.database.Entities;
+using comissions.app.api.Entities;
 
-namespace comissions.app.database.Models.Admin;
+namespace comissions.app.api.Models.Admin;
 
 public class AdminArtistModel
 {
@@ -22,7 +22,7 @@ public class AdminArtistModel
     public int NumberOfPortfolio { get; set; }
     public int NumberOfCompleted { get; set; }
     public double? AverageRating  { get; set; }
-    public User User { get; set; }
+    public Entities.User User { get; set; }
 }
 
 public static class AdminArtistModelExtensions

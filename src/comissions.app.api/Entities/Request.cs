@@ -1,4 +1,4 @@
-namespace comissions.app.database.Entities;
+namespace comissions.app.api.Entities;
 
 public class Request
 {

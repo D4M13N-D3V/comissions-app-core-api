@@ -4,6 +4,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "comissions.app.database.mig
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "comissions.app.api", "comissions.app.api\comissions.app.api.csproj", "{83F914D0-0C7A-47F7-A7D7-F9296AD00A97}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "comissions.app.sdk", "comissions.app.sdk\comissions.app.sdk.csproj", "{C03CA063-25C7-4177-9D44-F6A5C37B47FF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -18,6 +20,10 @@ Global
 		{83F914D0-0C7A-47F7-A7D7-F9296AD00A97}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{83F914D0-0C7A-47F7-A7D7-F9296AD00A97}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{83F914D0-0C7A-47F7-A7D7-F9296AD00A97}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C03CA063-25C7-4177-9D44-F6A5C37B47FF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C03CA063-25C7-4177-9D44-F6A5C37B47FF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C03CA063-25C7-4177-9D44-F6A5C37B47FF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C03CA063-25C7-4177-9D44-F6A5C37B47FF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 	EndGlobalSection

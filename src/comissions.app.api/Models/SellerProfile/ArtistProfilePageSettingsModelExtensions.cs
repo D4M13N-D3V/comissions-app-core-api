@@ -1,7 +1,7 @@
-using comissions.app.database.Entities;
+using comissions.app.api.Entities;
 using Newtonsoft.Json;
 
-namespace comissions.app.api.Models.Artist;
+namespace comissions.app.api.Models.SellerProfile;
 
 public static class ArtistPageSettingsModelExtensions
 {

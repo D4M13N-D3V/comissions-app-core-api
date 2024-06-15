@@ -1,13 +1,10 @@
-using comissions.app.api.Extensions;
-using comissions.app.database;
-using comissions.app.database.Models.Admin;
-using comissions.app.database.Models.Request;
+using comissions.app.api.Models.Admin;
+using comissions.app.api.Models.Request;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-namespace comissions.app.api.Controllers;
+namespace comissions.app.api.Controllers.Admin;
 
 [ApiController]
 [Authorize("admin")]

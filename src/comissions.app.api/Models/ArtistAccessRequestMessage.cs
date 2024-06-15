@@ -1,6 +1,6 @@
-using comissions.app.database.Entities;
+using comissions.app.api.Entities;
 
-namespace comissions.app.database.Models;
+namespace comissions.app.api.Models;
 
 public class ArtistAccessRequestMessage
 {

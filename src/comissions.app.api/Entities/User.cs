@@ -1,7 +1,7 @@
 using System.Text.Json.Serialization;
 using Microsoft.EntityFrameworkCore;
 
-namespace comissions.app.database.Entities;
+namespace comissions.app.api.Entities;
 
 [PrimaryKey(nameof(Id))]
 public record User
