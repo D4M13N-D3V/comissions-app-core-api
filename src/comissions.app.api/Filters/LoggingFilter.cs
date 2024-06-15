@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc.Filters;
 
-namespace comissions.app.database.Filters;
+namespace comissions.app.api.Filters;
 
 public class LoggingFilter : IActionFilter
 {

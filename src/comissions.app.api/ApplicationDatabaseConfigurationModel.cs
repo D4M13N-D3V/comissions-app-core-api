@@ -1,7 +1,5 @@
 
-using Microsoft.Extensions.Configuration;
-
-namespace comissions.app.database;
+namespace comissions.app.api;
 
 public class ApplicationDatabaseConfigurationModel
 {

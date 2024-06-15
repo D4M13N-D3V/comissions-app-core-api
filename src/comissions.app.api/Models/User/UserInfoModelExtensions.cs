@@ -2,7 +2,7 @@ namespace comissions.app.api.Models.User;
 
 public static class UserInfoModelExtensions
 {
-    public static UserInfoModel ToModel(this database.Entities.User user)
+    public static UserInfoModel ToModel(this Entities.User user)
     {
         return new()
         {
@@ -12,7 +12,7 @@ public static class UserInfoModelExtensions
             Email = user.Email
         };
     }
-    public static database.Entities.User ToEntity(this UserInfoUpdateModel user, database.Entities.User existingUser)
+    public static Entities.User ToEntity(this UserInfoUpdateModel user, Entities.User existingUser)
     {
         existingUser.DisplayName = user.DisplayName;
         existingUser.Biography = user.Biography;

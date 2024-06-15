@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace comissions.app.database.Entities;
+namespace comissions.app.api.Entities;
 
 public class ArtistPageSettings
 {

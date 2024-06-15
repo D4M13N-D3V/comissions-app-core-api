@@ -1,10 +1,11 @@
+using comissions.app.api.Entities;
 using comissions.app.api.Models.User;
 
-namespace comissions.app.api.Models.ArtistRequest;
+namespace comissions.app.api.Models.SellerProfileRequest;
 
 public static class ArtistRequestModelExtensions
 {
-    public static ArtistRequestModel ToModel(this database.Entities.ArtistRequest sellerProfileRequest)
+    public static ArtistRequestModel ToModel(this ArtistRequest sellerProfileRequest)
     {
         return new ArtistRequestModel()
         {
