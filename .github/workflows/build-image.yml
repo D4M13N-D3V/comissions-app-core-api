@@ -243,7 +243,9 @@ jobs:
     needs: gitversion
     strategy:
       matrix:
-        platform: [amd64, arm64]
+#        platform: [amd64, arm64]
+        platform: [ amd64 ]
+
     steps:
       - name: 'Cleanup build folder'
         run: |
