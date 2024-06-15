@@ -249,12 +249,13 @@ jobs:
         run: |
           rm ./* -r || true
           rm ./.??* -r  || true
+          
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
   
       - name: login into registry
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login https://ghcr.io -u $ --password-stdin
-  
-      - name: Test
-        run: ls ./ -la
   
       - name: Build image
         env:
