@@ -254,7 +254,7 @@ jobs:
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login https://ghcr.io -u $ --password-stdin
   
       - name: Test
-        run: ls -la
+        run: ls -la ./
   
       - name: Build image
         env:
