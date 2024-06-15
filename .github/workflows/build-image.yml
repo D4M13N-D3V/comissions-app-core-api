@@ -255,14 +255,9 @@ jobs:
   
       - name: Build image
         env:
-          dockerfile: /src/comissions.app.api/Dockerfile
+          dockerfile: ./src/comissions.app.api/Dockerfile
           docker_image_name: ghcr.io/d4m13n-d3v/comissions-api-${{ matrix.platform }}
         run: |
-          docker build --platform linux/${{ matrix.platform }} -t ${{ env.docker_image_name }}:${{ needs.gitversion.outputs.semantic_version }} -f ${{ env.dockerfile }}
+          docker build --platform linux/${{ matrix.platform }} -t ${{ env.docker_image_name }}:${{ needs.gitversion.outputs.semantic_version }} -f ${{ env.dockerfile }} --force-rm .
           docker tag ${{ env.docker_image_name }}:${{ needs.gitversion.outputs.semantic_version }} ${{ env.docker_image_name }}:latest
           docker push --all-tags ${{ env.docker_image_name }}
-  
-      - name: Tag branch
-        run: |
-          git tag ${{ needs.gitversion.outputs.semantic_version }}
-          git push origin ${{ needs.gitversion.outputs.semantic_version }}
