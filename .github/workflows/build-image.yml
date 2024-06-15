@@ -256,7 +256,7 @@ jobs:
       - name: Build image
         env:
           dockerfile: ./src/comissions.app.api/Dockerfile
-          docker_image_name: ghcr.io/comissions-app/comissions-api-${{ matrix.platform }}
+          docker_image_name: ghcr.io/D4M13N-D3V/comissions-api-${{ matrix.platform }}
         run: |
           docker build --build-arg NUGET_SOURCE=https://nuget.pkg.github.com/data443/index.json --build-arg NUGET_API_KEY=${{ secrets.PACKAGE_TOKEN }} --platform linux/${{ matrix.platform }} -t ${{ env.docker_image_name }}:${{ env.GitVersion_MajorMinorPatch }} -f ${{ env.dockerfile }} --force-rm .
           docker tag ${{ env.docker_image_name }}:${{ needs.gitversion.outputs.semantic_version }} ${{ env.docker_image_name }}:latest
