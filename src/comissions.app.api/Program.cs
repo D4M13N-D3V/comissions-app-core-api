@@ -128,6 +128,22 @@ builder.Services.AddAuthorization(options =>
 
 builder.Services.AddSingleton<IAuthorizationHandler, HasScopeHandler>();
 
+// CORS: allow only the explicitly configured origins (comma-separated in Cors:AllowedOrigins).
+const string CorsPolicyName = "DefaultCorsPolicy";
+var allowedOrigins = builder.Configuration.GetValue<string>("Cors:AllowedOrigins")?
+    .Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+    ?? Array.Empty<string>();
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(CorsPolicyName, policy =>
+    {
+        policy.WithOrigins(allowedOrigins)
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials();
+    });
+});
+
 
 var app = builder.Build();
 
@@ -146,6 +162,7 @@ defaultFilesOptions.DefaultFileNames.Clear();
 defaultFilesOptions.DefaultFileNames.Add("index.html"); // replace 'yourf
 app.UseStaticFiles();
 app.UseHttpsRedirection();
+app.UseCors(CorsPolicyName);
 app.UseAuthentication();
 app.UseMiddleware<UserMiddleware>();
 app.UseAuthorization();
