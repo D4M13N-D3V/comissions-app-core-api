@@ -21,6 +21,12 @@ public class ArtistRequestsController: Controller
     private readonly NovuClient _client;
     private readonly string _webHookSecret;
 
+    private static readonly string[] AllowedImageContentTypes =
+        { "image/jpeg", "image/png", "image/gif", "image/webp" };
+
+    private static bool IsAllowedImageContentType(string? contentType)
+        => contentType != null && AllowedImageContentTypes.Contains(contentType.Split(';')[0].Trim().ToLowerInvariant());
+
     public ArtistRequestsController(ApplicationDbContext dbContext, NovuClient client, IPaymentService paymentService, IStorageService storageService, IConfiguration configuration)
     {
         _client = client;
@@ -148,8 +154,12 @@ public class ArtistRequestsController: Controller
     [HttpPost]
     [Route("Artist/{requestId:int}/Assets")]
     [Authorize("write:request")]
+    [RequestSizeLimit(10 * 1024 * 1024)]
     public async Task<IActionResult> AddArtistAsset(int requestId)
     {
+        if (!IsAllowedImageContentType(Request.ContentType))
+            return BadRequest("Only image uploads (jpeg, png, gif, webp) are allowed.");
+
         var userId = User.GetUserId();
         var request = await _dbContext.Requests
             .Where(x=>x.UserId==userId)
