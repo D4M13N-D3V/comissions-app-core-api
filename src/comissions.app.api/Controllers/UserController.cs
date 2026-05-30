@@ -23,7 +23,9 @@ public class UserController : Controller
     public async Task<IActionResult> GetUser()
     {
         var userId = User.GetUserId();
-        var user = await _dbContext.Users.FirstAsync(user=>user.Id==userId);
+        var user = await _dbContext.Users.FirstOrDefaultAsync(user=>user.Id==userId);
+        if(user==null)
+            return NotFound();
         var result = user.ToModel();
         return Ok(result);
     }
@@ -33,8 +35,10 @@ public class UserController : Controller
     public async Task<IActionResult> UpdateUser(UserInfoUpdateModel model)
     {
         var userId = User.GetUserId();
-        var existingUser = await _dbContext.Users.FirstAsync(user=>user.Id==userId);
-        
+        var existingUser = await _dbContext.Users.FirstOrDefaultAsync(user=>user.Id==userId);
+        if(existingUser==null)
+            return NotFound();
+
         if(_dbContext.Users.Any(x=>x.DisplayName==model.DisplayName && x.Id!=userId))
             return BadRequest("Display name is already in use.");
         
