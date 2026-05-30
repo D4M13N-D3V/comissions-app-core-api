@@ -8,10 +8,12 @@ namespace comissions.app.api.Services.Storage
     public class ImgCdnStorageServiceProvider : IStorageService
     {
         private readonly HttpClient _client;
-        private const string ApiKey = "5386e05a3562c7a8f984e73401540836";
+        private readonly string _apiKey;
 
-        public ImgCdnStorageServiceProvider()
+        public ImgCdnStorageServiceProvider(IConfiguration configuration)
         {
+            _apiKey = configuration.GetValue<string>("Storage:ImgCdn:ApiKey")
+                      ?? throw new InvalidOperationException("Storage:ImgCdn:ApiKey is not configured.");
             _client = new HttpClient { BaseAddress = new Uri("https://imgcdn.dev/") };
         }
 
@@ -22,7 +24,7 @@ namespace comissions.app.api.Services.Storage
                 throw new System.ArgumentNullException(nameof(fileStream));
             }
             using var content = new MultipartFormDataContent();
-            content.Add(new StringContent(ApiKey), "key");
+            content.Add(new StringContent(_apiKey), "key");
             content.Add(new StreamContent(fileStream), "source", fileName);
             
             var response = await _client.PostAsync("api/1/upload", content);
