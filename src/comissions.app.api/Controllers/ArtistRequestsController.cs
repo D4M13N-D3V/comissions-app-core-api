@@ -307,18 +307,19 @@ public class ArtistRequestsController: Controller
             .Include(x=>x.Artist)
             .Where(x=>x.Artist.UserId==userId)
             .FirstOrDefaultAsync(x=>x.Id==requestId);
-        
+
+        if(request==null)
+            return NotFound();
+
         if(request.Completed)
             return BadRequest("Request has already been completed.");
-        
+
         if(request.Accepted)
             return BadRequest("Request has already been accepted.");
 
         if (request.Declined)
             return BadRequest("Request has already been declined.");
-        
-        if(request==null)
-            return NotFound();
+
         var paymentUrl = _paymentService.Charge(request.Id,request.Artist.StripeAccountId,Convert.ToDouble(request.Amount));
         request.Accepted = true;
         request.AcceptedDate = DateTime.UtcNow;
@@ -345,8 +346,8 @@ public class ArtistRequestsController: Controller
             },
             Payload = { }
         };
-        await _client.Event.Trigger(newTriggerModel);
-        
+        await _client.Event.Trigger(newTriggerArtistModel);
+
         var result = request.ToModel();
         return Ok(result);
     }
