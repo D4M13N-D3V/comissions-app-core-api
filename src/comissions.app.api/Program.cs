@@ -178,8 +178,15 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
-var dbContext = app.Services.GetService<ApplicationDbContext>();
-dbContext.Database.Migrate();
+// Applying migrations on startup races when multiple replicas boot together and
+// is best handled by the dedicated migrator job. Gate it behind a config flag
+// (default off) and resolve the DbContext from a scope rather than the root provider.
+if (builder.Configuration.GetValue<bool>("Database:RunMigrationsOnStartup"))
+{
+    using var migrationScope = app.Services.CreateScope();
+    var dbContext = migrationScope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+    dbContext.Database.Migrate();
+}
 app.UseSwagger();
 app.UseSwaggerUI(settings =>
 {
