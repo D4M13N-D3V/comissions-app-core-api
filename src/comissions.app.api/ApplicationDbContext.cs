@@ -31,8 +31,16 @@ public class ApplicationDbContext:DbContext
             Host = _configuration?.Host ?? "localhost",
             Port = _configuration?.Port ?? 5432,
             Database = _configuration?.Database ?? "comissionsapp",
-            Username = _configuration?.Username ?? "postgres",
-            Password = _configuration?.Password ?? "postgres"
+            // No hardcoded credential fallbacks. At runtime credentials come from the
+            // injected configuration model (which throws if unset). At design time
+            // (parameterless ctor, _configuration == null) they come from environment
+            // variables so tooling never depends on baked-in secrets.
+            Username = _configuration?.Username
+                       ?? Environment.GetEnvironmentVariable("DATABASE__USERNAME")
+                       ?? throw new InvalidOperationException("Database username is not configured."),
+            Password = _configuration?.Password
+                       ?? Environment.GetEnvironmentVariable("DATABASE__PASSWORD")
+                       ?? throw new InvalidOperationException("Database password is not configured.")
         };
         optionsBuilder.UseNpgsql(connectionStringBuilder.ConnectionString);
         base.OnConfiguring(optionsBuilder);
