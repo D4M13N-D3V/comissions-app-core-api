@@ -39,6 +39,7 @@ public class DiscoveryController : Controller
     public async Task<IActionResult> GetArtist(int sellerId)
     {
         var seller = await _dbContext.UserArtists
+            .Include(x=>x.User)
             .FirstOrDefaultAsync(x=>x.Id==sellerId);
         if(seller==null)
             return NotFound();
