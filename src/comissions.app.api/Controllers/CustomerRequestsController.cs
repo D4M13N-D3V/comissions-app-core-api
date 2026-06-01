@@ -43,39 +43,69 @@ public class CustomerRequestsController : Controller
         // can find the endpoint's secret by running `stripe listen`
         // Otherwise, find your endpoint's secret in your webhook settings
         // in the Developer Dashboard
-        var stripeEvent = EventUtility.ConstructEvent(json, Request.Headers["Stripe-Signature"], _webHookSecret);
+        Event stripeEvent;
+        try
+        {
+            stripeEvent = EventUtility.ConstructEvent(json, Request.Headers["Stripe-Signature"], _webHookSecret);
+        }
+        catch (StripeException)
+        {
+            // Invalid signature / payload — reject rather than throwing an unhandled 500.
+            return BadRequest();
+        }
 
         if (stripeEvent.Type == Events.CheckoutSessionExpired)
         {
             var session = stripeEvent.Data.Object as Session;
             var connectedAccountId = stripeEvent.Account;
-            var requestId = session.LineItems.First().Price.Product.Name;
+            var requestId = session?.LineItems?.FirstOrDefault()?.Price?.Product?.Name;
+            if (!int.TryParse(requestId, out var expiredRequestId))
+                return Ok();
             var request = await _dbContext.Requests
                 .Include(x=>x.Artist)
                 .Include(x=>x.User)
-                .FirstOrDefaultAsync(x=>x.Id==int.Parse(requestId));
+                .FirstOrDefaultAsync(x=>x.Id==expiredRequestId);
             if (request != null && request.Accepted && !request.Declined && !request.Completed &&
                 request.Artist.StripeAccountId == connectedAccountId)
             {
                 var paymentUrl = _paymentService.Charge(request.Id,request.Artist.StripeAccountId,Convert.ToDouble(request.Amount));
                 request.PaymentUrl = paymentUrl;
+                _dbContext.Entry(request).State = EntityState.Modified;
+                await _dbContext.SaveChangesAsync();
             }
         }
         else if (stripeEvent.Type == Events.CheckoutSessionCompleted)
         {
             var session = stripeEvent.Data.Object as Session;
             var connectedAccountId = stripeEvent.Account;
-            var requestId = session.Metadata["orderId"];
+            if (session?.Metadata == null || !session.Metadata.TryGetValue("orderId", out var orderId)
+                || !int.TryParse(orderId, out var completedRequestId))
+                return Ok();
             var request = await _dbContext.Requests
                 .Include(x=>x.Artist)
-                .FirstOrDefaultAsync(x=>x.Id==int.Parse(requestId));
-                    if (request.Artist.StripeAccountId == connectedAccountId)
-                    {
-                        request.Paid = true;
-                        request.PaidDate = DateTime.UtcNow;
-                    }
-                    _dbContext.Entry(request).State = EntityState.Modified;
-                    _dbContext.SaveChanges();
+                .FirstOrDefaultAsync(x=>x.Id==completedRequestId);
+
+            // Unknown request, or event came from a different connected account — ignore.
+            if (request == null || request.Artist.StripeAccountId != connectedAccountId)
+                return Ok();
+
+            // Idempotency: if already marked paid, do nothing (Stripe may redeliver events).
+            if (request.Paid)
+                return Ok();
+
+            // Verify the amount actually paid matches what we expect before marking paid.
+            var expectedAmount = (long)Math.Round(request.Amount * 100m);
+            if (session.AmountTotal != expectedAmount)
+            {
+                Console.WriteLine($"Webhook amount mismatch for request {request.Id}: " +
+                                  $"expected {expectedAmount}, got {session.AmountTotal}.");
+                return Ok();
+            }
+
+            request.Paid = true;
+            request.PaidDate = DateTime.UtcNow;
+            _dbContext.Entry(request).State = EntityState.Modified;
+            await _dbContext.SaveChangesAsync();
         }
                 else if (stripeEvent.Type == Events.AccountUpdated)
                 {
