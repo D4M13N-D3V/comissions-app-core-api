@@ -330,7 +330,7 @@ public class ArtistRequestsController: Controller
         if (request.Declined)
             return BadRequest("Request has already been declined.");
 
-        var paymentUrl = _paymentService.Charge(request.Id,request.Artist.StripeAccountId,Convert.ToDouble(request.Amount));
+        var paymentUrl = _paymentService.Charge(request.Id,request.Artist.StripeAccountId,request.Amount);
         request.Accepted = true;
         request.AcceptedDate = DateTime.UtcNow;
         request.Paid = false;

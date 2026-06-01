@@ -88,9 +88,10 @@ public class StripePaymentServiceProvider:IPaymentService
     }
 
     public string Charge(int requestId, string? sellerStripeAccountId,
-        double requestAmount)
+        decimal requestAmount)
     {
-        var feeAmount = (long)Math.Round((requestAmount*0.05) * 100);
+        // Work in integer cents; Stripe expects the smallest currency unit.
+        var feeAmount = (long)Math.Round(requestAmount * 0.05m * 100m, MidpointRounding.AwayFromZero);
         var options = new Stripe.Checkout.SessionCreateOptions
         {
             LineItems = new List<Stripe.Checkout.SessionLineItemOptions> {
@@ -98,7 +99,7 @@ public class StripePaymentServiceProvider:IPaymentService
                     {
                         PriceData = new Stripe.Checkout.SessionLineItemPriceDataOptions
                         {
-                            UnitAmount = (long)Math.Round(requestAmount * 100),
+                            UnitAmount = (long)Math.Round(requestAmount * 100m, MidpointRounding.AwayFromZero),
                             Currency = "usd",
                             ProductData = new Stripe.Checkout.SessionLineItemPriceDataProductDataOptions
                             {
@@ -143,22 +144,23 @@ public class StripePaymentServiceProvider:IPaymentService
         return account;
     }
     
-    public double GetBalance(string accountId)
+    public decimal GetBalance(string accountId)
     {
         var balanceService = new BalanceService();
         var balance = balanceService.Get(new RequestOptions()
         {
             StripeAccount = accountId
         });
-        return balance.Available[0].Amount/100;
+        // Stripe amounts are in integer cents; convert to a decimal currency amount without loss.
+        return balance.Available[0].Amount / 100m;
     }
-    public double GetPendingBalance(string accountId)
+    public decimal GetPendingBalance(string accountId)
     {
         var balanceService = new BalanceService();
         var balance = balanceService.Get(new RequestOptions()
         {
             StripeAccount = accountId
         });
-        return balance.Pending[0].Amount/100;
+        return balance.Pending[0].Amount / 100m;
     }
 }

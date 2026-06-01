@@ -9,9 +9,9 @@ public interface IPaymentService
     string CreateArtistAccount();
     string CreateArtistAccountOnboardingUrl(string accountId); 
     bool ArtistAccountIsOnboarded(string accountId);
-    string Charge(int orderArtistServiceId, string? sellerStripeAccountId, double orderPrice);
+    string Charge(int orderArtistServiceId, string? sellerStripeAccountId, decimal orderPrice);
     string CreateDashboardUrl(string accountId);
     Account GetAccount(string? artistStripeAccountId);
-    double GetBalance(string accountId);
-    double GetPendingBalance(string accountId);
+    decimal GetBalance(string accountId);
+    decimal GetPendingBalance(string accountId);
 }
