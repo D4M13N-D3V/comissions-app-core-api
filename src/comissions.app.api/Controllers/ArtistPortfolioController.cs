@@ -78,7 +78,7 @@ public class ArtistPortfolioController: Controller
     [HttpPost]
     [Route("Portfolio")]
     [Authorize("write:artist")]
-    [RequestSizeLimit(10 * 1024 * 1024)]
+    [RequestSizeLimit(100 * 1024 * 1024)]
     public async Task<IActionResult> AddPortfolio()
     {
         if (!IsAllowedImageContentType(Request.ContentType))
