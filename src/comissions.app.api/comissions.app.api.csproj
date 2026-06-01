@@ -11,26 +11,26 @@
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
     </PropertyGroup>
     <ItemGroup>
-        <PackageReference Include="Auth0.AspNetCore.Authentication" Version="1.4.1" />
-        <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.1" />
-        <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.1"/>
-        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.1" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.1">
+        <PackageReference Include="Auth0.AspNetCore.Authentication" Version="1.7.0" />
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.27" />
+        <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.27"/>
+        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.27" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.27">
           <PrivateAssets>all</PrivateAssets>
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="8.0.1" />
-        <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-        <PackageReference Include="Novu" Version="0.3.3" />
-        <PackageReference Include="Novu.Extensions" Version="0.3.3" />
-        <PackageReference Include="Novu.Sync" Version="0.3.3" />
-        <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.0" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="8.0.27" />
+        <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
+        <PackageReference Include="Novu" Version="0.6.1" />
+        <PackageReference Include="Novu.Extensions" Version="0.6.1" />
+        <PackageReference Include="Novu.Sync" Version="0.6.1" />
+        <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.11" />
         <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL.Design" Version="1.1.0" />
         <!-- Security pins: force fixed transitive versions to satisfy the image vulnerability scan gate. -->
-        <PackageReference Include="Npgsql" Version="8.0.3" /> <!-- CVE-2024-32655, transitive via EFCore.PostgreSQL 8.0.0 -->
-        <PackageReference Include="Refit" Version="7.2.22" /> <!-- CVE-2024-51501, transitive via Novu 0.3.3 -->
-        <PackageReference Include="Stripe.net" Version="43.12.0" />
-        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0"/>
+        <PackageReference Include="Npgsql" Version="8.0.6" /> <!-- CVE-2024-32655, transitive via EFCore.PostgreSQL 8.0.0 -->
+        <PackageReference Include="Refit" Version="8.0.0" /> <!-- CVE-2024-51501, transitive via Novu 0.3.3 -->
+        <PackageReference Include="Stripe.net" Version="43.23.0" />
+        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.9.0"/>
     </ItemGroup>
 
     <ItemGroup>
