@@ -1,12 +1,15 @@
 using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.Extensions.Logging;
 
 namespace comissions.app.api.Filters;
 
 public class LoggingFilter : IActionFilter
 {
+    private readonly ILogger<LoggingFilter> _logger;
 
-    public LoggingFilter()
+    public LoggingFilter(ILogger<LoggingFilter> logger)
     {
+        _logger = logger;
     }
 
     public void OnActionExecuting(ActionExecutingContext context)
@@ -14,7 +17,7 @@ public class LoggingFilter : IActionFilter
         // Log model state errors
         if (!context.ModelState.IsValid)
         {
-            Console.WriteLine("Model validation failed: {@Errors}", context.ModelState);
+            _logger.LogWarning("Model validation failed: {@ModelState}", context.ModelState);
         }
     }
 

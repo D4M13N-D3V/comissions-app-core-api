@@ -110,7 +110,7 @@ builder.Services.RegisterNovuClients(builder.Configuration).AddTransient<NovuCli
 
 builder.Services.AddControllers(options =>
     {
-        options.Filters.Add(new LoggingFilter()); // Register a custom logging filter
+        options.Filters.Add<LoggingFilter>(); // Register a custom logging filter (DI-activated for ILogger)
     })
     .AddJsonOptions(options=>
         options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles

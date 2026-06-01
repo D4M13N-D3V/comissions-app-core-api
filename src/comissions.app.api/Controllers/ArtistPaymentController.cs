@@ -10,8 +10,9 @@ using Novu;
 
 namespace comissions.app.api.Controllers;
 
+[ApiController]
 [Route("api/Artist")]
-public class ArtistPaymentController:Controller
+public class ArtistPaymentController:ControllerBase
 {
     
     private readonly ApplicationDbContext _dbContext;

@@ -10,8 +10,9 @@ using Novu;
 namespace comissions.app.api.Controllers;
 
 
+[ApiController]
 [Route("api/Artist")]
-public class ArtistPageController: Controller
+public class ArtistPageController: ControllerBase
 {
     private readonly ApplicationDbContext _dbContext;
     private readonly IStorageService _storageService;
