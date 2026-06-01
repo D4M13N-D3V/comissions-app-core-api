@@ -66,8 +66,10 @@ public class UserMiddleware
             {
                 var suspendDate = suspension.SuspensionDate.ToString("MM/dd/yyyy");
                 var unsuspendDate = suspension.UnsuspensionDate.ToString("MM/dd/yyyy");
-                await context.Response.WriteAsync($"Suspended on {suspendDate} until {unsuspendDate} for {suspension.Reason}.");
+                // Status code must be set before the body is written; once the response
+                // has started the headers are flushed and the status can no longer change.
                 context.Response.StatusCode = StatusCodes.Status403Forbidden;
+                await context.Response.WriteAsync($"Suspended on {suspendDate} until {unsuspendDate} for {suspension.Reason}.");
                 return;
             }
 
@@ -76,8 +78,9 @@ public class UserMiddleware
             {
                 var suspendDate = ban.BanDate.ToString("MM/dd/yyyy");
                 var unsuspendDate = ban.UnbanDate.ToString("MM/dd/yyyy");
-                await context.Response.WriteAsync($"Banned on {suspendDate} until {unsuspendDate} for {ban.Reason}.");
+                // Status code must be set before the body is written (see suspension branch above).
                 context.Response.StatusCode = StatusCodes.Status403Forbidden;
+                await context.Response.WriteAsync($"Banned on {suspendDate} until {unsuspendDate} for {ban.Reason}.");
                 return;
             }
         }
