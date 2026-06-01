@@ -1,4 +1,11 @@
 ﻿FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
+# Patch base-image OS CVEs flagged by the image scan gate (libgnutls30:
+# CVE-2026-33845 et al., fixed in 3.7.9-2+deb12u7). Done as root before
+# dropping to the non-root app user.
+USER root
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends --only-upgrade libgnutls30 \
+    && rm -rf /var/lib/apt/lists/*
 USER $APP_UID
 WORKDIR /app
 EXPOSE 8080
