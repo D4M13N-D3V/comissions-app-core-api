@@ -14,7 +14,7 @@ using Novu.DTO.Events;
 namespace comissions.app.api.Controllers;
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("api/Artist")]
 public class ArtistController : Controller
 {
     private readonly ApplicationDbContext _dbContext;
