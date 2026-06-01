@@ -74,7 +74,7 @@ public class CustomerRequestsController : Controller
             if (request != null && request.Accepted && !request.Declined && !request.Completed &&
                 request.Artist.StripeAccountId == connectedAccountId)
             {
-                var paymentUrl = _paymentService.Charge(request.Id,request.Artist.StripeAccountId,Convert.ToDouble(request.Amount));
+                var paymentUrl = _paymentService.Charge(request.Id,request.Artist.StripeAccountId,request.Amount);
                 request.PaymentUrl = paymentUrl;
                 _dbContext.Entry(request).State = EntityState.Modified;
                 await _dbContext.SaveChangesAsync();
@@ -773,7 +773,7 @@ public class CustomerRequestsController : Controller
         if(request==null)
             return NotFound();
         if(request.PaymentUrl==null)
-            request.PaymentUrl = _paymentService.Charge(request.Id,request.Artist.StripeAccountId,Convert.ToDouble(request.Amount));
+            request.PaymentUrl = _paymentService.Charge(request.Id,request.Artist.StripeAccountId,request.Amount);
         _dbContext.Entry(request).State = EntityState.Modified;
         _dbContext.SaveChanges();
         return Ok(new {paymentUrl = request.PaymentUrl});
