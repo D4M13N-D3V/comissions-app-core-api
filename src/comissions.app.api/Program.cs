@@ -65,7 +65,6 @@ builder.Services.AddSwaggerGen(options =>
         Version = "v1.0",
         Description = ""
     });
-    options.ResolveConflictingActions(x => x.First());
     options.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
     {
         Type = SecuritySchemeType.OAuth2,
