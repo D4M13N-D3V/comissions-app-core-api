@@ -19,6 +19,12 @@ public class ArtistPortfolioController: Controller
     private readonly IPaymentService _paymentService;
     private readonly NovuClient _client;
 
+    private static readonly string[] AllowedImageContentTypes =
+        { "image/jpeg", "image/png", "image/gif", "image/webp" };
+
+    private static bool IsAllowedImageContentType(string? contentType)
+        => contentType != null && AllowedImageContentTypes.Contains(contentType.Split(';')[0].Trim().ToLowerInvariant());
+
     public ArtistPortfolioController(ApplicationDbContext dbContext, IPaymentService paymentService, IStorageService storageService, NovuClient client)
     {
         _client = client;
@@ -72,8 +78,12 @@ public class ArtistPortfolioController: Controller
     [HttpPost]
     [Route("Portfolio")]
     [Authorize("write:artist")]
+    [RequestSizeLimit(100 * 1024 * 1024)]
     public async Task<IActionResult> AddPortfolio()
     {
+        if (!IsAllowedImageContentType(Request.ContentType))
+            return BadRequest("Only image uploads (jpeg, png, gif, webp) are allowed.");
+
         var userId = User.GetUserId();
         var existingArtist = await _dbContext.UserArtists.FirstOrDefaultAsync(Artist=>Artist.UserId==userId);
         if (existingArtist == null)

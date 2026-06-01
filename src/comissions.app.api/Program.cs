@@ -29,6 +29,12 @@ builder.Services.AddSingleton<IStorageService,LocalStorageServiceProvider>();
 builder.Services.AddSingleton<IPaymentService,StripePaymentServiceProvider>();
 
 builder.Services.AddHttpContextAccessor();
+
+// Cap request body size globally to mitigate unbounded-upload memory/disk DoS (10 MB).
+builder.Services.Configure<Microsoft.AspNetCore.Server.Kestrel.Core.KestrelServerOptions>(options =>
+{
+    options.Limits.MaxRequestBodySize = 100 * 1024 * 1024;
+});
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSingleton<ApplicationDatabaseConfigurationModel>();
 builder.Services.AddDbContext<ApplicationDbContext>();
@@ -128,6 +134,22 @@ builder.Services.AddAuthorization(options =>
 
 builder.Services.AddSingleton<IAuthorizationHandler, HasScopeHandler>();
 
+// CORS: allow only the explicitly configured origins (comma-separated in Cors:AllowedOrigins).
+const string CorsPolicyName = "DefaultCorsPolicy";
+var allowedOrigins = builder.Configuration.GetValue<string>("Cors:AllowedOrigins")?
+    .Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+    ?? Array.Empty<string>();
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(CorsPolicyName, policy =>
+    {
+        policy.WithOrigins(allowedOrigins)
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials();
+    });
+});
+
 
 var app = builder.Build();
 
@@ -146,6 +168,7 @@ defaultFilesOptions.DefaultFileNames.Clear();
 defaultFilesOptions.DefaultFileNames.Add("index.html"); // replace 'yourf
 app.UseStaticFiles();
 app.UseHttpsRedirection();
+app.UseCors(CorsPolicyName);
 app.UseAuthentication();
 app.UseMiddleware<UserMiddleware>();
 app.UseAuthorization();
