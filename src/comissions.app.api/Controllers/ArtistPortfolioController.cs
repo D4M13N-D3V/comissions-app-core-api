@@ -11,8 +11,9 @@ using Novu;
 namespace comissions.app.api.Controllers;
 
 
+[ApiController]
 [Route("api/Artist")]
-public class ArtistPortfolioController: Controller
+public class ArtistPortfolioController: ControllerBase
 {
     private readonly ApplicationDbContext _dbContext;
     private readonly IStorageService _storageService;
