@@ -1,0 +1,38 @@
+version: 2
+updates:
+  - package-ecosystem: nuget
+    directory: "/src"
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 10
+    labels:
+      - dependencies
+    groups:
+      # Batch low-risk transitive/framework bumps into a single PR
+      microsoft:
+        patterns:
+          - "Microsoft.*"
+          - "System.*"
+        update-types:
+          - minor
+          - patch
+      production-minor-patch:
+        update-types:
+          - minor
+          - patch
+
+  - package-ecosystem: github-actions
+    directory: "/"
+    schedule:
+      interval: weekly
+    labels:
+      - dependencies
+      - ci
+
+  - package-ecosystem: docker
+    directory: "/src/comissions.app.api"
+    schedule:
+      interval: weekly
+    labels:
+      - dependencies
+      - docker

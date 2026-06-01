@@ -1,0 +1,88 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-test:
+    name: Restore, build & test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      # Build the deployable projects individually. The solution also contains
+      # comissions.app.sdk, whose OpenApiReference depends on a generated
+      # swagger.json (produced by booting the API) and so can't build headless.
+      - name: Restore
+        run: |
+          dotnet restore src/comissions.app.api/comissions.app.api.csproj
+          dotnet restore src/comissions.app.database/comissions.app.database.csproj
+          dotnet restore src/comissions.app.database.migrator/comissions.app.database.migrator.csproj
+
+      - name: Build (Release)
+        run: |
+          dotnet build src/comissions.app.api/comissions.app.api.csproj -c Release --no-restore
+          dotnet build src/comissions.app.database.migrator/comissions.app.database.migrator.csproj -c Release --no-restore
+
+      - name: Test
+        # No runnable unit tests yet; this is a no-op guard that fails loudly
+        # only if test projects appear and break. Add real test projects here.
+        run: echo "No test projects configured yet."
+
+  docker-build:
+    name: Docker image builds
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/setup-buildx-action@v3
+      - name: Build image (no push)
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: src/comissions.app.api/Dockerfile
+          push: false
+          load: true
+          tags: comissions-app-core-api:ci
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  trivy-fs:
+    name: Trivy filesystem scan (report)
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      security-events: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Trivy scan (vuln, secret, misconfig)
+        uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
+        with:
+          scan-type: fs
+          scanners: vuln,secret,misconfig
+          severity: HIGH,CRITICAL
+          ignore-unfixed: true
+          format: sarif
+          output: trivy-fs.sarif
+        # Report-only: a dependency CVE shouldn't block PRs. The release
+        # job gates on the (pruned) image scan instead.
+
+      - name: Upload results to Security tab
+        if: always()
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: trivy-fs.sarif
+          category: trivy-fs

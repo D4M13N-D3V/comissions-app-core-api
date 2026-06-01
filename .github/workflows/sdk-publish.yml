@@ -1,0 +1,123 @@
+name: Publish SDKs
+
+# Builds and publishes the C# SDK (NuGet → GitHub Packages) and the
+# generated JavaScript SDK (npm → GitHub Packages + docs to GitHub Pages),
+# retargeted to the D4M13N-D3V namespace.
+#
+# NOTE: the SDK generation depends on a swagger.json produced by the
+# `dotnet swagger tofile` post-build target in comissions.app.api.csproj,
+# which boots the app and therefore needs minimal config. The "Generate
+# swagger" step below supplies dummy Auth0/DB values so generation can run
+# headless. If SDK generation fails, this workflow won't block releases —
+# it's intentionally decoupled from release.yml.
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: sdk-publish-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  version:
+    name: Compute version
+    runs-on: ubuntu-latest
+    outputs:
+      semver: ${{ steps.gitversion.outputs.semVer }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: gittools/actions/gitversion/setup@v1.1.1
+        with:
+          versionSpec: '5.x'
+      - id: gitversion
+        uses: gittools/actions/gitversion/execute@v1.1.1
+        with:
+          useConfigFile: true
+          configFilePath: GitVersion.yml
+
+  csharp-sdk:
+    name: C# SDK → GitHub Packages (NuGet)
+    needs: version
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Generate swagger.json (boots API headless with dummy config)
+        env:
+          Auth0__Domain: "https://example.us.auth0.com/"
+          Auth0__Audience: "https://api.comissions.app"
+          Database__username: "ci"
+          Database__password: "ci"
+        run: dotnet build src/comissions.app.api/comissions.app.api.csproj -c Release
+
+      - name: Build & pack SDK
+        run: dotnet build src/comissions.app.sdk/comissions.app.sdk.csproj -c Release -p:Version=${{ needs.version.outputs.semver }}
+
+      - name: Push to GitHub Packages
+        run: |
+          dotnet nuget push "src/comissions.app.sdk/bin/Release/**/*.nupkg" \
+            --skip-duplicate \
+            --source "https://nuget.pkg.github.com/D4M13N-D3V/index.json" \
+            --api-key "${{ secrets.GITHUB_TOKEN }}"
+
+  js-sdk:
+    name: JS SDK → GitHub Packages (npm) + docs
+    needs: version
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+      pages: write
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Generate swagger.json
+        env:
+          Auth0__Domain: "https://example.us.auth0.com/"
+          Auth0__Audience: "https://api.comissions.app"
+          Database__username: "ci"
+          Database__password: "ci"
+        run: dotnet build src/comissions.app.api/comissions.app.api.csproj -c Release
+
+      - name: Generate JavaScript client
+        uses: hatamiarash7/openapi-generator@v0.2.0
+        with:
+          generator: javascript
+          openapi-file: src/comissions.app.sdk/swagger.json
+          output-dir: ./javascript-client/
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          registry-url: 'https://npm.pkg.github.com'
+
+      - name: Set package name & version
+        working-directory: javascript-client
+        run: |
+          npm pkg set name="@d4m13n-d3v/comissions-app-sdk"
+          npm pkg set version="${{ needs.version.outputs.semver }}"
+
+      - name: Publish to GitHub Packages (npm)
+        working-directory: javascript-client
+        run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
