@@ -12,7 +12,7 @@ public record User
     public string Email { get; set; } = null!;
     
     public int? UserArtistId { get; set; }
-    public string AdminNotes { get; set; }
+    public string AdminNotes { get; set; } = string.Empty;
     [JsonIgnore] public virtual UserArtist? UserArtist { get; set; }
     [JsonIgnore] public virtual ICollection<Request> Requests { get; set; } = new List<Request>();
     [JsonIgnore] public virtual ICollection<Suspension> Suspensions { get; set; } = new List<Suspension>();
