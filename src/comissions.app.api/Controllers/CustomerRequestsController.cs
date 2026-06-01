@@ -23,6 +23,12 @@ public class CustomerRequestsController : Controller
     private readonly NovuClient _client;
     private readonly string _webHookSecret;
 
+    private static readonly string[] AllowedImageContentTypes =
+        { "image/jpeg", "image/png", "image/gif", "image/webp" };
+
+    private static bool IsAllowedImageContentType(string? contentType)
+        => contentType != null && AllowedImageContentTypes.Contains(contentType.Split(';')[0].Trim().ToLowerInvariant());
+
     public CustomerRequestsController(ApplicationDbContext dbContext, NovuClient client, IPaymentService paymentService, IStorageService storageService, IConfiguration configuration)
     {
         _client = client;
@@ -858,8 +864,12 @@ public class CustomerRequestsController : Controller
     [HttpPost]
     [Route("Customer/{requestId:int}/References")]
     [Authorize("write:request")]
+    [RequestSizeLimit(100 * 1024 * 1024)]
     public async Task<IActionResult> AddReference(int requestId)
     {
+        if (!IsAllowedImageContentType(Request.ContentType))
+            return BadRequest("Only image uploads (jpeg, png, gif, webp) are allowed.");
+
         var userId = User.GetUserId();
         var request = await _dbContext.Requests
             .Where(x=>x.UserId==userId)
