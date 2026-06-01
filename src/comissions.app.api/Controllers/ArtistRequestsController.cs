@@ -21,6 +21,12 @@ public class ArtistRequestsController: Controller
     private readonly NovuClient _client;
     private readonly string _webHookSecret;
 
+    private static readonly string[] AllowedImageContentTypes =
+        { "image/jpeg", "image/png", "image/gif", "image/webp" };
+
+    private static bool IsAllowedImageContentType(string? contentType)
+        => contentType != null && AllowedImageContentTypes.Contains(contentType.Split(';')[0].Trim().ToLowerInvariant());
+
     public ArtistRequestsController(ApplicationDbContext dbContext, NovuClient client, IPaymentService paymentService, IStorageService storageService, IConfiguration configuration)
     {
         _client = client;
@@ -148,8 +154,12 @@ public class ArtistRequestsController: Controller
     [HttpPost]
     [Route("Artist/{requestId:int}/Assets")]
     [Authorize("write:request")]
+    [RequestSizeLimit(10 * 1024 * 1024)]
     public async Task<IActionResult> AddArtistAsset(int requestId)
     {
+        if (!IsAllowedImageContentType(Request.ContentType))
+            return BadRequest("Only image uploads (jpeg, png, gif, webp) are allowed.");
+
         var userId = User.GetUserId();
         var request = await _dbContext.Requests
             .Where(x=>x.UserId==userId)
@@ -307,18 +317,19 @@ public class ArtistRequestsController: Controller
             .Include(x=>x.Artist)
             .Where(x=>x.Artist.UserId==userId)
             .FirstOrDefaultAsync(x=>x.Id==requestId);
-        
+
+        if(request==null)
+            return NotFound();
+
         if(request.Completed)
             return BadRequest("Request has already been completed.");
-        
+
         if(request.Accepted)
             return BadRequest("Request has already been accepted.");
 
         if (request.Declined)
             return BadRequest("Request has already been declined.");
-        
-        if(request==null)
-            return NotFound();
+
         var paymentUrl = _paymentService.Charge(request.Id,request.Artist.StripeAccountId,Convert.ToDouble(request.Amount));
         request.Accepted = true;
         request.AcceptedDate = DateTime.UtcNow;
@@ -345,8 +356,8 @@ public class ArtistRequestsController: Controller
             },
             Payload = { }
         };
-        await _client.Event.Trigger(newTriggerModel);
-        
+        await _client.Event.Trigger(newTriggerArtistModel);
+
         var result = request.ToModel();
         return Ok(result);
     }

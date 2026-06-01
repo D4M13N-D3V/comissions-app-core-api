@@ -29,7 +29,32 @@ builder.Services.AddSingleton<IStorageService,LocalStorageServiceProvider>();
 builder.Services.AddSingleton<IPaymentService,StripePaymentServiceProvider>();
 
 builder.Services.AddHttpContextAccessor();
+
+// Cap request body size globally to mitigate unbounded-upload memory/disk DoS (10 MB).
+builder.Services.Configure<Microsoft.AspNetCore.Server.Kestrel.Core.KestrelServerOptions>(options =>
+{
+    options.Limits.MaxRequestBodySize = 10 * 1024 * 1024;
+});
 builder.Services.AddEndpointsApiExplorer();
+
+// Basic per-client fixed-window rate limiting to blunt abuse / brute force.
+builder.Services.AddRateLimiter(options =>
+{
+    options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
+    options.GlobalLimiter = System.Threading.RateLimiting.PartitionedRateLimiter.Create<HttpContext, string>(context =>
+    {
+        var partitionKey = context.User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value
+                           ?? context.Connection.RemoteIpAddress?.ToString()
+                           ?? "anonymous";
+        return System.Threading.RateLimiting.RateLimitPartition.GetFixedWindowLimiter(partitionKey, _ =>
+            new System.Threading.RateLimiting.FixedWindowRateLimiterOptions
+            {
+                PermitLimit = 100,
+                Window = TimeSpan.FromMinutes(1),
+                QueueLimit = 0
+            });
+    });
+});
 builder.Services.AddSingleton<ApplicationDatabaseConfigurationModel>();
 builder.Services.AddDbContext<ApplicationDbContext>();
 builder.Services.AddSwaggerGen(options =>
@@ -128,11 +153,40 @@ builder.Services.AddAuthorization(options =>
 
 builder.Services.AddSingleton<IAuthorizationHandler, HasScopeHandler>();
 
+// CORS: allow only the explicitly configured origins (comma-separated in Cors:AllowedOrigins).
+const string CorsPolicyName = "DefaultCorsPolicy";
+var allowedOrigins = builder.Configuration.GetValue<string>("Cors:AllowedOrigins")?
+    .Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+    ?? Array.Empty<string>();
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(CorsPolicyName, policy =>
+    {
+        policy.WithOrigins(allowedOrigins)
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials();
+    });
+});
+
 
 var app = builder.Build();
 
-var dbContext = app.Services.GetService<ApplicationDbContext>();
-dbContext.Database.Migrate();
+// Enforce HSTS outside development.
+if (!app.Environment.IsDevelopment())
+{
+    app.UseHsts();
+}
+
+// Applying migrations on startup races when multiple replicas boot together and
+// is best handled by the dedicated migrator job. Gate it behind a config flag
+// (default off) and resolve the DbContext from a scope rather than the root provider.
+if (builder.Configuration.GetValue<bool>("Database:RunMigrationsOnStartup"))
+{
+    using var migrationScope = app.Services.CreateScope();
+    var dbContext = migrationScope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+    dbContext.Database.Migrate();
+}
 app.UseSwagger();
 app.UseSwaggerUI(settings =>
 {
@@ -146,6 +200,8 @@ defaultFilesOptions.DefaultFileNames.Clear();
 defaultFilesOptions.DefaultFileNames.Add("index.html"); // replace 'yourf
 app.UseStaticFiles();
 app.UseHttpsRedirection();
+app.UseRateLimiter();
+app.UseCors(CorsPolicyName);
 app.UseAuthentication();
 app.UseMiddleware<UserMiddleware>();
 app.UseAuthorization();
