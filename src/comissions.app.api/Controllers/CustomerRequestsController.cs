@@ -864,7 +864,7 @@ public class CustomerRequestsController : Controller
     [HttpPost]
     [Route("Customer/{requestId:int}/References")]
     [Authorize("write:request")]
-    [RequestSizeLimit(10 * 1024 * 1024)]
+    [RequestSizeLimit(100 * 1024 * 1024)]
     public async Task<IActionResult> AddReference(int requestId)
     {
         if (!IsAllowedImageContentType(Request.ContentType))
