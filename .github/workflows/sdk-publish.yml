@@ -99,7 +99,7 @@ jobs:
         run: dotnet build src/comissions.app.api/comissions.app.api.csproj -c Release
 
       - name: Generate JavaScript client
-        uses: hatamiarash7/openapi-generator@v0.2.0
+        uses: hatamiarash7/openapi-generator@v0.3.0
         with:
           generator: javascript
           openapi-file: src/comissions.app.sdk/swagger.json
