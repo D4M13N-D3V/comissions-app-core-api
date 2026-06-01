@@ -33,7 +33,7 @@ builder.Services.AddHttpContextAccessor();
 // Cap request body size globally to mitigate unbounded-upload memory/disk DoS (10 MB).
 builder.Services.Configure<Microsoft.AspNetCore.Server.Kestrel.Core.KestrelServerOptions>(options =>
 {
-    options.Limits.MaxRequestBodySize = 10 * 1024 * 1024;
+    options.Limits.MaxRequestBodySize = 100 * 1024 * 1024;
 });
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSingleton<ApplicationDatabaseConfigurationModel>();
