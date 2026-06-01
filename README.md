@@ -48,6 +48,29 @@ docker run -p 8080:80 art-platform
 
 The API should be accessible at `http://localhost:8080`.
 
+## Configuration
+
+Application settings are read from `appsettings.json` (and environment-specific
+overrides). **Do not commit real secrets.** Copy the template and fill in your
+own values locally, or supply them via environment variables / a secret store:
+
+```bash
+cp src/comissions.app.api/appsettings.example.json src/comissions.app.api/appsettings.json
+```
+
+Secrets configured via this file or env vars include:
+
+| Key | Description |
+| --- | --- |
+| `Database:username` / `Database:password` | Postgres credentials (required — the app fails to start if unset) |
+| `Stripe:ApiKey` / `Stripe:WebHookSecret` | Stripe secret key and webhook signing secret |
+| `Auth0:ClientId` / `Auth0:ClientSecret` | Auth0 application credentials |
+| `Storage:ImgCdn:ApiKey` | imgcdn upload key |
+| `Novu:ApiKey` | Novu notifications key |
+
+Environment variables use the standard .NET double-underscore convention,
+e.g. `Database__password`, `Stripe__ApiKey`.
+
 ## Usage
 
 Describe how to use your API and any specific details or considerations that users need to be aware of.
