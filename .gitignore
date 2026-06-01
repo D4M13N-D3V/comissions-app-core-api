@@ -396,3 +396,11 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
+
+# Local secrets / config overrides — never commit real secret values.
+# The tracked appsettings.json is kept secret-free; put real values in a
+# local override or environment variables instead.
+appsettings.Local.json
+appsettings.*.Local.json
+**/appsettings.Local.json
+**/appsettings.*.Local.json
