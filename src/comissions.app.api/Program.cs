@@ -36,6 +36,25 @@ builder.Services.Configure<Microsoft.AspNetCore.Server.Kestrel.Core.KestrelServe
     options.Limits.MaxRequestBodySize = 100 * 1024 * 1024;
 });
 builder.Services.AddEndpointsApiExplorer();
+
+// Basic per-client fixed-window rate limiting to blunt abuse / brute force.
+builder.Services.AddRateLimiter(options =>
+{
+    options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
+    options.GlobalLimiter = System.Threading.RateLimiting.PartitionedRateLimiter.Create<HttpContext, string>(context =>
+    {
+        var partitionKey = context.User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value
+                           ?? context.Connection.RemoteIpAddress?.ToString()
+                           ?? "anonymous";
+        return System.Threading.RateLimiting.RateLimitPartition.GetFixedWindowLimiter(partitionKey, _ =>
+            new System.Threading.RateLimiting.FixedWindowRateLimiterOptions
+            {
+                PermitLimit = 100,
+                Window = TimeSpan.FromMinutes(1),
+                QueueLimit = 0
+            });
+    });
+});
 builder.Services.AddSingleton<ApplicationDatabaseConfigurationModel>();
 builder.Services.AddDbContext<ApplicationDbContext>();
 builder.Services.AddSwaggerGen(options =>
@@ -153,6 +172,12 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
+// Enforce HSTS outside development.
+if (!app.Environment.IsDevelopment())
+{
+    app.UseHsts();
+}
+
 var dbContext = app.Services.GetService<ApplicationDbContext>();
 dbContext.Database.Migrate();
 app.UseSwagger();
@@ -168,6 +193,7 @@ defaultFilesOptions.DefaultFileNames.Clear();
 defaultFilesOptions.DefaultFileNames.Add("index.html"); // replace 'yourf
 app.UseStaticFiles();
 app.UseHttpsRedirection();
+app.UseRateLimiter();
 app.UseCors(CorsPolicyName);
 app.UseAuthentication();
 app.UseMiddleware<UserMiddleware>();
