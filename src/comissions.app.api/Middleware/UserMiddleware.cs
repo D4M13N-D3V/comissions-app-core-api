@@ -1,10 +1,7 @@
 using System.Security.Claims;
 using comissions.app.api.Entities;
-using comissions.app.api.Services.Payment;
 using Microsoft.EntityFrameworkCore;
 using Novu;
-using Novu.Interfaces;
-using Novu.DTO;
 using Novu.DTO.Subscribers;
 
 namespace comissions.app.api.Middleware;
@@ -14,55 +11,62 @@ public class UserMiddleware
 {
     private readonly RequestDelegate _next;
     private readonly NovuClient _client;
-    public UserMiddleware(RequestDelegate next, NovuClient client)
+    private readonly ILogger<UserMiddleware> _logger;
+
+    public UserMiddleware(RequestDelegate next, NovuClient client, ILogger<UserMiddleware> logger)
     {
         _next = next;
         _client = client;
+        _logger = logger;
     }
 
-    public async Task InvokeAsync(HttpContext context, ApplicationDbContext dbContext, IPaymentService paymentService)
+    public async Task InvokeAsync(HttpContext context, ApplicationDbContext dbContext)
     {
-        if (context.User.Identity.IsAuthenticated)
+        if (context.User.Identity?.IsAuthenticated == true)
         {
-            var userId = context.User.Claims.First(c => c.Type == ClaimTypes.NameIdentifier).Value;
+            var userId = context.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (string.IsNullOrEmpty(userId))
+            {
+                // Authenticated principal without a subject claim — nothing to load.
+                await _next(context);
+                return;
+            }
 
-            var user = await dbContext.Users.Include(x=>x.UserArtist)
-                .Include(x=>x.Bans)
-                .Include(x=>x.Suspensions)
-                .FirstOrDefaultAsync(x=>x.Id==userId);
+            var user = await dbContext.Users
+                .Include(x => x.Bans)
+                .Include(x => x.Suspensions)
+                .FirstOrDefaultAsync(x => x.Id == userId);
+
+            var email = context.User.FindFirst(ClaimTypes.Email)?.Value ?? string.Empty;
 
             if (user == null)
             {
-                var displayName = context.User.Claims.FirstOrDefault(x=>x.Type==ClaimTypes.Name)?.Value ?? "Anonymous";
-                if(dbContext.Users.Any(x=>x.DisplayName==displayName))
+                var displayName = context.User.FindFirst(ClaimTypes.Name)?.Value ?? "Anonymous";
+                if (await dbContext.Users.AnyAsync(x => x.DisplayName == displayName))
                     displayName = $"{displayName}#{Guid.NewGuid().ToString().Substring(0, 4)}";
                 user = new User
                 {
-                    Id = userId, 
-                    DisplayName = displayName, 
+                    Id = userId,
+                    DisplayName = displayName,
                     Biography = string.Empty,
-                    Email = context.User.Claims.FirstOrDefault(x=>x.Type==ClaimTypes.Email)?.Value ?? string.Empty,
+                    Email = email,
                 };
                 dbContext.Users.Add(user);
                 await dbContext.SaveChangesAsync();
+
+                // Provision the notification subscriber only on first sight of the user,
+                // not on every request. Failures must not take down the request pipeline.
+                await TrySyncSubscriberAsync(user);
             }
-            else 
-            {   
-                user.Email= context.User.Claims.FirstOrDefault(x=>x.Type==ClaimTypes.Email)?.Value ?? string.Empty;
-                dbContext.Users.Update(user);
+            else if (user.Email != email)
+            {
+                // Only write to the database when something actually changed.
+                user.Email = email;
                 await dbContext.SaveChangesAsync();
             }
 
-            var newSubscriberDto = new SubscriberCreateData()
-            {
-                SubscriberId = userId, //replace with system_internal_user_id
-                FirstName = user.DisplayName,
-                LastName = "",
-                Email = user.Email
-            };
-            var subscriber = await _client.Subscriber.Create(newSubscriberDto);
-            var suspension = user.Suspensions.FirstOrDefault(x => x.UnsuspensionDate > DateTime.UtcNow && x.Voided==false);
-            if (suspension!=null)
+            var suspension = user.Suspensions.FirstOrDefault(x => x.UnsuspensionDate > DateTime.UtcNow && x.Voided == false);
+            if (suspension != null)
             {
                 var suspendDate = suspension.SuspensionDate.ToString("MM/dd/yyyy");
                 var unsuspendDate = suspension.UnsuspensionDate.ToString("MM/dd/yyyy");
@@ -73,8 +77,8 @@ public class UserMiddleware
                 return;
             }
 
-            var ban = user.Bans.FirstOrDefault(x => x.UnbanDate > DateTime.UtcNow && x.Voided==false);
-            if (ban!=null)
+            var ban = user.Bans.FirstOrDefault(x => x.UnbanDate > DateTime.UtcNow && x.Voided == false);
+            if (ban != null)
             {
                 var suspendDate = ban.BanDate.ToString("MM/dd/yyyy");
                 var unsuspendDate = ban.UnbanDate.ToString("MM/dd/yyyy");
@@ -86,5 +90,23 @@ public class UserMiddleware
         }
 
         await _next(context);
+    }
+
+    private async Task TrySyncSubscriberAsync(User user)
+    {
+        try
+        {
+            await _client.Subscriber.Create(new SubscriberCreateData()
+            {
+                SubscriberId = user.Id,
+                FirstName = user.DisplayName,
+                LastName = "",
+                Email = user.Email
+            });
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Failed to sync Novu subscriber for user {UserId}", user.Id);
+        }
     }
 }
