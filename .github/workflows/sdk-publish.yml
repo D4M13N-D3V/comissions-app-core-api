@@ -30,7 +30,7 @@ jobs:
     outputs:
       semver: ${{ steps.gitversion.outputs.semVer }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           fetch-depth: 0
       - uses: gittools/actions/gitversion/setup@v1.1.1
@@ -50,7 +50,7 @@ jobs:
       contents: read
       packages: write
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - uses: actions/setup-dotnet@v4
         with:
           dotnet-version: 8.0.x
@@ -83,7 +83,7 @@ jobs:
       pages: write
       id-token: write
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           fetch-depth: 0
       - uses: actions/setup-dotnet@v4

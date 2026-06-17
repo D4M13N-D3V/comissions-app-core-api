@@ -22,7 +22,7 @@ jobs:
     outputs:
       semver: ${{ steps.gitversion.outputs.semVer }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           fetch-depth: 0
 
@@ -56,7 +56,7 @@ jobs:
       contents: write # create the GitHub Release
       packages: write # push to GHCR
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Resolve lowercase image name
         id: vars
