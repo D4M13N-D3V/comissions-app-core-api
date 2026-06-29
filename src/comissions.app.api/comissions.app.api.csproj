@@ -28,7 +28,7 @@
         <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL.Design" Version="1.1.0" />
         <!-- Security pins: force fixed transitive versions to satisfy the image vulnerability scan gate. -->
         <PackageReference Include="Npgsql" Version="8.0.3" /> <!-- CVE-2024-32655, transitive via EFCore.PostgreSQL 8.0.0 -->
-        <PackageReference Include="Refit" Version="7.2.22" /> <!-- CVE-2024-51501, transitive via Novu 0.3.3 -->
+        <PackageReference Include="Refit" Version="12.1.0" /> <!-- CVE-2024-51501, transitive via Novu 0.3.3 -->
         <PackageReference Include="Stripe.net" Version="43.12.0" />
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0"/>
     </ItemGroup>
